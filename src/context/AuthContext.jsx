@@ -12,18 +12,33 @@ import {
 
 const AuthContext = createContext(null);
 
+const DEFAULT_PREFERENCES = {
+  tempUnit: 'C', // 'C' | 'F'
+  currency: 'USD', // 'USD' | 'EUR' | 'GBP' | 'JPY' | 'INR' | 'AUD' | 'CAD'
+  travelStyle: 'Culture',
+  weatherAlerts: true,
+  aiRecommendations: true,
+  offlineCaching: true
+};
+
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [authError, setAuthError] = useState(null);
   const [savedFavorites, setSavedFavorites] = useState([]);
+  const [preferences, setPreferences] = useState(DEFAULT_PREFERENCES);
 
-  // Load saved favorites & stored active user session on mount
+  // Load saved favorites, preferences & stored active user session on mount
   useEffect(() => {
     try {
       const storedFavs = localStorage.getItem('aetheria_saved_favorites');
       if (storedFavs) {
         setSavedFavorites(JSON.parse(storedFavs));
+      }
+
+      const storedPrefs = localStorage.getItem('aetheria_preferences');
+      if (storedPrefs) {
+        setPreferences({ ...DEFAULT_PREFERENCES, ...JSON.parse(storedPrefs) });
       }
 
       const activeLocalUser = localStorage.getItem('aetheria_active_user');
@@ -64,6 +79,46 @@ export function AuthProvider({ children }) {
       if (unsubscribe) unsubscribe();
     };
   }, []);
+
+  // Update Preferences
+  const updatePreferences = (newPrefs) => {
+    setPreferences((prev) => {
+      const updated = { ...prev, ...newPrefs };
+      localStorage.setItem('aetheria_preferences', JSON.stringify(updated));
+      return updated;
+    });
+  };
+
+  // Update User Display Name
+  const updateDisplayName = async (newDisplayName) => {
+    if (!newDisplayName || !user) return;
+    try {
+      if (auth?.currentUser) {
+        await updateProfile(auth.currentUser, { displayName: newDisplayName }).catch(() => {});
+      }
+      const updatedUser = { ...user, displayName: newDisplayName };
+      setUser(updatedUser);
+      localStorage.setItem('aetheria_active_user', JSON.stringify(updatedUser));
+      
+      // Update in registered list if local
+      const storedUsers = JSON.parse(localStorage.getItem('aetheria_registered_users') || '[]');
+      const userIdx = storedUsers.findIndex((u) => u.email?.toLowerCase() === user.email?.toLowerCase());
+      if (userIdx >= 0) {
+        storedUsers[userIdx].displayName = newDisplayName;
+        localStorage.setItem('aetheria_registered_users', JSON.stringify(storedUsers));
+      }
+      return updatedUser;
+    } catch (err) {
+      console.error('Failed to update display name:', err);
+      throw err;
+    }
+  };
+
+  // Clear all saved favorites
+  const clearAllFavorites = () => {
+    setSavedFavorites([]);
+    localStorage.removeItem('aetheria_saved_favorites');
+  };
 
   // Sign in with Email and Password
   const loginWithEmail = async (email, password) => {
@@ -197,7 +252,7 @@ export function AuthProvider({ children }) {
     return newProfile;
   };
 
-  // Sign in with Google through Firebase Authentication.
+  // Sign in with Google through Firebase Authentication
   const loginWithGoogle = async () => {
     setAuthError(null);
 
@@ -226,19 +281,17 @@ export function AuthProvider({ children }) {
       const errorMessages = {
         'auth/unauthorized-domain': `This site is not authorized in Firebase. Add ${window.location.hostname} in Firebase Console > Authentication > Settings > Authorized domains.`,
         'auth/popup-blocked': 'Google sign-in was blocked by the browser. Allow popups for this site and try again.',
-        'auth/popup-closed-by-user': 'The Google sign-in window closed before authentication completed. If you did not close it, add this site to Firebase Authorized domains and verify the OAuth redirect URI.',
-        'auth/operation-not-allowed': 'Google sign-in is disabled. Enable the Google provider in Firebase Authentication > Sign-in method.',
+        'auth/popup-closed-by-user': 'The Google sign-in window closed before authentication completed.',
+        'auth/operation-not-allowed': 'Google sign-in is disabled in Firebase Console.',
         'auth/invalid-api-key': 'The Firebase API key configured for this deployment is invalid.'
       };
-      const msg = errorMessages[error.code] || (error.message?.includes('redirect_uri_mismatch')
-        ? 'Google OAuth callback is not configured. Add https://travelapplication.firebaseapp.com/__/auth/handler to the Google OAuth client redirect URIs.'
-        : 'Google sign-in failed. Check the Firebase and Google OAuth settings, then try again.');
+      const msg = errorMessages[error.code] || error.message || 'Google sign-in failed.';
       setAuthError(msg);
       throw new Error(msg);
     }
   };
 
-  // Demo Sign-In (1-Click instant test login)
+  // Demo Sign-In
   const loginWithDemo = (demoName = 'Niranjan Explorer') => {
     const mockUser = {
       uid: 'demo_user_traveler',
@@ -288,6 +341,10 @@ export function AuthProvider({ children }) {
     logout,
     savedFavorites,
     toggleFavorite,
+    clearAllFavorites,
+    preferences,
+    updatePreferences,
+    updateDisplayName,
     isAuthenticated: !!user
   };
 

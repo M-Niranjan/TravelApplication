@@ -1,6 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { useWeather } from '../hooks/useWeather';
+import { useAuth } from '../context/AuthContext';
 import LoadingState from './LoadingState';
 import ErrorState from './ErrorState';
 import { 
@@ -20,6 +21,8 @@ import {
 
 export default function WeatherCard({ lat, lon, locationName = '' }) {
   const { weatherData, loading, error } = useWeather(lat, lon);
+  const { preferences } = useAuth();
+  const isFahrenheit = preferences?.tempUnit === 'F';
 
   if (loading) {
     return <LoadingState type="weather" message="Fetching live meteorological satellite radar data..." />;
@@ -33,6 +36,18 @@ export default function WeatherCard({ lat, lon, locationName = '' }) {
       />
     );
   }
+
+  // Convert Celsius to Fahrenheit if preferred
+  const toDisplayTemp = (celsiusVal) => {
+    const num = parseInt(celsiusVal, 10);
+    if (isNaN(num)) return celsiusVal;
+    if (isFahrenheit) {
+      return Math.round((num * 9) / 5 + 32);
+    }
+    return num;
+  };
+
+  const tempUnitSymbol = isFahrenheit ? '°F' : '°C';
 
   // Dynamic Atmospheric Weather Background Image
   const getWeatherBg = (cond) => {
@@ -71,27 +86,27 @@ export default function WeatherCard({ lat, lon, locationName = '' }) {
   };
 
   const bgImage = getWeatherBg(weatherData.condition);
-  const currentTemp = parseInt(weatherData.temp) || 24;
+  const currentTempNum = parseInt(weatherData.temp, 10) || 24;
 
   const forecastDays = [
     {
       day: 'Tomorrow',
-      high: currentTemp + 1,
-      low: currentTemp - 4,
+      high: toDisplayTemp(currentTempNum + 1),
+      low: toDisplayTemp(currentTempNum - 4),
       condition: weatherData.condition || 'Sunny',
       icon: getWeatherIcon(weatherData.condition)
     },
     {
       day: 'In 2 Days',
-      high: currentTemp + 2,
-      low: currentTemp - 3,
+      high: toDisplayTemp(currentTempNum + 2),
+      low: toDisplayTemp(currentTempNum - 3),
       condition: 'Partly Cloudy',
       icon: <CloudSun className="w-6 h-6 text-amber-300" />
     },
     {
       day: 'In 3 Days',
-      high: currentTemp,
-      low: currentTemp - 5,
+      high: toDisplayTemp(currentTempNum),
+      low: toDisplayTemp(currentTempNum - 5),
       condition: 'Clear Sky',
       icon: <Sun className="w-6 h-6 text-amber-400" />
     }
@@ -140,10 +155,10 @@ export default function WeatherCard({ lat, lon, locationName = '' }) {
           <div className="space-y-2">
             <div className="flex items-baseline space-x-1">
               <span className="font-editorial text-5xl sm:text-6xl font-bold text-white tracking-tight leading-none drop-shadow-md">
-                {weatherData.temp}
+                {toDisplayTemp(weatherData.temp)}
               </span>
               <span className="font-sans text-2xl sm:text-3xl font-bold text-blue-400 self-start leading-none pt-0.5">
-                °C
+                {tempUnitSymbol}
               </span>
             </div>
 
@@ -153,13 +168,13 @@ export default function WeatherCard({ lat, lon, locationName = '' }) {
 
             <div className="flex flex-wrap items-center gap-2 text-xs text-slate-200 font-medium pt-1">
               <span className="px-3 py-1 rounded-xl bg-white/10 backdrop-blur-md border border-white/15">
-                Feels like <strong className="text-white font-bold">{weatherData.feelsLike}°C</strong>
+                Feels like <strong className="text-white font-bold">{toDisplayTemp(weatherData.feelsLike)}{tempUnitSymbol}</strong>
               </span>
               <span className="px-3 py-1 rounded-xl bg-white/10 backdrop-blur-md border border-white/15">
-                High: <strong className="text-white font-bold">{weatherData.high}°C</strong>
+                High: <strong className="text-white font-bold">{toDisplayTemp(weatherData.high)}{tempUnitSymbol}</strong>
               </span>
               <span className="px-3 py-1 rounded-xl bg-white/10 backdrop-blur-md border border-white/15">
-                Low: <strong className="text-white font-bold">{weatherData.low}°C</strong>
+                Low: <strong className="text-white font-bold">{toDisplayTemp(weatherData.low)}{tempUnitSymbol}</strong>
               </span>
             </div>
           </div>
