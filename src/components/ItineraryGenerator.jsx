@@ -15,7 +15,9 @@ import {
   Minus,
   Sliders, 
   Layers,
-  Edit3
+  Edit3,
+  Landmark,
+  CheckCircle2
 } from 'lucide-react';
 import confetti from 'canvas-confetti';
 
@@ -26,6 +28,7 @@ export default function ItineraryGenerator({ initialDestination = null }) {
   const [style, setStyle] = useState('Culture');
   const [budget, setBudget] = useState('Mid-range');
   const [selectedInterests, setSelectedInterests] = useState(['History', 'Food']);
+  const [selectedTourIds, setSelectedTourIds] = useState([]);
 
   const activeDestination = DESTINATIONS.find((d) => d.id === selectedDestId) || DESTINATIONS[0];
 
@@ -41,17 +44,42 @@ export default function ItineraryGenerator({ initialDestination = null }) {
   const presetDurations = [1, 2, 3, 5, 7, 10];
   const interestOptions = ['History', 'Nature', 'Shopping', 'Food', 'Photography', 'Nightlife', 'Architecture'];
 
-  // Helper to build default structured plan
-  const createDefaultPlan = (dest, numDays = 3, planStyle = 'Culture') => {
+  // Initialize selected tours when destination changes
+  useEffect(() => {
+    if (activeDestination?.places) {
+      setSelectedTourIds(activeDestination.places.map((p) => p.id));
+    }
+  }, [selectedDestId]);
+
+  const toggleTour = (tourId) => {
+    setSelectedTourIds((prev) =>
+      prev.includes(tourId) ? prev.filter((id) => id !== tourId) : [...prev, tourId]
+    );
+  };
+
+  const selectAllTours = () => {
+    if (activeDestination?.places) {
+      setSelectedTourIds(activeDestination.places.map((p) => p.id));
+    }
+  };
+
+  // Helper to build default structured plan with chosen tours
+  const createDefaultPlan = (dest, numDays = 3, planStyle = 'Culture', activeTourIds = []) => {
     const daysArr = [];
     const cappedDays = Math.min(Math.max(numDays, 1), 30);
+    
+    const availablePlaces = dest.places?.filter((p) => 
+      activeTourIds.length === 0 || activeTourIds.includes(p.id)
+    ) || dest.places || [];
+
+    const pool = availablePlaces.length > 0 ? availablePlaces : dest.places;
 
     for (let i = 1; i <= cappedDays; i++) {
-      const p1 = dest.places?.[(i - 1) % (dest.places?.length || 1)] || { 
+      const p1 = pool[(i - 1) % (pool.length || 1)] || { 
         name: 'Historic Old Quarter', 
-        description: 'Explore charming avenues, heritage architecture, and iconic squares.' 
+        description: `Explore charming avenues and iconic sights in ${dest.name}.` 
       };
-      const p2 = dest.places?.[i % (dest.places?.length || 1)] || { 
+      const p2 = pool[i % (pool.length || 1)] || { 
         name: 'Scenic Viewpoint & Cultural Market', 
         description: 'Sample authentic regional delicacies and enjoy panoramic cityscapes.' 
       };
@@ -63,26 +91,26 @@ export default function ItineraryGenerator({ initialDestination = null }) {
           : i === 2 
             ? `Cultural Immersion & Local Gastronomy` 
             : i === 3
-              ? `Scenic Excursion & Viewpoints`
-              : `Day ${i}: Hidden Gems & Neighborhood Discovery`,
+              ? `Scenic Excursion & Natural Wonders`
+              : `Day ${i}: Iconic Sights & Hidden Treasures`,
         activities: [
           {
             time: '09:00',
-            title: `Morning Exploration at ${p1.name}`,
+            title: `Morning Tour: ${p1.name}`,
             description: p1.description,
-            duration: '2.5 hours'
+            duration: p1.duration || '2.5 hours'
           },
           {
             time: '13:00',
-            title: `Authentic Regional Lunch & Neighborhood Stroll`,
+            title: `Authentic Regional Lunch & Stroll`,
             description: `Enjoy traditional cuisine at a top-rated local bistro in ${dest.name}.`,
             duration: '1.5 hours'
           },
           {
             time: '16:30',
-            title: `Afternoon Cultural Visit to ${p2.name}`,
+            title: `Afternoon Excursion: ${p2.name}`,
             description: p2.description,
-            duration: '2 hours'
+            duration: p2.duration || '2 hours'
           }
         ]
       });
@@ -90,7 +118,7 @@ export default function ItineraryGenerator({ initialDestination = null }) {
 
     return {
       destination: dest.name,
-      overview: `A tailored ${cappedDays}-day ${planStyle.toLowerCase()} journey through ${dest.name}, combining famous landmarks, culinary secrets, and scenic viewpoints.`,
+      overview: `A tailored ${cappedDays}-day ${planStyle.toLowerCase()} journey through ${dest.name}, featuring ${pool.length} signature tours and attractions.`,
       days: daysArr
     };
   };
@@ -109,8 +137,8 @@ export default function ItineraryGenerator({ initialDestination = null }) {
   }, [initialDestination]);
 
   useEffect(() => {
-    setItineraryResult(createDefaultPlan(activeDestination, days, style));
-  }, [selectedDestId, days]);
+    setItineraryResult(createDefaultPlan(activeDestination, days, style, selectedTourIds));
+  }, [selectedDestId, days, selectedTourIds]);
 
   const toggleInterest = (interest) => {
     setSelectedInterests((prev) =>
@@ -127,12 +155,18 @@ export default function ItineraryGenerator({ initialDestination = null }) {
 
   const handleGenerate = async (e) => {
     if (e) e.preventDefault();
+    
+    const chosenTours = activeDestination.places?.filter((p) => selectedTourIds.includes(p.id)) || [];
+
     const config = {
       destination: activeDestination,
       days,
       style,
       budget,
-      interests: selectedInterests
+      interests: [
+        ...selectedInterests,
+        ...chosenTours.map((t) => t.name)
+      ]
     };
 
     const result = await createItinerary(config);
@@ -157,7 +191,7 @@ export default function ItineraryGenerator({ initialDestination = null }) {
           Custom Day-by-Day Itinerary
         </h2>
         <p className="text-xs sm:text-sm text-[#68706D] font-light">
-          Choose preset durations or enter custom days, personalize your style, and let Gemini AI generate your schedule.
+          Select your destination, customize included tours & duration, and let Gemini AI generate your schedule.
         </p>
       </div>
 
@@ -167,7 +201,7 @@ export default function ItineraryGenerator({ initialDestination = null }) {
         {/* Left Column: Studio Controls Panel (5 cols) */}
         <div className="no-print lg:col-span-5 bg-white p-6 sm:p-7 rounded-3xl border border-[#171A19]/10 shadow-lg space-y-6 sticky lg:top-24">
           
-          {/* Destination Preview & Selector */}
+          {/* 1. Destination Selector with Preview */}
           <div>
             <label className="text-[10px] font-extrabold text-[#2F6F68] uppercase tracking-wider block mb-2">
               Select Destination
@@ -199,7 +233,59 @@ export default function ItineraryGenerator({ initialDestination = null }) {
             </select>
           </div>
 
-          {/* Duration Selector with Presets & Manual / Custom Option */}
+          {/* 2. Included Tours & Attractions in Destination (NEW!) */}
+          <div>
+            <div className="flex items-center justify-between mb-2">
+              <label className="text-[10px] font-extrabold text-[#2F6F68] uppercase tracking-wider flex items-center space-x-1">
+                <Landmark className="w-3.5 h-3.5 text-[#2F6F68]" />
+                <span>Included Tours in {activeDestination.name}</span>
+              </label>
+              <button
+                type="button"
+                onClick={selectAllTours}
+                className="text-[10px] font-bold text-[#2F6F68] hover:underline"
+              >
+                Select All
+              </button>
+            </div>
+
+            <div className="space-y-2 max-h-56 overflow-y-auto no-scrollbar pr-1">
+              {activeDestination.places?.map((tour) => {
+                const isChecked = selectedTourIds.includes(tour.id);
+                return (
+                  <div
+                    key={tour.id}
+                    onClick={() => toggleTour(tour.id)}
+                    className={`p-2.5 rounded-2xl border transition-all flex items-center justify-between cursor-pointer ${
+                      isChecked
+                        ? 'bg-[#2F6F68]/08 border-[#2F6F68] text-[#171A19]'
+                        : 'bg-[#F7F5F0] border-transparent text-[#68706D] opacity-60 hover:opacity-100'
+                    }`}
+                  >
+                    <div className="flex items-center space-x-3">
+                      <img
+                        src={tour.image}
+                        alt={tour.name}
+                        className="w-10 h-10 rounded-xl object-cover shrink-0"
+                      />
+                      <div>
+                        <span className="text-xs font-bold block leading-tight">{tour.name}</span>
+                        <span className="text-[10px] text-[#68706D] block">{tour.category} · {tour.duration}</span>
+                      </div>
+                    </div>
+
+                    <div className={`w-5 h-5 rounded-full flex items-center justify-center shrink-0 ${
+                      isChecked ? 'bg-[#2F6F68] text-white' : 'bg-gray-200 text-transparent'
+                    }`}>
+                      <Check className="w-3 h-3" />
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* 3. Duration Selector with Presets & Manual / Custom Option */}
           <div>
             <div className="flex items-center justify-between mb-2">
               <label className="text-[10px] font-extrabold text-[#2F6F68] uppercase tracking-wider">
@@ -215,7 +301,6 @@ export default function ItineraryGenerator({ initialDestination = null }) {
               </button>
             </div>
             
-            {/* Preset Pill Buttons */}
             {!isCustomDays ? (
               <div className="grid grid-cols-6 gap-1.5">
                 {presetDurations.map((num) => (
@@ -234,7 +319,6 @@ export default function ItineraryGenerator({ initialDestination = null }) {
                 ))}
               </div>
             ) : (
-              /* Manual / Custom Stepper & Input */
               <div className="bg-[#F7F5F0] p-3 rounded-2xl border border-[#171A19]/08 flex items-center justify-between gap-3">
                 <button
                   type="button"
@@ -270,7 +354,7 @@ export default function ItineraryGenerator({ initialDestination = null }) {
             )}
           </div>
 
-          {/* Travel Style Selector */}
+          {/* 4. Travel Style Selector */}
           <div>
             <label className="text-[10px] font-extrabold text-[#2F6F68] uppercase tracking-wider block mb-2">
               Travel Vibe & Style
@@ -294,7 +378,7 @@ export default function ItineraryGenerator({ initialDestination = null }) {
             </div>
           </div>
 
-          {/* Interests Filter Chips */}
+          {/* 5. Interests Filter Chips */}
           <div>
             <label className="text-[10px] font-extrabold text-[#2F6F68] uppercase tracking-wider block mb-2">
               Specific Interests
@@ -321,7 +405,7 @@ export default function ItineraryGenerator({ initialDestination = null }) {
             </div>
           </div>
 
-          {/* Generate Button */}
+          {/* 6. Generate Button */}
           <button
             type="button"
             onClick={handleGenerate}
