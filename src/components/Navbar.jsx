@@ -11,9 +11,9 @@ import {
   User, 
   Landmark, 
   Calendar, 
-  Luggage,
-  Heart,
-  ChevronRight
+  Luggage, 
+  ChevronRight,
+  Heart
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 
@@ -40,7 +40,7 @@ export default function Navbar({ onOpenAIChat, onOpenLocationModal, onOpenAuthMo
     }
   }, [mobileMenuOpen]);
 
-  // Handle Escape key to close mobile menu
+  // Handle Escape key
   useEffect(() => {
     const handleKeyDown = (e) => {
       if (e.key === 'Escape' && mobileMenuOpen) {
@@ -55,128 +55,165 @@ export default function Navbar({ onOpenAIChat, onOpenLocationModal, onOpenAuthMo
 
   const navLinks = [
     { path: '/destinations', label: 'Destinations', icon: null },
-    { path: '/places', label: 'Tourist Places', icon: <Landmark className="w-3.5 h-3.5 text-[#24655D]" /> },
-    { path: '/itinerary', label: 'AI Planner', icon: <Calendar className="w-3.5 h-3.5 text-[#24655D]" /> },
-    { path: '/weather', label: 'Weather', icon: <CloudSun className="w-3.5 h-3.5 text-[#24655D]" /> },
-    { path: '/packing', label: 'Packing', icon: <Luggage className="w-3.5 h-3.5 text-[#24655D]" /> }
+    { 
+      path: '/places', 
+      label: 'Tourist Places', 
+      icon: <Landmark className="w-3.5 h-3.5 text-blue-500" /> 
+    },
+    { 
+      path: '/itinerary', 
+      label: 'AI Planner', 
+      icon: <Calendar className="w-3.5 h-3.5 text-blue-500" /> 
+    },
+    { 
+      path: '/weather', 
+      label: 'Weather', 
+      icon: <CloudSun className="w-3.5 h-3.5 text-amber-500" /> 
+    },
+    { 
+      path: '/packing', 
+      label: 'Packing', 
+      icon: <Luggage className="w-3.5 h-3.5 text-rose-500" /> 
+    }
   ];
 
   return (
-    <header className={`fixed top-0 left-0 right-0 z-40 transition-all duration-500 ${
+    <header className={`fixed top-0 left-0 right-0 z-40 transition-all duration-300 ${
       isScrolled ? 'glass-nav-light py-2.5 shadow-sm' : 'bg-transparent py-4'
     }`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between">
         
-        {/* Brand Logo */}
+        {/* Brand Logo with HD Gradient Icon */}
         <Link 
           to="/" 
-          className="flex items-center space-x-3 px-4 py-2 rounded-full bg-white/90 hover:bg-white backdrop-blur-xl border border-[#101413]/08 shadow-sm group focus:outline-none focus:ring-2 focus:ring-[#24655D] min-h-[44px] transition-all"
+          className="flex items-center space-x-3 px-3.5 py-1.5 rounded-full bg-white/95 hover:bg-white backdrop-blur-xl border border-slate-200/80 shadow-sm group focus:outline-none focus:ring-2 focus:ring-blue-500 min-h-[44px] transition-all"
         >
-          <div className="w-8 h-8 rounded-full bg-[#1B4944] text-white flex items-center justify-center shadow-md shadow-[#1B4944]/25 group-hover:scale-105 transition-transform">
-            <Compass className="w-4 h-4 stroke-[2.2]" />
-          </div>
+          <motion.div 
+            whileHover={{ rotate: 90 }}
+            transition={{ type: 'spring', stiffness: 200, damping: 10 }}
+            className="w-8 h-8 rounded-full bg-gradient-to-tr from-blue-600 via-indigo-600 to-rose-500 text-white flex items-center justify-center shadow-md shadow-blue-500/25"
+          >
+            <Compass className="w-4 h-4 stroke-[2.4]" />
+          </motion.div>
           <div className="flex flex-col">
-            <span className="font-editorial text-xl font-bold tracking-tight text-[#101413] leading-none">
+            <span className="font-editorial text-xl font-bold tracking-tight text-slate-900 leading-none">
               Aetheria
             </span>
-            <span className="text-[9px] uppercase tracking-[0.2em] font-semibold text-[#8A9592] mt-0.5">
-              Luxury Travel
+            <span className="text-[9px] uppercase tracking-[0.2em] font-bold text-blue-600 mt-0.5">
+              TRAVEL LUXE
             </span>
           </div>
         </Link>
 
-        {/* Desktop Navigation Links */}
-        <nav className="hidden lg:flex items-center space-x-1 bg-white/90 backdrop-blur-xl px-4 py-1.5 rounded-full border border-[#101413]/08 shadow-sm">
-          {navLinks.map((link) => (
-            <Link
-              key={link.path}
-              to={link.path}
-              className={`px-4 py-2 rounded-full text-xs font-semibold tracking-wide transition-all min-h-[38px] flex items-center space-x-1.5 ${
-                isActive(link.path)
-                  ? 'bg-[#1B4944] text-white shadow-sm'
-                  : 'text-[#586260] hover:text-[#101413] hover:bg-black/5'
-              }`}
-            >
-              {link.icon}
-              <span>{link.label}</span>
-            </Link>
-          ))}
+        {/* Desktop Navigation Links with Spring Micro-Interactions */}
+        <nav className="hidden lg:flex items-center space-x-1 bg-white/95 backdrop-blur-xl px-3.5 py-1.5 rounded-full border border-slate-200/80 shadow-sm">
+          {navLinks.map((link) => {
+            const active = isActive(link.path);
+            return (
+              <Link
+                key={link.path}
+                to={link.path}
+                className={`relative px-4 py-2 rounded-full text-xs font-bold tracking-wide transition-all min-h-[38px] flex items-center space-x-1.5 ${
+                  active
+                    ? 'text-white'
+                    : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100/70'
+                }`}
+              >
+                {active && (
+                  <motion.div
+                    layoutId="activeNavTab"
+                    className="absolute inset-0 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-full shadow-md shadow-blue-500/30 -z-10"
+                    transition={{ type: 'spring', stiffness: 380, damping: 30 }}
+                  />
+                )}
+                {link.icon && <span className={active ? 'text-white' : ''}>{link.icon}</span>}
+                <span>{link.label}</span>
+              </Link>
+            );
+          })}
 
-          {/* AI Assistant Quick Pill */}
-          <button
+          {/* Ask AI Pill Button */}
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
             onClick={onOpenAIChat}
-            className="px-4 py-2 rounded-full text-xs font-bold text-[#1B4944] hover:bg-[#1B4944]/10 transition-all min-h-[38px] flex items-center space-x-1.5 cursor-pointer ml-1"
+            className="px-4 py-2 rounded-full text-xs font-bold bg-gradient-to-r from-blue-50 to-indigo-50 hover:from-blue-100 hover:to-indigo-100 text-blue-700 transition-all min-h-[38px] flex items-center space-x-1.5 border border-blue-200/60 ml-1 cursor-pointer"
           >
-            <Sparkles className="w-3.5 h-3.5 text-[#C29C61]" />
+            <Sparkles className="w-3.5 h-3.5 text-rose-500 animate-pulse" />
             <span>Ask AI</span>
-          </button>
+          </motion.button>
         </nav>
 
-        {/* Right Actions: Location, Auth Profile, Mobile Menu */}
+        {/* Right Actions */}
         <div className="flex items-center space-x-2 sm:space-x-3">
           
           {/* Location Selector Pill */}
-          <button
+          <motion.button
+            whileHover={{ scale: 1.03 }}
+            whileTap={{ scale: 0.96 }}
             onClick={onOpenLocationModal}
-            className="hidden sm:flex items-center space-x-2 px-3.5 py-2 rounded-full bg-white/90 hover:bg-white backdrop-blur-xl border border-[#101413]/08 shadow-sm text-xs font-semibold text-[#101413] transition-all min-h-[44px]"
-            title="Select or detect your location"
+            className="hidden sm:flex items-center space-x-2 px-3.5 py-2 rounded-full bg-white/95 hover:bg-white backdrop-blur-xl border border-slate-200/80 shadow-sm text-xs font-bold text-slate-800 transition-all min-h-[44px]"
+            title="Select or detect location"
           >
-            <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-            <MapPin className="w-3.5 h-3.5 text-[#24655D]" />
+            <div className="w-2 h-2 rounded-full bg-blue-500 animate-pulse" />
+            <MapPin className="w-3.5 h-3.5 text-blue-600" />
             <span className="max-w-[110px] truncate">
-              {currentLocation ? currentLocation.name : 'Detect Location'}
+              {currentLocation ? currentLocation.name : 'Location'}
             </span>
-          </button>
+          </motion.button>
 
-          {/* Auth & Profile Avatar */}
-          <button
+          {/* Auth & Favorites Pill */}
+          <motion.button
+            whileHover={{ scale: 1.03 }}
+            whileTap={{ scale: 0.96 }}
             onClick={onOpenAuthModal}
-            className="flex items-center space-x-2 px-3.5 py-2 rounded-full bg-white/90 hover:bg-white backdrop-blur-xl border border-[#101413]/08 shadow-sm transition-all min-h-[44px]"
-            title={user ? `${user.displayName || 'Profile'} (${savedFavorites.length} saved)` : 'Sign In / Register'}
+            className="flex items-center space-x-2 px-3.5 py-2 rounded-full bg-white/95 hover:bg-white backdrop-blur-xl border border-slate-200/80 shadow-sm transition-all min-h-[44px]"
+            title={user ? `${user.displayName || 'Profile'} (${savedFavorites.length} saved)` : 'Sign In'}
           >
             {user?.photoURL ? (
               <img
                 src={user.photoURL}
                 alt="Profile"
-                className="w-6 h-6 rounded-full object-cover border border-[#1B4944]"
+                className="w-6 h-6 rounded-full object-cover border border-blue-600"
               />
             ) : (
-              <div className="w-6 h-6 rounded-full bg-[#1B4944]/10 text-[#1B4944] flex items-center justify-center font-bold text-[11px]">
+              <div className="w-6 h-6 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center font-bold text-[11px]">
                 {user ? (user.displayName?.[0] || 'U').toUpperCase() : <User className="w-3.5 h-3.5" />}
               </div>
             )}
-            <span className="text-xs font-semibold text-[#101413] hidden md:inline">
+            <span className="text-xs font-bold text-slate-800 hidden md:inline">
               {user ? (user.displayName?.split(' ')[0] || 'Account') : 'Sign In'}
             </span>
             {savedFavorites?.length > 0 && (
-              <span className="w-4 h-4 rounded-full bg-rose-500 text-white font-bold text-[9px] flex items-center justify-center">
+              <span className="w-4 h-4 rounded-full bg-gradient-to-r from-rose-500 to-pink-500 text-white font-extrabold text-[9px] flex items-center justify-center shadow-sm">
                 {savedFavorites.length}
               </span>
             )}
-          </button>
+          </motion.button>
 
-          {/* Mobile Menu Toggle Button */}
-          <button
+          {/* Mobile Hamburger Toggle */}
+          <motion.button
+            whileTap={{ scale: 0.9 }}
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="lg:hidden p-2.5 rounded-full bg-white/90 hover:bg-white backdrop-blur-xl border border-[#101413]/08 shadow-sm text-[#101413] min-h-[44px] min-w-[44px] flex items-center justify-center transition-all"
+            className="lg:hidden p-2.5 rounded-full bg-white/95 hover:bg-white backdrop-blur-xl border border-slate-200/80 shadow-sm text-slate-800 min-h-[44px] min-w-[44px] flex items-center justify-center"
             aria-label="Toggle navigation menu"
           >
             {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-          </button>
+          </motion.button>
 
         </div>
 
       </div>
 
-      {/* Mobile Drawer Navigation Menu */}
+      {/* Mobile Animated Drawer Menu */}
       <AnimatePresence>
         {mobileMenuOpen && (
           <motion.div
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            transition={{ duration: 0.25, ease: 'easeOut' }}
-            className="lg:hidden fixed inset-x-4 top-20 bg-white/95 backdrop-blur-2xl rounded-3xl border border-[#101413]/10 shadow-2xl p-6 space-y-4 z-50 overflow-hidden"
+            initial={{ opacity: 0, y: -20, scale: 0.98 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: -20, scale: 0.98 }}
+            transition={{ type: 'spring', stiffness: 300, damping: 25 }}
+            className="lg:hidden fixed inset-x-4 top-20 bg-white/98 backdrop-blur-2xl rounded-3xl border border-slate-200/90 shadow-2xl p-6 space-y-4 z-50 overflow-hidden"
           >
             <div className="space-y-1.5">
               {navLinks.map((link) => (
@@ -184,13 +221,13 @@ export default function Navbar({ onOpenAIChat, onOpenLocationModal, onOpenAuthMo
                   key={link.path}
                   to={link.path}
                   onClick={() => setMobileMenuOpen(false)}
-                  className={`flex items-center justify-between px-4 py-3 rounded-2xl text-sm font-semibold transition-all ${
+                  className={`flex items-center justify-between px-4 py-3 rounded-2xl text-sm font-bold transition-all ${
                     isActive(link.path)
-                      ? 'bg-[#1B4944] text-white shadow-sm'
-                      : 'text-[#586260] hover:text-[#101413] hover:bg-black/5'
+                      ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-md'
+                      : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
                   }`}
                 >
-                  <div className="flex items-center space-x-2.5">
+                  <div className="flex items-center space-x-3">
                     {link.icon}
                     <span>{link.label}</span>
                   </div>
@@ -199,20 +236,20 @@ export default function Navbar({ onOpenAIChat, onOpenLocationModal, onOpenAuthMo
               ))}
             </div>
 
-            {/* Mobile Actions: Location & AI */}
-            <div className="pt-4 border-t border-[#101413]/08 space-y-2.5">
+            {/* Mobile Actions */}
+            <div className="pt-4 border-t border-slate-100 space-y-2.5">
               <button
                 onClick={() => {
                   setMobileMenuOpen(false);
                   onOpenLocationModal();
                 }}
-                className="w-full flex items-center justify-between px-4 py-3 rounded-2xl bg-[#F9F8F5] text-xs font-semibold text-[#101413]"
+                className="w-full flex items-center justify-between px-4 py-3 rounded-2xl bg-slate-50 text-xs font-bold text-slate-800 border border-slate-200/60"
               >
                 <div className="flex items-center space-x-2">
-                  <MapPin className="w-4 h-4 text-[#24655D]" />
+                  <MapPin className="w-4 h-4 text-blue-600" />
                   <span>{currentLocation ? currentLocation.name : 'Choose Location'}</span>
                 </div>
-                <span className="text-[10px] uppercase font-bold text-[#24655D]">Change</span>
+                <span className="text-[10px] uppercase font-bold text-blue-600">Change</span>
               </button>
 
               <button
@@ -220,9 +257,9 @@ export default function Navbar({ onOpenAIChat, onOpenLocationModal, onOpenAuthMo
                   setMobileMenuOpen(false);
                   onOpenAIChat();
                 }}
-                className="w-full flex items-center justify-center space-x-2 py-3.5 rounded-2xl bg-[#101413] text-white text-xs font-bold shadow-md"
+                className="w-full flex items-center justify-center space-x-2 py-3.5 rounded-2xl bg-gradient-to-r from-blue-600 via-indigo-600 to-rose-500 text-white text-xs font-bold shadow-lg shadow-blue-500/20"
               >
-                <Sparkles className="w-4 h-4 text-[#C29C61]" />
+                <Sparkles className="w-4 h-4 text-amber-300" />
                 <span>✨ Launch AI Travel Assistant</span>
               </button>
             </div>

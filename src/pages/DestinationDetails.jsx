@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { motion } from 'framer-motion';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { DESTINATIONS } from '../data/destinations';
 import WeatherCard from '../components/WeatherCard';
@@ -22,10 +23,10 @@ export default function DestinationDetails({ onOpenAIChatWithDestination }) {
     return (
       <div className="pt-32 pb-24 text-center max-w-md mx-auto px-4">
         <h2 className="font-editorial text-3xl font-bold mb-4">Destination Not Found</h2>
-        <p className="text-xs text-[#586260] mb-6">The requested travel guide could not be located.</p>
+        <p className="text-xs text-slate-500 mb-6">The requested travel guide could not be located.</p>
         <Link
           to="/destinations"
-          className="px-6 py-3 rounded-full bg-[#1B4944] text-white font-bold text-xs inline-flex items-center space-x-2 shadow-md"
+          className="px-6 py-3 rounded-full bg-blue-600 text-white font-bold text-xs inline-flex items-center space-x-2 shadow-md"
         >
           <ArrowLeft className="w-4 h-4" />
           <span>Back to Destinations</span>
@@ -37,41 +38,45 @@ export default function DestinationDetails({ onOpenAIChatWithDestination }) {
   return (
     <div className="pt-24 pb-24">
       
-      {/* 1. Cinematic Hero Banner */}
-      <div className="relative h-[65vh] min-h-[460px] w-full overflow-hidden bg-[#101413]">
+      {/* 1. Cinematic Hero Banner with Midnight Sapphire Overlay */}
+      <div className="relative h-[65vh] min-h-[460px] w-full overflow-hidden bg-[#0F172A]">
         <img
           src={destination.image}
           alt={destination.name}
           className="w-full h-full object-cover"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-[#101413] via-[#101413]/50 to-black/30" />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#0F172A] via-[#0F172A]/50 to-black/30" />
 
         {/* Back Link & Heart Action */}
         <div className="absolute top-8 left-4 sm:left-8 right-4 sm:right-8 z-20 flex items-center justify-between">
-          <button
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
             onClick={() => navigate(-1)}
-            className="inline-flex items-center space-x-2 px-4 py-2 rounded-full bg-white/95 hover:bg-white text-[#101413] font-bold text-xs backdrop-blur-xl shadow-md transition-all active:scale-95 min-h-[40px]"
+            className="inline-flex items-center space-x-2 px-4 py-2 rounded-full bg-white/95 hover:bg-white text-slate-900 font-bold text-xs backdrop-blur-xl shadow-md transition-all min-h-[40px] cursor-pointer"
           >
             <ArrowLeft className="w-4 h-4" />
             <span>Back</span>
-          </button>
+          </motion.button>
 
-          <button
+          <motion.button
+            whileHover={{ scale: 1.15 }}
+            whileTap={{ scale: 0.85 }}
             onClick={() => toggleFavorite(destination.id)}
-            className="p-3 rounded-full bg-black/40 hover:bg-black/60 backdrop-blur-xl border border-white/20 text-white transition-all active:scale-95 shadow-md min-h-[44px] min-w-[44px] flex items-center justify-center"
+            className="p-3 rounded-full bg-black/40 hover:bg-black/60 backdrop-blur-xl border border-white/20 text-white transition-all shadow-md min-h-[44px] min-w-[44px] flex items-center justify-center cursor-pointer"
             title={isSaved ? 'Remove from favorites' : 'Save to favorites'}
           >
-            <Heart className={`w-5 h-5 ${isSaved ? 'fill-rose-500 text-rose-500' : 'text-white'}`} />
-          </button>
+            <Heart className={`w-5 h-5 ${isSaved ? 'fill-rose-500 text-rose-500 drop-shadow-[0_0_8px_rgba(244,63,94,0.6)]' : 'text-white'}`} />
+          </motion.button>
         </div>
 
         {/* Hero Title & Badges */}
         <div className="absolute bottom-12 left-4 sm:left-8 lg:left-16 right-4 sm:right-8 max-w-4xl text-white">
           <div className="flex items-center space-x-2 mb-3">
-            <span className="px-3.5 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider bg-white/95 text-[#101413] shadow-sm">
+            <span className="px-3.5 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider bg-white/95 text-slate-900 shadow-sm">
               {destination.region}
             </span>
-            <span className="px-3.5 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider bg-[#1B4944] text-[#E0C89E] shadow-sm">
+            <span className="px-3.5 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-sm">
               {destination.country}
             </span>
           </div>
@@ -90,45 +95,45 @@ export default function DestinationDetails({ onOpenAIChatWithDestination }) {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-8 relative z-20 space-y-16">
         
         {/* Quick Facts Grid */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 bg-white p-6 sm:p-8 rounded-3xl border border-[#101413]/08 shadow-luxury">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 bg-white p-6 sm:p-8 rounded-3xl border border-slate-200/80 shadow-luxury">
           
           <div className="flex items-center space-x-3.5">
-            <div className="w-11 h-11 rounded-2xl bg-[#1B4944]/10 text-[#1B4944] flex items-center justify-center shrink-0 shadow-sm">
+            <div className="w-11 h-11 rounded-2xl bg-blue-50 text-blue-600 flex items-center justify-center shrink-0 shadow-sm">
               <Calendar className="w-5 h-5" />
             </div>
             <div>
-              <span className="text-[10px] font-bold uppercase tracking-wider text-[#8A9592] block">Best Season</span>
-              <span className="text-xs sm:text-sm font-bold text-[#101413]">{destination.bestTime}</span>
+              <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 block">Best Season</span>
+              <span className="text-xs sm:text-sm font-bold text-slate-900">{destination.bestTime}</span>
             </div>
           </div>
 
           <div className="flex items-center space-x-3.5">
-            <div className="w-11 h-11 rounded-2xl bg-[#1B4944]/10 text-[#1B4944] flex items-center justify-center shrink-0 shadow-sm">
+            <div className="w-11 h-11 rounded-2xl bg-amber-50 text-amber-600 flex items-center justify-center shrink-0 shadow-sm">
               <DollarSign className="w-5 h-5" />
             </div>
             <div>
-              <span className="text-[10px] font-bold uppercase tracking-wider text-[#8A9592] block">Currency</span>
-              <span className="text-xs sm:text-sm font-bold text-[#101413]">{destination.currency}</span>
+              <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 block">Currency</span>
+              <span className="text-xs sm:text-sm font-bold text-slate-900">{destination.currency}</span>
             </div>
           </div>
 
           <div className="flex items-center space-x-3.5">
-            <div className="w-11 h-11 rounded-2xl bg-[#1B4944]/10 text-[#1B4944] flex items-center justify-center shrink-0 shadow-sm">
+            <div className="w-11 h-11 rounded-2xl bg-indigo-50 text-indigo-600 flex items-center justify-center shrink-0 shadow-sm">
               <Globe className="w-5 h-5" />
             </div>
             <div>
-              <span className="text-[10px] font-bold uppercase tracking-wider text-[#8A9592] block">Language</span>
-              <span className="text-xs sm:text-sm font-bold text-[#101413]">{destination.language}</span>
+              <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 block">Language</span>
+              <span className="text-xs sm:text-sm font-bold text-slate-900">{destination.language}</span>
             </div>
           </div>
 
           <div className="flex items-center space-x-3.5">
-            <div className="w-11 h-11 rounded-2xl bg-[#1B4944]/10 text-[#1B4944] flex items-center justify-center shrink-0 shadow-sm">
+            <div className="w-11 h-11 rounded-2xl bg-rose-50 text-rose-600 flex items-center justify-center shrink-0 shadow-sm">
               <MapPin className="w-5 h-5" />
             </div>
             <div>
-              <span className="text-[10px] font-bold uppercase tracking-wider text-[#8A9592] block">Coordinates</span>
-              <span className="text-xs sm:text-sm font-bold text-[#101413]">{destination.latitude.toFixed(2)}°, {destination.longitude.toFixed(2)}°</span>
+              <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 block">Coordinates</span>
+              <span className="text-xs sm:text-sm font-bold text-slate-900">{destination.latitude.toFixed(2)}°, {destination.longitude.toFixed(2)}°</span>
             </div>
           </div>
 
@@ -136,7 +141,7 @@ export default function DestinationDetails({ onOpenAIChatWithDestination }) {
 
         {/* Live Weather Forecast */}
         <div>
-          <h3 className="font-editorial text-3xl font-bold text-[#101413] mb-5">
+          <h3 className="font-editorial text-3xl font-bold text-slate-900 mb-5">
             Live Climate in {destination.name}
           </h3>
           <WeatherCard
@@ -150,14 +155,14 @@ export default function DestinationDetails({ onOpenAIChatWithDestination }) {
         <div>
           <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-8 gap-2">
             <div>
-              <span className="text-xs font-bold uppercase tracking-wider text-[#1B4944] block mb-1">
+              <span className="text-xs font-bold uppercase tracking-wider text-blue-600 block mb-1">
                 CURATED SIGHTS
               </span>
-              <h3 className="font-editorial text-3xl font-bold text-[#101413]">
+              <h3 className="font-editorial text-3xl font-bold text-slate-900">
                 Famous Places in {destination.name}
               </h3>
             </div>
-            <p className="text-xs text-[#586260]">
+            <p className="text-xs text-slate-500">
               Click any place to explore detailed visiting tips & AI advice.
             </p>
           </div>
@@ -173,10 +178,10 @@ export default function DestinationDetails({ onOpenAIChatWithDestination }) {
           </div>
         </div>
 
-        {/* Ask AI Assistant CTA */}
-        <div className="p-8 sm:p-10 rounded-3xl bg-[#101413] text-white flex flex-col md:flex-row items-center justify-between gap-6 shadow-xl border border-white/10">
+        {/* Ask AI Assistant CTA with Radiant Gradient */}
+        <div className="p-8 sm:p-10 rounded-3xl bg-[#0F172A] text-white flex flex-col md:flex-row items-center justify-between gap-6 shadow-xl border border-slate-800">
           <div>
-            <span className="text-[10px] uppercase tracking-widest font-extrabold text-[#E0C89E] block mb-1">
+            <span className="text-[10px] uppercase tracking-widest font-extrabold text-blue-400 block mb-1">
               DESTINATION CONCIERGE
             </span>
             <h3 className="font-editorial text-3xl font-bold text-white mb-2">
@@ -187,13 +192,15 @@ export default function DestinationDetails({ onOpenAIChatWithDestination }) {
             </p>
           </div>
 
-          <button
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
             onClick={() => onOpenAIChatWithDestination(destination)}
-            className="px-8 py-4 rounded-full bg-[#1B4944] hover:bg-[#24655D] text-white font-bold text-xs sm:text-sm shadow-xl shadow-[#1B4944]/30 transition-transform hover:scale-105 active:scale-95 flex items-center space-x-2 shrink-0 min-h-[48px]"
+            className="px-8 py-4 rounded-full bg-gradient-to-r from-blue-600 via-indigo-600 to-rose-500 text-white font-extrabold text-xs sm:text-sm shadow-xl shadow-blue-500/30 transition-transform flex items-center space-x-2 shrink-0 min-h-[48px] cursor-pointer"
           >
-            <Sparkles className="w-4 h-4 text-[#E0C89E]" />
+            <Sparkles className="w-4 h-4 text-amber-300" />
             <span>✨ Ask AI about {destination.name}</span>
-          </button>
+          </motion.button>
         </div>
 
         {/* AI Itinerary Generator Section */}

@@ -30,14 +30,14 @@ export default function Destinations() {
       
       {/* Page Header */}
       <div className="text-center max-w-3xl mx-auto mb-14">
-        <span className="text-xs font-extrabold uppercase tracking-widest text-[#1B4944] block mb-2">
+        <span className="text-xs font-extrabold uppercase tracking-widest text-blue-600 block mb-2">
           GLOBAL EXPLORER
         </span>
-        <h1 className="font-editorial text-4xl sm:text-6xl font-bold text-[#101413] tracking-tight mb-4">
+        <h1 className="font-editorial text-4xl sm:text-6xl font-bold text-slate-900 tracking-tight mb-4">
           All Destinations
         </h1>
-        <p className="text-sm sm:text-base text-[#586260] font-light leading-relaxed">
-          Browse world-class destinations with cinematic imagery, weather data, and cultural highlights.
+        <p className="text-sm sm:text-base text-slate-600 font-light leading-relaxed">
+          Browse world-class destinations with cinematic imagery, satellite climate data, and cultural highlights.
         </p>
       </div>
 

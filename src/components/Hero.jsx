@@ -67,7 +67,6 @@ export default function Hero({ onOpenAIChat }) {
   const videoRefs = useRef([]);
   const activeItem = TRAVEL_MEDIA[currentMediaIndex];
 
-  // Auto-cycle through media smoothly every 4 seconds
   useEffect(() => {
     const timer = setInterval(() => {
       setCurrentMediaIndex((prev) => (prev + 1) % TRAVEL_MEDIA.length);
@@ -76,22 +75,19 @@ export default function Hero({ onOpenAIChat }) {
     return () => clearInterval(timer);
   }, []);
 
-  // Play video smoothly when it becomes active
   useEffect(() => {
     const activeVideo = videoRefs.current[currentMediaIndex];
     if (activeVideo) {
       activeVideo.currentTime = 0;
       const playPromise = activeVideo.play();
       if (playPromise !== undefined) {
-        playPromise.catch(() => {
-          // Handled autoplay restrictions gracefully
-        });
+        playPromise.catch(() => {});
       }
     }
   }, [currentMediaIndex]);
 
   return (
-    <section className="relative min-h-[92vh] sm:min-h-screen flex items-center justify-center overflow-hidden bg-[#101413]">
+    <section className="relative min-h-[92vh] sm:min-h-screen flex items-center justify-center overflow-hidden bg-[#0F172A]">
       
       {/* 1. Cinematic Background Auto-Crossfade Layer */}
       <div className="absolute inset-0 w-full h-full">
@@ -104,7 +100,6 @@ export default function Hero({ onOpenAIChat }) {
                 isActive ? 'opacity-100 z-10' : 'opacity-0 z-0 pointer-events-none'
               }`}
             >
-              {/* Fallback & Loading High-Res Image */}
               <img
                 src={item.image}
                 alt={item.name}
@@ -112,7 +107,6 @@ export default function Hero({ onOpenAIChat }) {
                 loading="eager"
               />
 
-              {/* Seamless Loop Video */}
               {item.video && (
                 <video
                   ref={(el) => (videoRefs.current[index] = el)}
@@ -130,86 +124,95 @@ export default function Hero({ onOpenAIChat }) {
         })}
       </div>
 
-      {/* 2. Deep Gradient Vignette for Maximum Text Legibility */}
-      <div className="absolute inset-0 bg-gradient-to-t from-[#101413] via-[#101413]/55 to-[#101413]/40 z-20" />
+      {/* 2. Deep Midnight Sapphire Gradient Vignette */}
+      <div className="absolute inset-0 bg-gradient-to-t from-[#0F172A] via-[#0F172A]/60 to-[#0F172A]/40 z-20" />
       <div className="absolute inset-0 bg-radial-gradient from-transparent via-black/20 to-black/60 z-20 pointer-events-none" />
 
       {/* 3. Hero Content */}
-      <div className="relative z-30 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center pt-24 pb-16 flex flex-col items-center">
+      <div className="relative z-30 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center pt-28 pb-16 flex flex-col items-center">
         
-        {/* Glowing Badge */}
+        {/* Radiant Badge */}
         <motion.div
           initial={{ opacity: 0, y: 15 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, ease: 'easeOut' }}
-          className="inline-flex items-center space-x-2 px-4 py-1.5 rounded-full bg-white/15 hover:bg-white/20 backdrop-blur-xl border border-white/20 text-white text-xs font-semibold tracking-wider uppercase mb-6 shadow-lg"
+          transition={{ duration: 0.5, ease: 'easeOut' }}
+          className="inline-flex items-center space-x-2 px-4 py-1.5 rounded-full bg-white/15 hover:bg-white/25 backdrop-blur-xl border border-white/25 text-white text-xs font-bold tracking-wider uppercase mb-6 shadow-xl"
         >
-          <Sparkles className="w-3.5 h-3.5 text-[#C29C61] animate-pulse" />
-          <span>AI-Powered Global Travel Guide</span>
+          <div className="w-2 h-2 rounded-full bg-rose-500 animate-ping" />
+          <Sparkles className="w-3.5 h-3.5 text-amber-300" />
+          <span>AI-Powered Global Travel Platform</span>
         </motion.div>
 
-        {/* Large Editorial Headline */}
+        {/* Large Editorial Headline with Coral & Azure Gradient */}
         <motion.h1
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, delay: 0.1, ease: 'easeOut' }}
+          transition={{ duration: 0.6, delay: 0.1, ease: 'easeOut' }}
           className="font-editorial text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-bold tracking-tight text-white leading-[1.08] mb-6 drop-shadow-2xl"
         >
-          Explore Extraordinary <br />
-          <span className="italic font-normal text-[#E0C89E] font-editorial">Destinations</span> Across Earth
+          Discover Extraordinary <br />
+          <span className="italic font-normal bg-gradient-to-r from-blue-400 via-indigo-300 to-rose-400 bg-clip-text text-transparent font-editorial">
+            Destinations
+          </span> Across Earth
         </motion.h1>
 
         {/* Supporting Subtitle */}
         <motion.p
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, delay: 0.2, ease: 'easeOut' }}
+          transition={{ duration: 0.6, delay: 0.2, ease: 'easeOut' }}
           className="text-sm sm:text-base md:text-lg text-slate-200 font-light max-w-2xl mx-auto mb-10 leading-relaxed drop-shadow-md"
         >
-          Curated iconic landmarks, live local climates, custom day-by-day itineraries, and smart packing assistants powered by Google Gemini AI.
+          Curated iconic landmarks, live satellite climates, custom day-by-day itineraries, and smart packing assistants powered by Google Gemini AI.
         </motion.p>
 
-        {/* Primary Action Buttons */}
+        {/* Primary Action Buttons with Electric Azure & Radiant Coral */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, delay: 0.3, ease: 'easeOut' }}
+          transition={{ duration: 0.6, delay: 0.3, ease: 'easeOut' }}
           className="flex flex-col sm:flex-row items-center justify-center gap-4 w-full max-w-md sm:max-w-none"
         >
-          <Link
-            to="/destinations"
-            className="w-full sm:w-auto px-8 py-4 rounded-full bg-[#1B4944] hover:bg-[#24655D] text-white font-bold text-xs sm:text-sm tracking-wide shadow-xl shadow-[#1B4944]/40 hover:scale-105 active:scale-95 transition-all flex items-center justify-center space-x-2.5 min-h-[48px]"
-          >
-            <Compass className="w-4 h-4 text-[#C29C61]" />
-            <span>Explore Destinations</span>
-            <ArrowRight className="w-4 h-4" />
-          </Link>
+          <motion.div whileHover={{ scale: 1.05, y: -2 }} whileTap={{ scale: 0.95 }} className="w-full sm:w-auto">
+            <Link
+              to="/destinations"
+              className="w-full sm:w-auto px-8 py-4 rounded-full bg-gradient-to-r from-blue-600 via-blue-500 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-extrabold text-xs sm:text-sm tracking-wide shadow-xl shadow-blue-500/35 transition-all flex items-center justify-center space-x-2.5 min-h-[48px]"
+            >
+              <Compass className="w-4 h-4 text-white" />
+              <span>Explore Destinations</span>
+              <ArrowRight className="w-4 h-4" />
+            </Link>
+          </motion.div>
 
-          <Link
-            to="/itinerary"
-            className="w-full sm:w-auto px-8 py-4 rounded-full bg-white/15 hover:bg-white/25 text-white backdrop-blur-xl border border-white/25 font-bold text-xs sm:text-sm tracking-wide hover:scale-105 active:scale-95 transition-all flex items-center justify-center space-x-2 min-h-[48px]"
-          >
-            <Calendar className="w-4 h-4 text-[#C29C61]" />
-            <span>Plan Itinerary</span>
-          </Link>
+          <motion.div whileHover={{ scale: 1.05, y: -2 }} whileTap={{ scale: 0.95 }} className="w-full sm:w-auto">
+            <Link
+              to="/itinerary"
+              className="w-full sm:w-auto px-8 py-4 rounded-full bg-white/15 hover:bg-white/25 text-white backdrop-blur-xl border border-white/25 font-extrabold text-xs sm:text-sm tracking-wide transition-all flex items-center justify-center space-x-2 min-h-[48px]"
+            >
+              <Calendar className="w-4 h-4 text-rose-400" />
+              <span>Plan AI Itinerary</span>
+            </Link>
+          </motion.div>
         </motion.div>
 
         {/* Live Active Slide Location Indicator */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ duration: 1, delay: 0.5 }}
-          className="mt-14 inline-flex items-center space-x-3 px-4 py-2 rounded-full bg-black/40 backdrop-blur-xl border border-white/10 text-white text-xs"
+          transition={{ duration: 0.8, delay: 0.4 }}
+          className="mt-14 inline-flex items-center space-x-3 px-4 py-2 rounded-full bg-black/50 backdrop-blur-xl border border-white/15 text-white text-xs shadow-lg"
         >
-          <MapPin className="w-3.5 h-3.5 text-[#C29C61]" />
-          <span className="font-semibold">{activeItem.name}, {activeItem.country}</span>
+          <MapPin className="w-3.5 h-3.5 text-rose-400" />
+          <span className="font-bold">{activeItem.name}, {activeItem.country}</span>
           <div className="flex space-x-1 pl-2">
             {TRAVEL_MEDIA.map((_, i) => (
               <button
                 key={i}
                 onClick={() => setCurrentMediaIndex(i)}
                 className={`h-1.5 rounded-full transition-all duration-300 ${
-                  i === currentMediaIndex ? 'w-5 bg-[#C29C61]' : 'w-1.5 bg-white/30 hover:bg-white/60'
+                  i === currentMediaIndex 
+                    ? 'w-6 bg-gradient-to-r from-blue-400 to-rose-400' 
+                    : 'w-1.5 bg-white/30 hover:bg-white/60'
                 }`}
                 aria-label={`Slide ${i + 1}`}
               />

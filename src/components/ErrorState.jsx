@@ -1,4 +1,5 @@
 import React from 'react';
+import { motion } from 'framer-motion';
 import { AlertCircle, RefreshCw } from 'lucide-react';
 
 export default function ErrorState({ 
@@ -12,17 +13,19 @@ export default function ErrorState({
         <AlertCircle className="w-7 h-7" />
       </div>
 
-      <h4 className="font-editorial text-2xl font-bold text-[#101413] mb-2">{title}</h4>
-      <p className="text-xs text-[#586260] font-light leading-relaxed mb-6">{message}</p>
+      <h4 className="font-editorial text-2xl font-bold text-slate-900 mb-2">{title}</h4>
+      <p className="text-xs text-slate-600 font-light leading-relaxed mb-6">{message}</p>
 
       {onRetry && (
-        <button
+        <motion.button
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
           onClick={onRetry}
-          className="inline-flex items-center space-x-2 px-6 py-3 rounded-full bg-[#1B4944] hover:bg-[#24655D] text-white font-bold text-xs transition-transform active:scale-95 shadow-md min-h-[44px]"
+          className="inline-flex items-center space-x-2 px-6 py-3 rounded-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-bold text-xs shadow-md shadow-blue-500/25 min-h-[44px] cursor-pointer"
         >
           <RefreshCw className="w-4 h-4" />
           <span>Retry Action</span>
-        </button>
+        </motion.button>
       )}
     </div>
   );

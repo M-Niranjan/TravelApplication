@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
 import { useGemini } from '../hooks/useGemini';
 import ItineraryTimeline from './ItineraryTimeline';
 import LoadingState from './LoadingState';
@@ -44,7 +45,6 @@ export default function ItineraryGenerator({ initialDestination = null }) {
   const presetDurations = [1, 2, 3, 5, 7, 10];
   const interestOptions = ['History', 'Nature', 'Shopping', 'Food', 'Photography', 'Nightlife', 'Architecture'];
 
-  // Initialize selected tours when destination changes
   useEffect(() => {
     if (activeDestination?.places) {
       setSelectedTourIds(activeDestination.places.map((p) => p.id));
@@ -63,7 +63,6 @@ export default function ItineraryGenerator({ initialDestination = null }) {
     }
   };
 
-  // Helper to build default structured plan with chosen tours
   const createDefaultPlan = (dest, numDays = 3, planStyle = 'Culture', activeTourIds = []) => {
     const daysArr = [];
     const cappedDays = Math.min(Math.max(numDays, 1), 30);
@@ -129,7 +128,6 @@ export default function ItineraryGenerator({ initialDestination = null }) {
 
   const { loading, createItinerary } = useGemini();
 
-  // Keep destination synced if prop changes
   useEffect(() => {
     if (initialDestination?.id) {
       setSelectedDestId(initialDestination.id);
@@ -183,14 +181,14 @@ export default function ItineraryGenerator({ initialDestination = null }) {
       
       {/* Header */}
       <div className="no-print text-center max-w-2xl mx-auto mb-10">
-        <div className="inline-flex items-center space-x-2 px-4 py-1.5 rounded-full bg-[#1B4944]/10 text-[#1B4944] text-xs font-bold uppercase tracking-wider mb-3">
-          <Sparkles className="w-3.5 h-3.5 text-[#C29C61]" />
-          <span>AI Travel Planner Studio</span>
+        <div className="inline-flex items-center space-x-2 px-4 py-1.5 rounded-full bg-blue-50 text-blue-700 text-xs font-bold uppercase tracking-wider mb-3 border border-blue-200/60 shadow-sm">
+          <Sparkles className="w-3.5 h-3.5 text-rose-500 animate-pulse" />
+          <span>AI TRAVEL PLANNER STUDIO</span>
         </div>
-        <h2 className="font-editorial text-3xl sm:text-5xl font-bold text-[#101413] tracking-tight mb-3">
+        <h2 className="font-editorial text-3xl sm:text-5xl font-bold text-slate-900 tracking-tight mb-3">
           {initialDestination ? `${activeDestination.name} Travel Itinerary` : 'Custom Day-by-Day Itinerary'}
         </h2>
-        <p className="text-xs sm:text-sm text-[#586260] font-light">
+        <p className="text-xs sm:text-sm text-slate-600 font-light">
           {initialDestination 
             ? `Customize tourist places and duration in ${activeDestination.name} to generate your schedule.`
             : 'Select your destination, customize included tours & duration, and let Gemini AI generate your schedule.'}
@@ -201,23 +199,23 @@ export default function ItineraryGenerator({ initialDestination = null }) {
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
         
         {/* Left Column: Studio Controls Panel (5 cols) */}
-        <div className="no-print lg:col-span-5 bg-white p-6 sm:p-7 rounded-3xl border border-[#101413]/08 shadow-luxury space-y-6 sticky lg:top-24">
+        <div className="no-print lg:col-span-5 bg-white p-6 sm:p-7 rounded-3xl border border-slate-200/80 shadow-luxury space-y-6 sticky lg:top-24">
           
           {/* 1. Destination Card */}
           <div>
-            <label className="text-[10px] font-extrabold text-[#1B4944] uppercase tracking-wider block mb-2">
+            <label className="text-[10px] font-extrabold text-blue-600 uppercase tracking-wider block mb-2">
               Destination
             </label>
             
-            <div className="relative rounded-2xl overflow-hidden h-28 border border-[#101413]/08 shadow-sm bg-slate-200">
+            <div className="relative rounded-2xl overflow-hidden h-28 border border-slate-200 shadow-sm bg-slate-100">
               <img
                 src={activeDestination.image}
                 alt={activeDestination.name}
                 className="w-full h-full object-cover"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/35 to-transparent" />
+              <div className="absolute inset-0 bg-gradient-to-t from-[#0F172A]/90 via-[#0F172A]/40 to-transparent" />
               <div className="absolute bottom-3 left-4 text-white">
-                <span className="text-[10px] uppercase font-bold text-[#E0C89E] block">{activeDestination.country}</span>
+                <span className="text-[10px] uppercase font-bold text-amber-300 block">{activeDestination.country}</span>
                 <span className="font-editorial text-xl font-bold">{activeDestination.name}</span>
               </div>
             </div>
@@ -226,11 +224,11 @@ export default function ItineraryGenerator({ initialDestination = null }) {
               <select
                 value={selectedDestId}
                 onChange={(e) => setSelectedDestId(e.target.value)}
-                className="w-full mt-3 bg-[#F9F8F5] border border-[#101413]/10 rounded-2xl px-4 py-3 text-xs sm:text-sm font-semibold text-[#101413] focus:outline-none focus:border-[#1B4944]"
+                className="w-full mt-3 bg-slate-50 border border-slate-200 rounded-2xl px-4 py-3 text-xs sm:text-sm font-bold text-slate-800 focus:outline-none focus:border-blue-500"
               >
                 {DESTINATIONS.map((d) => (
                   <option key={d.id} value={d.id}>
-                    {d.name}
+                    {d.name} ({d.country})
                   </option>
                 ))}
               </select>
@@ -240,14 +238,14 @@ export default function ItineraryGenerator({ initialDestination = null }) {
           {/* 2. Included Tourist Places & Attractions in Destination */}
           <div>
             <div className="flex items-center justify-between mb-2">
-              <label className="text-[10px] font-extrabold text-[#1B4944] uppercase tracking-wider flex items-center space-x-1">
-                <Landmark className="w-3.5 h-3.5 text-[#1B4944]" />
+              <label className="text-[10px] font-extrabold text-blue-600 uppercase tracking-wider flex items-center space-x-1">
+                <Landmark className="w-3.5 h-3.5 text-blue-600" />
                 <span>Tourist Places in {activeDestination.name}</span>
               </label>
               <button
                 type="button"
                 onClick={selectAllTours}
-                className="text-[10px] font-bold text-[#1B4944] hover:underline"
+                className="text-[10px] font-bold text-blue-600 hover:underline cursor-pointer"
               >
                 Select All
               </button>
@@ -262,8 +260,8 @@ export default function ItineraryGenerator({ initialDestination = null }) {
                     onClick={() => toggleTour(tour.id)}
                     className={`p-2.5 rounded-2xl border transition-all flex items-center justify-between cursor-pointer ${
                       isChecked
-                        ? 'bg-[#1B4944]/08 border-[#1B4944] text-[#101413]'
-                        : 'bg-[#F9F8F5] border-transparent text-[#586260] opacity-60 hover:opacity-100'
+                        ? 'bg-blue-50/70 border-blue-500 text-slate-900 shadow-sm'
+                        : 'bg-slate-50 border-slate-100 text-slate-500 opacity-60 hover:opacity-100'
                     }`}
                   >
                     <div className="flex items-center space-x-3">
@@ -274,12 +272,12 @@ export default function ItineraryGenerator({ initialDestination = null }) {
                       />
                       <div>
                         <span className="text-xs font-bold block leading-tight">{tour.name}</span>
-                        <span className="text-[10px] text-[#586260] block">{tour.category} · {tour.duration}</span>
+                        <span className="text-[10px] text-slate-500 block">{tour.category} · {tour.duration}</span>
                       </div>
                     </div>
 
                     <div className={`w-5 h-5 rounded-full flex items-center justify-center shrink-0 ${
-                      isChecked ? 'bg-[#1B4944] text-white' : 'bg-gray-200 text-transparent'
+                      isChecked ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-sm' : 'bg-slate-200 text-transparent'
                     }`}>
                       <Check className="w-3 h-3" />
                     </div>
@@ -289,16 +287,16 @@ export default function ItineraryGenerator({ initialDestination = null }) {
             </div>
           </div>
 
-          {/* 3. Duration Selector with Presets & Manual / Custom Option */}
+          {/* 3. Duration Selector with Presets & Manual Custom Option */}
           <div>
             <div className="flex items-center justify-between mb-2">
-              <label className="text-[10px] font-extrabold text-[#1B4944] uppercase tracking-wider">
+              <label className="text-[10px] font-extrabold text-blue-600 uppercase tracking-wider">
                 Trip Duration
               </label>
               <button
                 type="button"
                 onClick={() => setIsCustomDays(!isCustomDays)}
-                className="text-[11px] font-bold text-[#1B4944] hover:underline flex items-center space-x-1"
+                className="text-[11px] font-bold text-blue-600 hover:underline flex items-center space-x-1 cursor-pointer"
               >
                 <Edit3 className="w-3 h-3" />
                 <span>{isCustomDays ? 'Use Presets' : 'Custom Days'}</span>
@@ -308,29 +306,31 @@ export default function ItineraryGenerator({ initialDestination = null }) {
             {!isCustomDays ? (
               <div className="grid grid-cols-6 gap-1.5">
                 {presetDurations.map((num) => (
-                  <button
+                  <motion.button
+                    whileTap={{ scale: 0.92 }}
                     key={num}
                     type="button"
                     onClick={() => setDays(num)}
-                    className={`py-2 rounded-xl text-xs font-bold transition-all min-h-[38px] ${
+                    className={`py-2 rounded-xl text-xs font-bold transition-all min-h-[38px] cursor-pointer ${
                       days === num
-                        ? 'bg-[#1B4944] text-white shadow-md scale-105'
-                        : 'bg-[#F9F8F5] text-[#586260] hover:text-[#101413] hover:bg-black/5'
+                        ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-md shadow-blue-500/25 scale-105'
+                        : 'bg-slate-50 text-slate-600 hover:text-slate-900 hover:bg-slate-100'
                     }`}
                   >
                     {num}D
-                  </button>
+                  </motion.button>
                 ))}
               </div>
             ) : (
-              <div className="bg-[#F9F8F5] p-3 rounded-2xl border border-[#101413]/08 flex items-center justify-between gap-3">
-                <button
+              <div className="bg-slate-50 p-3 rounded-2xl border border-slate-200 flex items-center justify-between gap-3">
+                <motion.button
+                  whileTap={{ scale: 0.85 }}
                   type="button"
                   onClick={() => setDays((prev) => Math.max(prev - 1, 1))}
-                  className="w-10 h-10 rounded-xl bg-white hover:bg-black/5 text-[#101413] font-bold shadow-sm flex items-center justify-center transition-transform active:scale-90"
+                  className="w-10 h-10 rounded-xl bg-white hover:bg-slate-100 text-slate-800 font-bold shadow-sm flex items-center justify-center cursor-pointer"
                 >
                   <Minus className="w-4 h-4" />
-                </button>
+                </motion.button>
 
                 <div className="flex-1 text-center">
                   <div className="flex items-center justify-center space-x-1">
@@ -340,27 +340,28 @@ export default function ItineraryGenerator({ initialDestination = null }) {
                       max="30"
                       value={days}
                       onChange={(e) => handleCustomDaysChange(e.target.value)}
-                      className="w-16 text-center font-editorial text-2xl font-bold text-[#101413] bg-white border border-[#101413]/15 rounded-xl py-1 focus:outline-none focus:border-[#1B4944]"
+                      className="w-16 text-center font-editorial text-2xl font-bold text-slate-900 bg-white border border-slate-300 rounded-xl py-1 focus:outline-none focus:border-blue-500"
                     />
-                    <span className="text-xs font-bold text-[#1B4944]">Days</span>
+                    <span className="text-xs font-bold text-blue-600">Days</span>
                   </div>
-                  <span className="text-[10px] text-[#586260] block mt-0.5 font-light">Custom range: 1 to 30 days</span>
+                  <span className="text-[10px] text-slate-500 block mt-0.5 font-light">Custom range: 1 to 30 days</span>
                 </div>
 
-                <button
+                <motion.button
+                  whileTap={{ scale: 0.85 }}
                   type="button"
                   onClick={() => setDays((prev) => Math.min(prev + 1, 30))}
-                  className="w-10 h-10 rounded-xl bg-white hover:bg-black/5 text-[#101413] font-bold shadow-sm flex items-center justify-center transition-transform active:scale-90"
+                  className="w-10 h-10 rounded-xl bg-white hover:bg-slate-100 text-slate-800 font-bold shadow-sm flex items-center justify-center cursor-pointer"
                 >
                   <Plus className="w-4 h-4" />
-                </button>
+                </motion.button>
               </div>
             )}
           </div>
 
           {/* 4. Travel Style Selector */}
           <div>
-            <label className="text-[10px] font-extrabold text-[#1B4944] uppercase tracking-wider block mb-2">
+            <label className="text-[10px] font-extrabold text-blue-600 uppercase tracking-wider block mb-2">
               Travel Vibe & Style
             </label>
             <div className="grid grid-cols-3 gap-2">
@@ -369,10 +370,10 @@ export default function ItineraryGenerator({ initialDestination = null }) {
                   key={st.id}
                   type="button"
                   onClick={() => setStyle(st.id)}
-                  className={`p-2.5 rounded-2xl text-xs font-bold transition-all flex flex-col items-center space-y-1 border ${
+                  className={`p-2.5 rounded-2xl text-xs font-bold transition-all flex flex-col items-center space-y-1 border cursor-pointer ${
                     style === st.id
-                      ? 'bg-[#1B4944]/10 border-[#1B4944] text-[#1B4944] shadow-sm'
-                      : 'bg-[#F9F8F5] border-transparent text-[#586260] hover:text-[#101413]'
+                      ? 'bg-blue-50 border-blue-500 text-blue-700 shadow-sm'
+                      : 'bg-slate-50 border-transparent text-slate-600 hover:text-slate-900 hover:bg-slate-100'
                   }`}
                 >
                   <span className="text-base">{st.icon}</span>
@@ -384,7 +385,7 @@ export default function ItineraryGenerator({ initialDestination = null }) {
 
           {/* 5. Interests Filter Chips */}
           <div>
-            <label className="text-[10px] font-extrabold text-[#1B4944] uppercase tracking-wider block mb-2">
+            <label className="text-[10px] font-extrabold text-blue-600 uppercase tracking-wider block mb-2">
               Specific Interests
             </label>
             <div className="flex flex-wrap gap-1.5">
@@ -395,13 +396,13 @@ export default function ItineraryGenerator({ initialDestination = null }) {
                     key={interest}
                     type="button"
                     onClick={() => toggleInterest(interest)}
-                    className={`px-3 py-1.5 rounded-full text-[11px] font-semibold transition-all flex items-center space-x-1 ${
+                    className={`px-3 py-1.5 rounded-full text-[11px] font-bold transition-all flex items-center space-x-1 cursor-pointer ${
                       selected
-                        ? 'bg-[#101413] text-white shadow-sm'
-                        : 'bg-[#F9F8F5] text-[#586260] hover:text-[#101413]'
+                        ? 'bg-slate-900 text-white shadow-sm'
+                        : 'bg-slate-100 text-slate-600 hover:text-slate-900'
                     }`}
                   >
-                    {selected && <Check className="w-3 h-3 text-[#E0C89E]" />}
+                    {selected && <Check className="w-3 h-3 text-rose-400" />}
                     <span>{interest}</span>
                   </button>
                 );
@@ -409,16 +410,18 @@ export default function ItineraryGenerator({ initialDestination = null }) {
             </div>
           </div>
 
-          {/* 6. Generate Button */}
-          <button
+          {/* 6. Generate Button with Glowing Gradient */}
+          <motion.button
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.97 }}
             type="button"
             onClick={handleGenerate}
             disabled={loading}
-            className="w-full py-4 rounded-full bg-[#1B4944] hover:bg-[#24655D] text-white font-bold text-xs sm:text-sm shadow-xl shadow-[#1B4944]/30 transition-transform hover:scale-[1.02] active:scale-95 flex items-center justify-center space-x-2 disabled:opacity-50 min-h-[48px]"
+            className="w-full py-4 rounded-full bg-gradient-to-r from-blue-600 via-indigo-600 to-rose-500 text-white font-extrabold text-xs sm:text-sm shadow-xl shadow-blue-500/25 flex items-center justify-center space-x-2 disabled:opacity-50 min-h-[48px] cursor-pointer"
           >
-            <Sparkles className="w-4 h-4 text-[#E0C89E]" />
+            <Sparkles className="w-4 h-4 text-amber-300" />
             <span>{loading ? 'AI is generating itinerary...' : `✨ Generate ${days}-Day ${activeDestination.name} Plan`}</span>
-          </button>
+          </motion.button>
 
         </div>
 

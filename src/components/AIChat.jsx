@@ -23,7 +23,6 @@ export default function AIChat({ isOpen, onClose, destination = null }) {
   const chatEndRef = useRef(null);
   const inputRef = useRef(null);
 
-  // Dynamic suggested prompts
   const suggestedPrompts = useMemo(() => {
     const destName = activeDestination.name;
     if (destName) {
@@ -46,7 +45,6 @@ export default function AIChat({ isOpen, onClose, destination = null }) {
     ];
   }, [activeDestination]);
 
-  // Focus input on open & close on Escape key
   useEffect(() => {
     const handleKeyDown = (e) => {
       if (e.key === 'Escape' && isOpen) {
@@ -62,7 +60,6 @@ export default function AIChat({ isOpen, onClose, destination = null }) {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [isOpen, onClose]);
 
-  // Smooth scroll to bottom on new message
   useEffect(() => {
     chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages, loading, error]);
@@ -84,30 +81,30 @@ export default function AIChat({ isOpen, onClose, destination = null }) {
 
   return (
     <motion.div 
-      initial={{ opacity: 0, scale: 0.95, y: 20 }}
+      initial={{ opacity: 0, scale: 0.9, y: 25 }}
       animate={{ opacity: 1, scale: 1, y: 0 }}
-      exit={{ opacity: 0, scale: 0.95, y: 20 }}
-      transition={{ duration: 0.25, ease: 'easeOut' }}
+      exit={{ opacity: 0, scale: 0.9, y: 25 }}
+      transition={{ type: 'spring', stiffness: 300, damping: 25 }}
       role="dialog"
       aria-label="Travel AI Assistant"
-      className="fixed inset-0 sm:inset-auto sm:bottom-6 sm:right-6 z-50 w-full sm:max-w-md h-full sm:h-[580px] bg-white rounded-none sm:rounded-3xl shadow-2xl border-none sm:border border-[#101413]/10 overflow-hidden flex flex-col"
+      className="fixed inset-0 sm:inset-auto sm:bottom-6 sm:right-6 z-50 w-full sm:max-w-md h-full sm:h-[590px] bg-white rounded-none sm:rounded-3xl shadow-2xl border-none sm:border border-slate-200 overflow-hidden flex flex-col"
     >
       
-      {/* Header */}
-      <div className="bg-[#101413] text-white px-5 py-4 flex items-center justify-between shrink-0 shadow-md">
-        <div className="flex items-center space-x-2.5">
-          <div className="w-8 h-8 rounded-xl bg-[#1B4944] flex items-center justify-center text-[#E0C89E] shadow-sm">
+      {/* Header with Deep Sapphire & Radiant Gradient */}
+      <div className="bg-[#0F172A] text-white px-5 py-4 flex items-center justify-between shrink-0 shadow-md">
+        <div className="flex items-center space-x-3">
+          <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-blue-600 via-indigo-600 to-rose-500 flex items-center justify-center text-white shadow-md">
             <Sparkles className="w-4 h-4" />
           </div>
           <div>
             <div className="flex items-center space-x-1.5">
               <h3 className="font-editorial text-base font-bold tracking-wide">Aetheria AI</h3>
-              <span className="text-[10px] px-2 py-0.5 rounded-full bg-[#1B4944] text-[#E0C89E] font-bold">
+              <span className="text-[10px] px-2 py-0.5 rounded-full bg-gradient-to-r from-blue-500 to-indigo-600 text-white font-extrabold shadow-sm">
                 PRO
               </span>
             </div>
             <p className="text-[10px] text-slate-300 font-light flex items-center space-x-1">
-              <MapPin className="w-3 h-3 text-[#E0C89E]" />
+              <MapPin className="w-3 h-3 text-rose-400" />
               <span>{activeDestination.name}, {activeDestination.country}</span>
             </p>
           </div>
@@ -117,7 +114,7 @@ export default function AIChat({ isOpen, onClose, destination = null }) {
           {messages.length > 0 && (
             <button
               onClick={clearMessages}
-              className="p-2 rounded-full hover:bg-white/10 text-slate-300 hover:text-white transition-colors"
+              className="p-2 rounded-full hover:bg-white/10 text-slate-300 hover:text-white transition-colors cursor-pointer"
               title="Reset Conversation"
             >
               <RotateCcw className="w-4 h-4" />
@@ -126,7 +123,7 @@ export default function AIChat({ isOpen, onClose, destination = null }) {
 
           <button
             onClick={onClose}
-            className="p-2 rounded-full hover:bg-white/10 text-slate-300 hover:text-white transition-colors"
+            className="p-2 rounded-full hover:bg-white/10 text-slate-300 hover:text-white transition-colors cursor-pointer"
             aria-label="Close chat"
           >
             <X className="w-5 h-5" />
@@ -135,21 +132,21 @@ export default function AIChat({ isOpen, onClose, destination = null }) {
       </div>
 
       {/* Messages Scroll Area */}
-      <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-[#F9F8F5]">
+      <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-slate-50">
         
         {/* Welcome Banner */}
         {messages.length === 0 && (
-          <div className="p-5 rounded-2xl bg-white border border-[#101413]/06 shadow-sm space-y-3">
-            <div className="flex items-center space-x-2 text-[#1B4944] font-bold text-xs">
+          <div className="p-5 rounded-2xl bg-white border border-slate-200/80 shadow-sm space-y-3">
+            <div className="flex items-center space-x-2 text-blue-600 font-bold text-xs">
               <Bot className="w-4 h-4" />
               <span>Your Luxury Travel Concierge</span>
             </div>
-            <p className="text-xs text-[#586260] leading-relaxed font-light">
+            <p className="text-xs text-slate-600 leading-relaxed font-light">
               Ask me anything about <strong>{activeDestination.name}</strong>, iconic sights, hidden spots, dining secrets, or custom trip timelines.
             </p>
 
             <div className="pt-2">
-              <span className="text-[10px] uppercase font-bold text-[#8A9592] block mb-2">
+              <span className="text-[10px] uppercase font-bold text-slate-400 block mb-2">
                 Popular Inquiries
               </span>
               <div className="flex flex-wrap gap-1.5">
@@ -157,7 +154,7 @@ export default function AIChat({ isOpen, onClose, destination = null }) {
                   <button
                     key={i}
                     onClick={() => handleSend(prompt)}
-                    className="text-left text-[11px] px-3 py-1.5 rounded-full bg-[#F9F8F5] hover:bg-[#1B4944] hover:text-white text-[#101413] border border-[#101413]/08 transition-all"
+                    className="text-left text-[11px] px-3 py-1.5 rounded-full bg-slate-100 hover:bg-blue-600 hover:text-white text-slate-700 transition-all cursor-pointer font-medium"
                   >
                     {prompt}
                   </button>
@@ -175,12 +172,12 @@ export default function AIChat({ isOpen, onClose, destination = null }) {
         {/* Loading Indicator */}
         {loading && (
           <div className="flex items-start space-x-2">
-            <div className="w-7 h-7 rounded-full bg-[#1B4944] text-[#E0C89E] flex items-center justify-center shrink-0">
+            <div className="w-7 h-7 rounded-full bg-gradient-to-tr from-blue-600 to-indigo-600 text-white flex items-center justify-center shrink-0 shadow-sm">
               <Bot className="w-4 h-4" />
             </div>
-            <div className="p-3.5 rounded-2xl bg-white border border-[#101413]/08 shadow-sm flex items-center space-x-2">
-              <Loader2 className="w-4 h-4 text-[#1B4944] animate-spin" />
-              <span className="text-xs text-[#586260] font-medium">Aetheria AI is thinking...</span>
+            <div className="p-3.5 rounded-2xl bg-white border border-slate-200/80 shadow-sm flex items-center space-x-2">
+              <Loader2 className="w-4 h-4 text-blue-600 animate-spin" />
+              <span className="text-xs text-slate-600 font-medium">Aetheria AI is thinking...</span>
             </div>
           </div>
         )}
@@ -206,12 +203,12 @@ export default function AIChat({ isOpen, onClose, destination = null }) {
 
       {/* Suggested Chips Carousel */}
       {messages.length > 0 && (
-        <div className="px-4 py-2 bg-white border-t border-[#101413]/06 overflow-x-auto no-scrollbar flex space-x-1.5 shrink-0">
+        <div className="px-4 py-2 bg-white border-t border-slate-100 overflow-x-auto no-scrollbar flex space-x-1.5 shrink-0">
           {suggestedPrompts.slice(0, 4).map((prompt, i) => (
             <button
               key={i}
               onClick={() => handleSend(prompt)}
-              className="whitespace-nowrap text-[11px] px-3 py-1 rounded-full bg-[#F9F8F5] hover:bg-[#1B4944] hover:text-white text-[#586260] border border-[#101413]/08 transition-all"
+              className="whitespace-nowrap text-[11px] px-3 py-1 rounded-full bg-slate-100 hover:bg-blue-600 hover:text-white text-slate-600 transition-all font-medium cursor-pointer"
             >
               {prompt}
             </button>
@@ -220,7 +217,7 @@ export default function AIChat({ isOpen, onClose, destination = null }) {
       )}
 
       {/* Input Row */}
-      <div className="p-3 bg-white border-t border-[#101413]/08 shrink-0">
+      <div className="p-3 bg-white border-t border-slate-200 shrink-0">
         <form
           onSubmit={(e) => {
             e.preventDefault();
@@ -234,17 +231,18 @@ export default function AIChat({ isOpen, onClose, destination = null }) {
             value={input}
             onChange={(e) => setInput(e.target.value)}
             placeholder={`Ask anything about ${activeDestination.name}...`}
-            className="flex-1 bg-[#F9F8F5] border border-[#101413]/10 rounded-full px-4 py-2.5 text-xs font-medium text-[#101413] focus:outline-none focus:border-[#1B4944]"
+            className="flex-1 bg-slate-100 border border-slate-200 rounded-full px-4 py-2.5 text-xs font-medium text-slate-900 focus:outline-none focus:border-blue-500"
           />
 
-          <button
+          <motion.button
+            whileTap={{ scale: 0.9 }}
             type="submit"
             disabled={!input.trim() || loading}
-            className="w-10 h-10 rounded-full bg-[#1B4944] hover:bg-[#24655D] text-white flex items-center justify-center shadow-sm disabled:opacity-40 transition-transform active:scale-95 shrink-0"
+            className="w-10 h-10 rounded-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white flex items-center justify-center shadow-md shadow-blue-500/25 disabled:opacity-40 transition-transform shrink-0 cursor-pointer"
             aria-label="Send message"
           >
             <Send className="w-4 h-4" />
-          </button>
+          </motion.button>
         </form>
       </div>
 
