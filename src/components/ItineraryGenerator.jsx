@@ -11,15 +11,18 @@ import {
   Printer, 
   Clock, 
   Check, 
+  Plus,
+  Minus,
   Sliders, 
   Layers,
-  ChevronRight
+  Edit3
 } from 'lucide-react';
 import confetti from 'canvas-confetti';
 
 export default function ItineraryGenerator({ initialDestination = null }) {
   const [selectedDestId, setSelectedDestId] = useState(initialDestination?.id || DESTINATIONS[0].id);
   const [days, setDays] = useState(3);
+  const [isCustomDays, setIsCustomDays] = useState(false);
   const [style, setStyle] = useState('Culture');
   const [budget, setBudget] = useState('Mid-range');
   const [selectedInterests, setSelectedInterests] = useState(['History', 'Food']);
@@ -35,16 +38,18 @@ export default function ItineraryGenerator({ initialDestination = null }) {
     { id: 'Luxury', label: 'Luxury', icon: '💎' }
   ];
 
-  const durationOptions = [1, 2, 3, 4, 5, 7];
+  const presetDurations = [1, 2, 3, 5, 7, 10];
   const interestOptions = ['History', 'Nature', 'Shopping', 'Food', 'Photography', 'Nightlife', 'Architecture'];
 
   // Helper to build default structured plan
   const createDefaultPlan = (dest, numDays = 3, planStyle = 'Culture') => {
     const daysArr = [];
-    for (let i = 1; i <= numDays; i++) {
+    const cappedDays = Math.min(Math.max(numDays, 1), 30);
+
+    for (let i = 1; i <= cappedDays; i++) {
       const p1 = dest.places?.[(i - 1) % (dest.places?.length || 1)] || { 
         name: 'Historic Old Quarter', 
-        description: 'Explore charming cobblestone avenues, heritage architecture, and iconic squares.' 
+        description: 'Explore charming avenues, heritage architecture, and iconic squares.' 
       };
       const p2 = dest.places?.[i % (dest.places?.length || 1)] || { 
         name: 'Scenic Viewpoint & Cultural Market', 
@@ -57,7 +62,9 @@ export default function ItineraryGenerator({ initialDestination = null }) {
           ? `Arrival & Classic ${dest.name} Highlights` 
           : i === 2 
             ? `Cultural Immersion & Local Gastronomy` 
-            : `Scenic Excursion & Sunset Landmarks`,
+            : i === 3
+              ? `Scenic Excursion & Viewpoints`
+              : `Day ${i}: Hidden Gems & Neighborhood Discovery`,
         activities: [
           {
             time: '09:00',
@@ -83,7 +90,7 @@ export default function ItineraryGenerator({ initialDestination = null }) {
 
     return {
       destination: dest.name,
-      overview: `A tailored ${numDays}-day ${planStyle.toLowerCase()} journey through ${dest.name}, combining famous landmarks, culinary secrets, and scenic viewpoints.`,
+      overview: `A tailored ${cappedDays}-day ${planStyle.toLowerCase()} journey through ${dest.name}, combining famous landmarks, culinary secrets, and scenic viewpoints.`,
       days: daysArr
     };
   };
@@ -103,12 +110,19 @@ export default function ItineraryGenerator({ initialDestination = null }) {
 
   useEffect(() => {
     setItineraryResult(createDefaultPlan(activeDestination, days, style));
-  }, [selectedDestId]);
+  }, [selectedDestId, days]);
 
   const toggleInterest = (interest) => {
     setSelectedInterests((prev) =>
       prev.includes(interest) ? prev.filter((i) => i !== interest) : [...prev, interest]
     );
+  };
+
+  const handleCustomDaysChange = (val) => {
+    const parsed = parseInt(val, 10);
+    if (!isNaN(parsed)) {
+      setDays(Math.min(Math.max(parsed, 1), 30));
+    }
   };
 
   const handleGenerate = async (e) => {
@@ -143,7 +157,7 @@ export default function ItineraryGenerator({ initialDestination = null }) {
           Custom Day-by-Day Itinerary
         </h2>
         <p className="text-xs sm:text-sm text-[#68706D] font-light">
-          Personalize your travel style, duration, and interests to generate a structured timeline.
+          Choose preset durations or enter custom days, personalize your style, and let Gemini AI generate your schedule.
         </p>
       </div>
 
@@ -185,31 +199,75 @@ export default function ItineraryGenerator({ initialDestination = null }) {
             </select>
           </div>
 
-          {/* Duration Selector (Pills) */}
+          {/* Duration Selector with Presets & Manual / Custom Option */}
           <div>
             <div className="flex items-center justify-between mb-2">
               <label className="text-[10px] font-extrabold text-[#2F6F68] uppercase tracking-wider">
                 Trip Duration
               </label>
-              <span className="text-xs font-bold text-[#171A19]">{days} Days</span>
+              <button
+                type="button"
+                onClick={() => setIsCustomDays(!isCustomDays)}
+                className="text-[11px] font-bold text-[#2F6F68] hover:underline flex items-center space-x-1"
+              >
+                <Edit3 className="w-3 h-3" />
+                <span>{isCustomDays ? 'Use Presets' : 'Custom Days'}</span>
+              </button>
             </div>
             
-            <div className="grid grid-cols-6 gap-1.5">
-              {durationOptions.map((num) => (
+            {/* Preset Pill Buttons */}
+            {!isCustomDays ? (
+              <div className="grid grid-cols-6 gap-1.5">
+                {presetDurations.map((num) => (
+                  <button
+                    key={num}
+                    type="button"
+                    onClick={() => setDays(num)}
+                    className={`py-2 rounded-xl text-xs font-bold transition-all min-h-[38px] ${
+                      days === num
+                        ? 'bg-[#2F6F68] text-white shadow-md scale-105'
+                        : 'bg-[#F7F5F0] text-[#68706D] hover:text-[#171A19] hover:bg-black/5'
+                    }`}
+                  >
+                    {num}D
+                  </button>
+                ))}
+              </div>
+            ) : (
+              /* Manual / Custom Stepper & Input */
+              <div className="bg-[#F7F5F0] p-3 rounded-2xl border border-[#171A19]/08 flex items-center justify-between gap-3">
                 <button
-                  key={num}
                   type="button"
-                  onClick={() => setDays(num)}
-                  className={`py-2 rounded-xl text-xs font-bold transition-all min-h-[38px] ${
-                    days === num
-                      ? 'bg-[#2F6F68] text-white shadow-md scale-105'
-                      : 'bg-[#F7F5F0] text-[#68706D] hover:text-[#171A19] hover:bg-black/5'
-                  }`}
+                  onClick={() => setDays((prev) => Math.max(prev - 1, 1))}
+                  className="w-10 h-10 rounded-xl bg-white hover:bg-black/5 text-[#171A19] font-bold shadow-sm flex items-center justify-center transition-transform active:scale-90"
                 >
-                  {num}D
+                  <Minus className="w-4 h-4" />
                 </button>
-              ))}
-            </div>
+
+                <div className="flex-1 text-center">
+                  <div className="flex items-center justify-center space-x-1">
+                    <input
+                      type="number"
+                      min="1"
+                      max="30"
+                      value={days}
+                      onChange={(e) => handleCustomDaysChange(e.target.value)}
+                      className="w-16 text-center font-editorial text-2xl font-bold text-[#171A19] bg-white border border-[#171A19]/15 rounded-xl py-1 focus:outline-none focus:border-[#2F6F68]"
+                    />
+                    <span className="text-xs font-bold text-[#2F6F68]">Days</span>
+                  </div>
+                  <span className="text-[10px] text-[#68706D] block mt-0.5 font-light">Custom range: 1 to 30 days</span>
+                </div>
+
+                <button
+                  type="button"
+                  onClick={() => setDays((prev) => Math.min(prev + 1, 30))}
+                  className="w-10 h-10 rounded-xl bg-white hover:bg-black/5 text-[#171A19] font-bold shadow-sm flex items-center justify-center transition-transform active:scale-90"
+                >
+                  <Plus className="w-4 h-4" />
+                </button>
+              </div>
+            )}
           </div>
 
           {/* Travel Style Selector */}
@@ -271,7 +329,7 @@ export default function ItineraryGenerator({ initialDestination = null }) {
             className="w-full py-4 rounded-full bg-[#2F6F68] hover:bg-[#265953] text-white font-bold text-xs sm:text-sm shadow-xl shadow-[#2F6F68]/25 transition-transform hover:scale-[1.02] active:scale-95 flex items-center justify-center space-x-2 disabled:opacity-50 min-h-[48px]"
           >
             <Sparkles className="w-4 h-4 text-[#D8B98A]" />
-            <span>{loading ? 'AI is generating itinerary...' : '✨ Generate Day-by-Day Plan'}</span>
+            <span>{loading ? 'AI is generating itinerary...' : `✨ Generate ${days}-Day Itinerary`}</span>
           </button>
 
         </div>
