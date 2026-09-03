@@ -12,7 +12,9 @@ import {
   Calendar, 
   Luggage, 
   ChevronRight,
-  Heart
+  Heart,
+  Compass,
+  ArrowRight
 } from 'lucide-react';
 import VoyagerLogo from './VoyagerLogo';
 import { useAuth } from '../context/AuthContext';
@@ -52,26 +54,35 @@ export default function Navbar({ onOpenAIChat, onOpenLocationModal, onOpenAuthMo
   const isActive = (path) => location.pathname === path;
 
   const navLinks = [
-    { path: '/destinations', label: 'Destinations', icon: null },
+    { 
+      path: '/destinations', 
+      label: 'Destinations', 
+      icon: <Compass className="w-4 h-4 text-blue-600" />,
+      bg: 'bg-blue-50' 
+    },
     { 
       path: '/places', 
       label: 'Tourist Places', 
-      icon: <Landmark className="w-3.5 h-3.5 text-blue-500" /> 
+      icon: <Landmark className="w-4 h-4 text-indigo-600" />,
+      bg: 'bg-indigo-50' 
     },
     { 
       path: '/itinerary', 
-      label: 'AI Planner', 
-      icon: <Calendar className="w-3.5 h-3.5 text-blue-500" /> 
+      label: 'AI Trip Planner', 
+      icon: <Calendar className="w-4 h-4 text-purple-600" />,
+      bg: 'bg-purple-50' 
     },
     { 
       path: '/weather', 
-      label: 'Weather', 
-      icon: <CloudSun className="w-3.5 h-3.5 text-amber-500" /> 
+      label: 'Live Weather', 
+      icon: <CloudSun className="w-4 h-4 text-amber-500" />,
+      bg: 'bg-amber-50' 
     },
     { 
       path: '/packing', 
-      label: 'Packing', 
-      icon: <Luggage className="w-3.5 h-3.5 text-rose-500" /> 
+      label: 'Packing List', 
+      icon: <Luggage className="w-4 h-4 text-rose-500" />,
+      bg: 'bg-rose-50' 
     }
   ];
 
@@ -110,7 +121,7 @@ export default function Navbar({ onOpenAIChat, onOpenLocationModal, onOpenAuthMo
                     transition={{ type: 'spring', stiffness: 380, damping: 30 }}
                   />
                 )}
-                {link.icon && <span className={active ? 'text-white' : ''}>{link.icon}</span>}
+                <span className={active ? 'text-white' : ''}>{link.icon}</span>
                 <span>{link.label}</span>
               </Link>
             );
@@ -178,76 +189,163 @@ export default function Navbar({ onOpenAIChat, onOpenLocationModal, onOpenAuthMo
           {/* Mobile Hamburger Toggle */}
           <motion.button
             whileTap={{ scale: 0.9 }}
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="lg:hidden p-2.5 rounded-full bg-white/95 hover:bg-white backdrop-blur-xl border border-slate-200/80 shadow-sm text-slate-800 min-h-[44px] min-w-[44px] flex items-center justify-center"
-            aria-label="Toggle navigation menu"
+            onClick={() => setMobileMenuOpen(true)}
+            className="lg:hidden p-2.5 rounded-full bg-white/95 hover:bg-white backdrop-blur-xl border border-slate-200/80 shadow-sm text-slate-800 min-h-[44px] min-w-[44px] flex items-center justify-center cursor-pointer"
+            aria-label="Open navigation menu"
           >
-            {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+            <Menu className="w-5 h-5" />
           </motion.button>
 
         </div>
 
       </div>
 
-      {/* Mobile Animated Drawer Menu */}
+      {/* ========================================================
+          MOBILE NAVIGATION DRAWER WITH SOLID HIGH-CONTRAST SHEET
+      ======================================================== */}
       <AnimatePresence>
         {mobileMenuOpen && (
-          <motion.div
-            initial={{ opacity: 0, y: -20, scale: 0.98 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: -20, scale: 0.98 }}
-            transition={{ type: 'spring', stiffness: 300, damping: 25 }}
-            className="lg:hidden fixed inset-x-4 top-20 bg-white/98 backdrop-blur-2xl rounded-3xl border border-slate-200/90 shadow-2xl p-6 space-y-4 z-50 overflow-hidden"
-          >
-            <div className="space-y-1.5">
-              {navLinks.map((link) => (
-                <Link
-                  key={link.path}
-                  to={link.path}
+          <div className="lg:hidden fixed inset-0 z-50 flex items-start justify-center p-4 overflow-y-auto">
+            
+            {/* 1. Full-Screen Dim Backdrop */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.2 }}
+              onClick={() => setMobileMenuOpen(false)}
+              className="fixed inset-0 bg-[#0F172A]/85 backdrop-blur-md cursor-pointer"
+            />
+
+            {/* 2. Solid High-Contrast Mobile Sheet */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.94, y: -20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.94, y: -20 }}
+              transition={{ type: 'spring', stiffness: 320, damping: 28 }}
+              className="relative w-full max-w-md bg-white rounded-3xl shadow-2xl border border-slate-200 overflow-hidden z-10 my-4 flex flex-col"
+            >
+              
+              {/* Sheet Header */}
+              <div className="bg-[#0F172A] text-white p-5 flex items-center justify-between border-b border-slate-800">
+                <VoyagerLogo size="sm" showText={true} isLight={true} />
+
+                <button
                   onClick={() => setMobileMenuOpen(false)}
-                  className={`flex items-center justify-between px-4 py-3 rounded-2xl text-sm font-bold transition-all ${
-                    isActive(link.path)
-                      ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-md'
-                      : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
-                  }`}
+                  className="p-2 rounded-full bg-white/10 hover:bg-white/20 text-white transition-colors cursor-pointer"
+                  aria-label="Close menu"
+                >
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
+
+              {/* Sheet Content Area */}
+              <div className="p-5 space-y-4 max-h-[75vh] overflow-y-auto no-scrollbar">
+                
+                {/* User Account / Profile Banner in Drawer */}
+                <div 
+                  onClick={() => {
+                    setMobileMenuOpen(false);
+                    onOpenAuthModal();
+                  }}
+                  className="p-3.5 rounded-2xl bg-slate-50 hover:bg-blue-50/50 border border-slate-200/80 flex items-center justify-between cursor-pointer transition-colors"
                 >
                   <div className="flex items-center space-x-3">
-                    {link.icon}
-                    <span>{link.label}</span>
+                    {user?.photoURL ? (
+                      <img src={user.photoURL} alt="Avatar" className="w-10 h-10 rounded-xl object-cover border border-blue-600" />
+                    ) : (
+                      <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-600 text-white flex items-center justify-center font-bold text-sm">
+                        {user ? (user.displayName?.[0] || 'U').toUpperCase() : <User className="w-4 h-4" />}
+                      </div>
+                    )}
+                    <div>
+                      <span className="text-xs font-bold text-slate-900 block leading-tight">
+                        {user ? (user.displayName || 'Travel Explorer') : 'Sign In / Register'}
+                      </span>
+                      <span className="text-[10px] text-slate-500">
+                        {user ? `${savedFavorites.length} Saved Favorites · Settings` : 'Access your travel hub & favorites'}
+                      </span>
+                    </div>
                   </div>
-                  <ChevronRight className="w-4 h-4 opacity-50" />
-                </Link>
-              ))}
-            </div>
-
-            {/* Mobile Actions */}
-            <div className="pt-4 border-t border-slate-100 space-y-2.5">
-              <button
-                onClick={() => {
-                  setMobileMenuOpen(false);
-                  onOpenLocationModal();
-                }}
-                className="w-full flex items-center justify-between px-4 py-3 rounded-2xl bg-slate-50 text-xs font-bold text-slate-800 border border-slate-200/60"
-              >
-                <div className="flex items-center space-x-2">
-                  <MapPin className="w-4 h-4 text-blue-600" />
-                  <span>{currentLocation ? currentLocation.name : 'Choose Location'}</span>
+                  <ChevronRight className="w-4 h-4 text-slate-400" />
                 </div>
-                <span className="text-[10px] uppercase font-bold text-blue-600">Change</span>
-              </button>
 
-              <button
-                onClick={() => {
-                  setMobileMenuOpen(false);
-                  onOpenAIChat();
-                }}
-                className="w-full flex items-center justify-center space-x-2 py-3.5 rounded-2xl bg-gradient-to-r from-blue-600 via-indigo-600 to-rose-500 text-white text-xs font-bold shadow-lg shadow-blue-500/20"
-              >
-                <Sparkles className="w-4 h-4 text-amber-300" />
-                <span>✨ Launch Voyager AI Assistant</span>
-              </button>
-            </div>
-          </motion.div>
+                {/* Primary Navigation Route Links with Solid White High Contrast */}
+                <div className="space-y-2">
+                  <span className="text-[10px] font-extrabold uppercase tracking-wider text-slate-400 block px-1">
+                    Explore Pages
+                  </span>
+                  
+                  {navLinks.map((link) => {
+                    const active = isActive(link.path);
+                    return (
+                      <Link
+                        key={link.path}
+                        to={link.path}
+                        onClick={() => setMobileMenuOpen(false)}
+                        className={`flex items-center justify-between p-3.5 rounded-2xl text-xs sm:text-sm font-bold transition-all ${
+                          active
+                            ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-md shadow-blue-500/20'
+                            : 'bg-slate-50 hover:bg-slate-100 text-slate-800 border border-slate-200/70'
+                        }`}
+                      >
+                        <div className="flex items-center space-x-3">
+                          <div className={`w-8 h-8 rounded-xl flex items-center justify-center ${
+                            active ? 'bg-white/20 text-white' : `${link.bg}`
+                          }`}>
+                            {React.cloneElement(link.icon, { className: active ? 'text-white w-4 h-4' : 'w-4 h-4' })}
+                          </div>
+                          <span>{link.label}</span>
+                        </div>
+                        <ChevronRight className={`w-4 h-4 ${active ? 'text-white' : 'text-slate-400'}`} />
+                      </Link>
+                    );
+                  })}
+                </div>
+
+                {/* Location Quick Switcher */}
+                <div className="pt-2">
+                  <button
+                    onClick={() => {
+                      setMobileMenuOpen(false);
+                      onOpenLocationModal();
+                    }}
+                    className="w-full flex items-center justify-between p-3.5 rounded-2xl bg-blue-50/60 hover:bg-blue-50 border border-blue-200/70 text-xs font-bold text-slate-800 transition-colors cursor-pointer"
+                  >
+                    <div className="flex items-center space-x-2.5">
+                      <div className="w-7 h-7 rounded-lg bg-blue-600 text-white flex items-center justify-center">
+                        <MapPin className="w-3.5 h-3.5" />
+                      </div>
+                      <div className="text-left">
+                        <span className="text-[10px] uppercase font-extrabold text-blue-600 block">Current Location</span>
+                        <span className="text-xs text-slate-900 font-bold">{currentLocation ? currentLocation.name : 'Detect Location'}</span>
+                      </div>
+                    </div>
+                    <span className="text-[10px] uppercase font-bold text-blue-600 bg-white px-2.5 py-1 rounded-full border border-blue-200 shadow-sm">
+                      Change
+                    </span>
+                  </button>
+                </div>
+
+                {/* Launch Voyager AI Concierge Primary CTA */}
+                <div className="pt-1">
+                  <motion.button
+                    whileTap={{ scale: 0.97 }}
+                    onClick={() => {
+                      setMobileMenuOpen(false);
+                      onOpenAIChat();
+                    }}
+                    className="w-full flex items-center justify-center space-x-2 py-3.5 px-4 rounded-2xl bg-gradient-to-r from-blue-600 via-indigo-600 to-rose-500 text-white text-xs font-extrabold shadow-lg shadow-blue-500/25 cursor-pointer"
+                  >
+                    <Sparkles className="w-4 h-4 text-amber-300" />
+                    <span>Launch Voyager AI Concierge</span>
+                  </motion.button>
+                </div>
+
+              </div>
+
+            </motion.div>
+          </div>
         )}
       </AnimatePresence>
     </header>
