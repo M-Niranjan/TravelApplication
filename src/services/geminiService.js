@@ -17,7 +17,7 @@ export async function askGeminiAssistant({ prompt, destinationContext = null, ap
            Provide expert travel insights, recommendations, best times to visit, packing tips, or local secrets.`;
 
       const response = await fetch(
-        `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash:generateContent?key=${activeKey}`,
+        `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent?key=${encodeURIComponent(activeKey)}`,
         {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -70,7 +70,7 @@ export async function generateAItinerary({ destination, durationDays = 3, style 
       }`;
 
       const response = await fetch(
-        `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash:generateContent?key=${activeKey}`,
+        `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent?key=${encodeURIComponent(activeKey)}`,
         {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },

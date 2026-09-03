@@ -13,8 +13,10 @@ import {
 } from 'lucide-react';
 import AIMessage from './AIMessage';
 import { useGemini } from '../hooks/useGemini';
+import { DESTINATIONS } from '../data/destinations';
 
 export default function AIChat({ isOpen, onClose, destination = null }) {
+  const activeDestination = destination || DESTINATIONS[0];
   const { messages, loading, error, sendMessage, clearMessages } = useGemini();
   const [input, setInput] = useState('');
   const chatEndRef = useRef(null);
@@ -22,7 +24,7 @@ export default function AIChat({ isOpen, onClose, destination = null }) {
 
   // Dynamic suggested prompts based on whether a destination is active
   const suggestedPrompts = useMemo(() => {
-    const destName = destination ? destination.name : null;
+    const destName = activeDestination.name;
     if (destName) {
       return [
         `How many days in ${destName}?`,
@@ -41,7 +43,7 @@ export default function AIChat({ isOpen, onClose, destination = null }) {
       `Family-friendly travel tips`,
       `Plan my trip with AI`
     ];
-  }, [destination]);
+  }, [activeDestination]);
 
   // Focus input on open & close on Escape key
   useEffect(() => {
@@ -68,14 +70,14 @@ export default function AIChat({ isOpen, onClose, destination = null }) {
 
   const handleSend = (userQuery = input) => {
     if (!userQuery.trim() || loading) return;
-    sendMessage(userQuery.trim(), destination);
+    sendMessage(userQuery.trim(), activeDestination);
     setInput('');
   };
 
   const handleRetryLast = () => {
     const lastUserMsg = [...messages].reverse().find((m) => m.sender === 'user');
     if (lastUserMsg) {
-      sendMessage(lastUserMsg.text, destination);
+      sendMessage(lastUserMsg.text, activeDestination);
     }
   };
 
@@ -103,7 +105,7 @@ export default function AIChat({ isOpen, onClose, destination = null }) {
             <p className="text-[10px] text-slate-300 flex items-center space-x-1">
               <MapPin className="w-3 h-3 text-[#D8B98A]" />
               <span>
-                Exploring: <strong className="text-[#D8B98A]">{destination ? `${destination.name}, ${destination.country}` : 'Global Destinations'}</strong>
+                Exploring: <strong className="text-[#D8B98A]">{activeDestination.name}, {activeDestination.country}</strong>
               </span>
             </p>
           </div>
@@ -143,7 +145,7 @@ export default function AIChat({ isOpen, onClose, destination = null }) {
               <Bot className="w-6 h-6" />
             </div>
             <p className="font-bold text-sm text-[#171A19]">
-              Ask me anything about {destination ? destination.name : 'your next journey'}
+              Ask me anything about {activeDestination.name}
             </p>
             <p className="text-[11px] text-[#68706D] max-w-xs mx-auto">
               Get recommendations on how long to stay, must-see places, best seasons, local food, and packing essentials.
@@ -226,8 +228,8 @@ export default function AIChat({ isOpen, onClose, destination = null }) {
           type="text"
           value={input}
           onChange={(e) => setInput(e.target.value)}
-          placeholder={`Ask about ${destination ? destination.name : 'your destination'}...`}
-          aria-label={`Ask about ${destination ? destination.name : 'your destination'}`}
+          placeholder={`Ask about ${activeDestination.name}...`}
+          aria-label={`Ask about ${activeDestination.name}`}
           className="flex-1 bg-[#F7F5F0] border border-[#171A19]/10 rounded-full px-4 py-3 text-xs sm:text-sm text-[#171A19] placeholder-[#68706D] focus:outline-none focus:border-[#2F6F68] min-h-[44px]"
         />
         <button

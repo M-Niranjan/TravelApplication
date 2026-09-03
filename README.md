@@ -87,6 +87,16 @@ VITE_UNSPLASH_ACCESS_KEY=your_unsplash_access_key_here
    npm run build
    ```
 
+### Vercel Deployment
+
+The `.env` file is intentionally excluded from Git. Add the Gemini key in the Vercel project before deploying:
+
+1. Open **Project Settings → Environment Variables**.
+2. Add `VITE_GEMINI_API_KEY` with your Google Gemini API key and enable **Production** (also enable Preview if needed).
+3. Redeploy from **Deployments → Redeploy**. Vite injects `VITE_*` variables during the build, so changing the variable requires a new deployment.
+
+The variable name must be exactly `VITE_GEMINI_API_KEY`; do not add quotes or spaces around the value.
+
 ---
 
 ## 📱 Android Studio Setup & APK Generation Steps

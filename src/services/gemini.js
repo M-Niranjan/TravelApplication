@@ -1,5 +1,4 @@
-// Official Google Gemini API Integration using @google/generative-ai SDK
-import { GoogleGenerativeAI } from '@google/generative-ai';
+// Official Google Gemini API Integration using the Gemini REST API
 
 /**
  * Ask Google Gemini Travel Assistant with destination context & multi-turn history
@@ -56,20 +55,30 @@ Guidelines:
   // 4. Call Official Google Gemini SDK
   if (activeKey) {
     try {
-      const genAI = new GoogleGenerativeAI(activeKey);
-      const model = genAI.getGenerativeModel({
-        model: 'gemini-3.6-flash',
-        systemInstruction: systemInstruction
-      });
+      const response = await fetch(
+        `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent?key=${encodeURIComponent(activeKey)}`,
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            systemInstruction: { parts: [{ text: systemInstruction }] },
+            contents: [
+              ...recentHistory.map((message) => ({
+                role: message.role,
+                parts: message.parts
+              })),
+              { role: 'user', parts: [{ text: question }] }
+            ]
+          })
+        }
+      );
 
-      // Start multi-turn chat session with history
-      const chat = model.startChat({
-        history: recentHistory
-      });
+      if (!response.ok) {
+        throw new Error(`Gemini request failed with HTTP ${response.status}`);
+      }
 
-      const result = await chat.sendMessage(question);
-      const response = await result.response;
-      const text = response.text();
+      const data = await response.json();
+      const text = data.candidates?.[0]?.content?.parts?.[0]?.text;
       if (text && text.trim()) return text.trim();
     } catch (e) {
       console.warn('Google Gemini SDK call warning, using fallback:', e.message);
@@ -129,15 +138,24 @@ Return ONLY valid JSON matching this exact structure, without markdown formattin
 
   if (activeKey) {
     try {
-      const genAI = new GoogleGenerativeAI(activeKey);
-      const model = genAI.getGenerativeModel({
-        model: 'gemini-3.6-flash',
-        generationConfig: { responseMimeType: 'application/json' }
-      });
+      const response = await fetch(
+        `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent?key=${encodeURIComponent(activeKey)}`,
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            contents: [{ parts: [{ text: systemPrompt }] }],
+            generationConfig: { responseMimeType: 'application/json' }
+          })
+        }
+      );
 
-      const result = await model.generateContent(systemPrompt);
-      const response = await result.response;
-      const rawText = response.text();
+      if (!response.ok) {
+        throw new Error(`Gemini itinerary request failed with HTTP ${response.status}`);
+      }
+
+      const data = await response.json();
+      const rawText = data.candidates?.[0]?.content?.parts?.[0]?.text;
       if (rawText) {
         const cleanedText = rawText.replace(/```json/g, '').replace(/```/g, '').trim();
         return JSON.parse(cleanedText);
