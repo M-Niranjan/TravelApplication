@@ -97,6 +97,23 @@ The `.env` file is intentionally excluded from Git. Add the Gemini key in the Ve
 
 The variable name must be exactly `VITE_GEMINI_API_KEY`; do not add quotes or spaces around the value.
 
+### Google Sign-In Deployment Setup
+
+For Google sign-in on Vercel, add the deployed hostname in **Firebase Console → Authentication → Settings → Authorized domains**:
+
+```text
+travel-application-rouge.vercel.app
+localhost
+```
+
+In **Google Cloud Console → APIs & Services → Credentials**, edit the OAuth web client used by Firebase and add this authorized redirect URI:
+
+```text
+https://travelapplication.firebaseapp.com/__/auth/handler
+```
+
+The Firebase `VITE_FIREBASE_*` variables in Vercel must belong to the same Firebase project as the OAuth client. Redeploy after changing any `VITE_*` variable.
+
 ---
 
 ## 📱 Android Studio Setup & APK Generation Steps

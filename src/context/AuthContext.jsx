@@ -197,45 +197,45 @@ export function AuthProvider({ children }) {
     return newProfile;
   };
 
-  // Sign in with Google (Seamless Firebase + Automatic Google Profile Resolution)
+  // Sign in with Google through Firebase Authentication.
   const loginWithGoogle = async () => {
     setAuthError(null);
 
-    // 1. Try Firebase Google Popup first
-    if (auth && googleProvider) {
-      try {
-        const result = await signInWithPopup(auth, googleProvider);
-        if (result?.user) {
-          const profileData = {
-            uid: result.user.uid,
-            email: result.user.email,
-            displayName: result.user.displayName || result.user.email.split('@')[0],
-            photoURL: result.user.photoURL || `https://api.dicebear.com/7.x/adventurer/svg?seed=${result.user.email}`,
-            createdAt: result.user.metadata?.creationTime || new Date().toISOString(),
-            isFirebase: true
-          };
-          setUser(profileData);
-          localStorage.setItem('aetheria_active_user', JSON.stringify(profileData));
-          return profileData;
-        }
-      } catch (error) {
-        console.warn('Firebase Google Auth encountered OAuth domain mismatch, authenticating verified Google profile:', error.message);
-      }
+    if (!auth || !googleProvider) {
+      const msg = 'Google sign-in is not configured for this deployment.';
+      setAuthError(msg);
+      throw new Error(msg);
     }
 
-    // 2. Automatic Verified Google Profile
-    const googleProfile = {
-      uid: `google_oauth_${Date.now()}`,
-      email: 'niranjan.traveler@gmail.com',
-      displayName: 'Niranjan M',
-      photoURL: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?q=80&w=250&auto=format&fit=crop',
-      createdAt: new Date().toLocaleDateString('en-US', { month: 'long', year: 'numeric' }),
-      provider: 'google.com',
-      isFirebase: true
-    };
-    localStorage.setItem('aetheria_active_user', JSON.stringify(googleProfile));
-    setUser(googleProfile);
-    return googleProfile;
+    try {
+      const result = await signInWithPopup(auth, googleProvider);
+      if (!result?.user) throw new Error('Google sign-in did not return a user.');
+
+      const profileData = {
+        uid: result.user.uid,
+        email: result.user.email,
+        displayName: result.user.displayName || result.user.email.split('@')[0],
+        photoURL: result.user.photoURL || `https://api.dicebear.com/7.x/adventurer/svg?seed=${result.user.email}`,
+        createdAt: result.user.metadata?.creationTime || new Date().toISOString(),
+        isFirebase: true
+      };
+      setUser(profileData);
+      localStorage.setItem('aetheria_active_user', JSON.stringify(profileData));
+      return profileData;
+    } catch (error) {
+      const errorMessages = {
+        'auth/unauthorized-domain': `This site is not authorized in Firebase. Add ${window.location.hostname} in Firebase Console > Authentication > Settings > Authorized domains.`,
+        'auth/popup-blocked': 'Google sign-in was blocked by the browser. Allow popups for this site and try again.',
+        'auth/popup-closed-by-user': 'The Google sign-in window closed before authentication completed. If you did not close it, add this site to Firebase Authorized domains and verify the OAuth redirect URI.',
+        'auth/operation-not-allowed': 'Google sign-in is disabled. Enable the Google provider in Firebase Authentication > Sign-in method.',
+        'auth/invalid-api-key': 'The Firebase API key configured for this deployment is invalid.'
+      };
+      const msg = errorMessages[error.code] || (error.message?.includes('redirect_uri_mismatch')
+        ? 'Google OAuth callback is not configured. Add https://travelapplication.firebaseapp.com/__/auth/handler to the Google OAuth client redirect URIs.'
+        : 'Google sign-in failed. Check the Firebase and Google OAuth settings, then try again.');
+      setAuthError(msg);
+      throw new Error(msg);
+    }
   };
 
   // Demo Sign-In (1-Click instant test login)
