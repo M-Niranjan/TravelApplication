@@ -12,33 +12,43 @@ import {
   ArrowRight,
   Heart
 } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { DESTINATIONS } from '../data/destinations';
 import { useAuth } from '../context/AuthContext';
 
 export default function PlaceDetailModal({ place, onClose, onOpenAIChatWithDestination }) {
   const navigate = useNavigate();
+  const location = useLocation();
   const { savedFavorites, toggleFavorite } = useAuth();
 
   if (!place) return null;
 
-  // Find parent destination if not directly provided
+  // Find parent destination reliably
   const parentDestination = DESTINATIONS.find((d) => 
-    d.places?.some((p) => p.id === place.id) ||
-    d.name.toLowerCase() === place.destinationName?.toLowerCase() ||
-    d.country.toLowerCase() === place.country?.toLowerCase()
+    d.places?.some((p) => p.id === place.id || p.name?.toLowerCase() === place.name?.toLowerCase()) ||
+    (place.destinationName && d.name.toLowerCase() === place.destinationName.toLowerCase()) ||
+    (place.country && d.country.toLowerCase() === place.country.toLowerCase())
   ) || DESTINATIONS[0];
 
   const isSaved = savedFavorites.includes(place.id);
 
-  const handleExploreDestination = () => {
+  const handleExploreDestination = (e) => {
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
     onClose();
     if (parentDestination?.id) {
       navigate(`/destinations/${parentDestination.id}`);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
   };
 
-  const handleAskAI = () => {
+  const handleAskAI = (e) => {
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
     onClose();
     if (onOpenAIChatWithDestination) {
       onOpenAIChatWithDestination(parentDestination);
@@ -55,7 +65,7 @@ export default function PlaceDetailModal({ place, onClose, onOpenAIChatWithDesti
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           onClick={onClose}
-          className="fixed inset-0 bg-black/75 backdrop-blur-md"
+          className="fixed inset-0 bg-black/75 backdrop-blur-md cursor-pointer"
         />
 
         {/* Modal Window */}
@@ -64,7 +74,7 @@ export default function PlaceDetailModal({ place, onClose, onOpenAIChatWithDesti
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.95, y: 20 }}
           transition={{ duration: 0.25, ease: 'easeOut' }}
-          className="relative bg-white rounded-3xl max-w-2xl w-full shadow-2xl overflow-hidden z-10 my-8 max-h-[90vh] flex flex-col"
+          className="relative bg-white rounded-3xl max-w-2xl w-full shadow-2xl overflow-hidden z-10 my-8 max-h-[90vh] flex flex-col pointer-events-auto"
         >
           {/* Hero Image Section */}
           <div className="relative h-64 sm:h-72 w-full shrink-0 overflow-hidden">
@@ -78,14 +88,14 @@ export default function PlaceDetailModal({ place, onClose, onOpenAIChatWithDesti
             {/* Close Button */}
             <button
               onClick={onClose}
-              className="absolute top-4 right-4 p-2.5 rounded-full bg-black/50 hover:bg-black/80 text-white backdrop-blur-md transition-transform hover:scale-105 active:scale-95 shadow-md"
+              className="absolute top-4 right-4 p-2.5 rounded-full bg-black/50 hover:bg-black/80 text-white backdrop-blur-md transition-transform hover:scale-105 active:scale-95 shadow-md z-20"
               aria-label="Close modal"
             >
               <X className="w-5 h-5" />
             </button>
 
             {/* Category & Location Badges */}
-            <div className="absolute top-4 left-4 flex items-center space-x-2">
+            <div className="absolute top-4 left-4 flex items-center space-x-2 z-10">
               <span className="px-3.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider bg-white/90 backdrop-blur-md text-[#171A19] shadow-sm">
                 {place.category || 'Landmark'}
               </span>
@@ -96,7 +106,7 @@ export default function PlaceDetailModal({ place, onClose, onOpenAIChatWithDesti
             </div>
 
             {/* Place Title in Overlay */}
-            <div className="absolute bottom-5 left-6 right-6 text-white">
+            <div className="absolute bottom-5 left-6 right-6 text-white z-10">
               <span className="text-xs uppercase tracking-widest font-semibold text-[#D8B98A] block mb-1">
                 {parentDestination.country}
               </span>
@@ -171,16 +181,18 @@ export default function PlaceDetailModal({ place, onClose, onOpenAIChatWithDesti
           <div className="p-4 sm:p-6 bg-[#F7F5F0] border-t border-[#171A19]/08 flex flex-col sm:flex-row items-center justify-between gap-3 shrink-0">
             
             <button
+              type="button"
               onClick={handleAskAI}
-              className="w-full sm:w-auto px-5 py-3 rounded-full bg-[#101413] hover:bg-black text-white font-bold text-xs flex items-center justify-center space-x-2 shadow-sm transition-transform active:scale-95"
+              className="w-full sm:w-auto px-5 py-3 rounded-full bg-[#101413] hover:bg-black text-white font-bold text-xs flex items-center justify-center space-x-2 shadow-sm transition-transform active:scale-95 cursor-pointer min-h-[44px]"
             >
               <Sparkles className="w-4 h-4 text-[#D8B98A]" />
               <span>Ask AI About {place.name}</span>
             </button>
 
             <button
+              type="button"
               onClick={handleExploreDestination}
-              className="w-full sm:w-auto px-6 py-3 rounded-full bg-[#2F6F68] hover:bg-[#265953] text-white font-bold text-xs flex items-center justify-center space-x-2 shadow-sm transition-transform hover:scale-[1.02] active:scale-95"
+              className="w-full sm:w-auto px-6 py-3 rounded-full bg-[#2F6F68] hover:bg-[#265953] text-white font-bold text-xs flex items-center justify-center space-x-2 shadow-sm transition-transform hover:scale-[1.02] active:scale-95 cursor-pointer min-h-[44px]"
             >
               <span>Explore {parentDestination.name}</span>
               <ArrowRight className="w-4 h-4" />
