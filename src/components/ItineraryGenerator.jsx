@@ -3,7 +3,18 @@ import { useGemini } from '../hooks/useGemini';
 import ItineraryTimeline from './ItineraryTimeline';
 import LoadingState from './LoadingState';
 import { DESTINATIONS } from '../data/destinations';
-import { Sparkles, Calendar, Compass, Sliders, Check, MapPin } from 'lucide-react';
+import { 
+  Sparkles, 
+  Calendar, 
+  Compass, 
+  MapPin, 
+  Printer, 
+  Clock, 
+  Check, 
+  Sliders, 
+  Layers,
+  ChevronRight
+} from 'lucide-react';
 import confetti from 'canvas-confetti';
 
 export default function ItineraryGenerator({ initialDestination = null }) {
@@ -12,16 +23,28 @@ export default function ItineraryGenerator({ initialDestination = null }) {
   const [style, setStyle] = useState('Culture');
   const [budget, setBudget] = useState('Mid-range');
   const [selectedInterests, setSelectedInterests] = useState(['History', 'Food']);
-  
+
   const activeDestination = DESTINATIONS.find((d) => d.id === selectedDestId) || DESTINATIONS[0];
 
-  // Helper to build initial structured day-by-day plan
+  const travelStyles = [
+    { id: 'Culture', label: 'Culture', icon: '🏛️' },
+    { id: 'Relaxed', label: 'Relaxed', icon: '🏖️' },
+    { id: 'Adventure', label: 'Adventure', icon: '⚡' },
+    { id: 'Food', label: 'Food & Wine', icon: '🍜' },
+    { id: 'Nature', label: 'Nature', icon: '🌿' },
+    { id: 'Luxury', label: 'Luxury', icon: '💎' }
+  ];
+
+  const durationOptions = [1, 2, 3, 4, 5, 7];
+  const interestOptions = ['History', 'Nature', 'Shopping', 'Food', 'Photography', 'Nightlife', 'Architecture'];
+
+  // Helper to build default structured plan
   const createDefaultPlan = (dest, numDays = 3, planStyle = 'Culture') => {
     const daysArr = [];
     for (let i = 1; i <= numDays; i++) {
       const p1 = dest.places?.[(i - 1) % (dest.places?.length || 1)] || { 
         name: 'Historic Old Quarter', 
-        description: 'Explore charming cobblestone avenues and heritage architecture.' 
+        description: 'Explore charming cobblestone avenues, heritage architecture, and iconic squares.' 
       };
       const p2 = dest.places?.[i % (dest.places?.length || 1)] || { 
         name: 'Scenic Viewpoint & Cultural Market', 
@@ -45,7 +68,7 @@ export default function ItineraryGenerator({ initialDestination = null }) {
           {
             time: '13:00',
             title: `Authentic Regional Lunch & Neighborhood Stroll`,
-            description: `Enjoy traditional cuisine at a top-rated local bistro.`,
+            description: `Enjoy traditional cuisine at a top-rated local bistro in ${dest.name}.`,
             duration: '1.5 hours'
           },
           {
@@ -71,10 +94,7 @@ export default function ItineraryGenerator({ initialDestination = null }) {
 
   const { loading, createItinerary } = useGemini();
 
-  const travelStyles = ['Relaxed', 'Adventure', 'Culture', 'Luxury', 'Food', 'Family'];
-  const interestOptions = ['History', 'Nature', 'Shopping', 'Food', 'Photography', 'Nightlife', 'Architecture'];
-
-  // Update plan when destination changes
+  // Keep destination synced if prop changes
   useEffect(() => {
     if (initialDestination?.id) {
       setSelectedDestId(initialDestination.id);
@@ -91,8 +111,8 @@ export default function ItineraryGenerator({ initialDestination = null }) {
     );
   };
 
-  const handleFormSubmit = async (e) => {
-    e.preventDefault();
+  const handleGenerate = async (e) => {
+    if (e) e.preventDefault();
     const config = {
       destination: activeDestination,
       days,
@@ -106,97 +126,122 @@ export default function ItineraryGenerator({ initialDestination = null }) {
       setItineraryResult(result);
       try {
         confetti({ particleCount: 70, spread: 60, origin: { y: 0.6 } });
-      } catch (e) {}
+      } catch (err) {}
     }
   };
 
   return (
-    <section id="itinerary-builder" className="py-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div id="itinerary-builder" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       
-      {/* Section Header */}
-      <div className="no-print text-center max-w-3xl mx-auto mb-12">
+      {/* Header */}
+      <div className="no-print text-center max-w-2xl mx-auto mb-10">
         <div className="inline-flex items-center space-x-2 px-4 py-1.5 rounded-full bg-[#2F6F68]/10 text-[#2F6F68] text-xs font-bold uppercase tracking-wider mb-3">
           <Sparkles className="w-3.5 h-3.5 text-[#D8B98A]" />
-          <span>✨ Plan my trip with AI</span>
+          <span>AI TRAVEL PLANNER STUDIO</span>
         </div>
-        <h2 className="font-editorial text-3xl sm:text-5xl font-bold text-[#171A19] tracking-tight mb-4">
-          Day-by-Day Travel Itinerary
+        <h2 className="font-editorial text-3xl sm:text-5xl font-bold text-[#171A19] tracking-tight mb-3">
+          Custom Day-by-Day Itinerary
         </h2>
-        <p className="text-sm text-[#68706D] font-light">
-          Configure your travel preferences and let Gemini AI generate a real, readable day-by-day plan directly on the page.
+        <p className="text-xs sm:text-sm text-[#68706D] font-light">
+          Personalize your travel style, duration, and interests to generate a structured timeline.
         </p>
       </div>
 
-      {/* Preferences Form Container */}
-      <div className="no-print bg-white p-6 sm:p-10 rounded-3xl border border-[#171A19]/10 shadow-sm mb-12">
-        <form onSubmit={handleFormSubmit} className="space-y-6">
+      {/* Modern Split Studio Layout */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+        
+        {/* Left Column: Studio Controls Panel (5 cols) */}
+        <div className="no-print lg:col-span-5 bg-white p-6 sm:p-7 rounded-3xl border border-[#171A19]/10 shadow-lg space-y-6 sticky lg:top-24">
           
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {/* Destination Preview & Selector */}
+          <div>
+            <label className="text-[10px] font-extrabold text-[#2F6F68] uppercase tracking-wider block mb-2">
+              Select Destination
+            </label>
             
-            {/* Destination Selection */}
-            <div>
-              <label className="text-xs font-bold text-[#171A19] uppercase tracking-wider block mb-2">
-                Destination
-              </label>
-              <select
-                value={selectedDestId}
-                onChange={(e) => setSelectedDestId(e.target.value)}
-                className="w-full bg-[#F7F5F0] border border-[#171A19]/10 rounded-2xl px-4 py-3 text-xs sm:text-sm font-semibold text-[#171A19] focus:outline-none focus:border-[#2F6F68]"
-              >
-                {DESTINATIONS.map((d) => (
-                  <option key={d.id} value={d.id}>
-                    {d.name}, {d.country}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            {/* Number of Days */}
-            <div>
-              <label className="text-xs font-bold text-[#171A19] uppercase tracking-wider block mb-2">
-                Duration ({days} Days)
-              </label>
-              <input
-                type="range"
-                min="1"
-                max="7"
-                value={days}
-                onChange={(e) => setDays(parseInt(e.target.value))}
-                className="w-full accent-[#2F6F68] bg-[#F7F5F0] cursor-pointer h-2 rounded-lg mt-3"
+            <div className="relative mb-3 rounded-2xl overflow-hidden h-28 border border-[#171A19]/10">
+              <img
+                src={activeDestination.image}
+                alt={activeDestination.name}
+                className="w-full h-full object-cover"
               />
-              <div className="flex justify-between text-[10px] text-[#68706D] mt-1 font-semibold">
-                <span>1 Day</span>
-                <span>4 Days</span>
-                <span>7 Days</span>
+              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
+              <div className="absolute bottom-3 left-4 text-white">
+                <span className="text-[10px] uppercase font-bold text-[#D8B98A] block">{activeDestination.country}</span>
+                <span className="font-editorial text-xl font-bold">{activeDestination.name}</span>
               </div>
             </div>
 
-            {/* Travel Style */}
-            <div>
-              <label className="text-xs font-bold text-[#171A19] uppercase tracking-wider block mb-2">
-                Travel Style
-              </label>
-              <select
-                value={style}
-                onChange={(e) => setStyle(e.target.value)}
-                className="w-full bg-[#F7F5F0] border border-[#171A19]/10 rounded-2xl px-4 py-3 text-xs sm:text-sm font-semibold text-[#171A19] focus:outline-none focus:border-[#2F6F68]"
-              >
-                {travelStyles.map((st) => (
-                  <option key={st} value={st}>
-                    {st}
-                  </option>
-                ))}
-              </select>
-            </div>
+            <select
+              value={selectedDestId}
+              onChange={(e) => setSelectedDestId(e.target.value)}
+              className="w-full bg-[#F7F5F0] border border-[#171A19]/10 rounded-2xl px-4 py-3 text-xs sm:text-sm font-semibold text-[#171A19] focus:outline-none focus:border-[#2F6F68]"
+            >
+              {DESTINATIONS.map((d) => (
+                <option key={d.id} value={d.id}>
+                  {d.name}, {d.country} ({d.region})
+                </option>
+              ))}
+            </select>
+          </div>
 
+          {/* Duration Selector (Pills) */}
+          <div>
+            <div className="flex items-center justify-between mb-2">
+              <label className="text-[10px] font-extrabold text-[#2F6F68] uppercase tracking-wider">
+                Trip Duration
+              </label>
+              <span className="text-xs font-bold text-[#171A19]">{days} Days</span>
+            </div>
+            
+            <div className="grid grid-cols-6 gap-1.5">
+              {durationOptions.map((num) => (
+                <button
+                  key={num}
+                  type="button"
+                  onClick={() => setDays(num)}
+                  className={`py-2 rounded-xl text-xs font-bold transition-all min-h-[38px] ${
+                    days === num
+                      ? 'bg-[#2F6F68] text-white shadow-md scale-105'
+                      : 'bg-[#F7F5F0] text-[#68706D] hover:text-[#171A19] hover:bg-black/5'
+                  }`}
+                >
+                  {num}D
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Travel Style Selector */}
+          <div>
+            <label className="text-[10px] font-extrabold text-[#2F6F68] uppercase tracking-wider block mb-2">
+              Travel Vibe & Style
+            </label>
+            <div className="grid grid-cols-3 gap-2">
+              {travelStyles.map((st) => (
+                <button
+                  key={st.id}
+                  type="button"
+                  onClick={() => setStyle(st.id)}
+                  className={`p-2.5 rounded-2xl text-xs font-bold transition-all flex flex-col items-center space-y-1 border ${
+                    style === st.id
+                      ? 'bg-[#2F6F68]/10 border-[#2F6F68] text-[#2F6F68] shadow-sm'
+                      : 'bg-[#F7F5F0] border-transparent text-[#68706D] hover:text-[#171A19]'
+                  }`}
+                >
+                  <span className="text-base">{st.icon}</span>
+                  <span className="text-[11px] truncate w-full text-center">{st.label}</span>
+                </button>
+              ))}
+            </div>
           </div>
 
           {/* Interests Filter Chips */}
           <div>
-            <label className="text-xs font-bold text-[#171A19] uppercase tracking-wider block mb-2">
-              Select Your Interests
+            <label className="text-[10px] font-extrabold text-[#2F6F68] uppercase tracking-wider block mb-2">
+              Specific Interests
             </label>
-            <div className="flex flex-wrap gap-2">
+            <div className="flex flex-wrap gap-1.5">
               {interestOptions.map((interest) => {
                 const selected = selectedInterests.includes(interest);
                 return (
@@ -204,13 +249,13 @@ export default function ItineraryGenerator({ initialDestination = null }) {
                     key={interest}
                     type="button"
                     onClick={() => toggleInterest(interest)}
-                    className={`px-4 py-2 rounded-full text-xs font-semibold transition-all flex items-center space-x-1.5 ${
+                    className={`px-3 py-1.5 rounded-full text-[11px] font-semibold transition-all flex items-center space-x-1 ${
                       selected
-                        ? 'bg-[#2F6F68] text-white shadow-sm'
-                        : 'bg-[#F7F5F0] text-[#68706D] hover:text-[#171A19] border border-[#171A19]/08'
+                        ? 'bg-[#101413] text-white shadow-sm'
+                        : 'bg-[#F7F5F0] text-[#68706D] hover:text-[#171A19]'
                     }`}
                   >
-                    {selected && <Check className="w-3.5 h-3.5 text-[#D8B98A]" />}
+                    {selected && <Check className="w-3 h-3 text-[#D8B98A]" />}
                     <span>{interest}</span>
                   </button>
                 );
@@ -219,34 +264,35 @@ export default function ItineraryGenerator({ initialDestination = null }) {
           </div>
 
           {/* Generate Button */}
-          <div className="pt-2 text-right">
-            <button
-              type="submit"
-              disabled={loading}
-              className="w-full sm:w-auto px-10 py-4 rounded-full bg-[#2F6F68] hover:bg-[#265953] text-white font-bold text-sm shadow-md shadow-[#2F6F68]/20 transition-transform hover:scale-[1.02] flex items-center justify-center space-x-2 disabled:opacity-50 min-h-[44px]"
-            >
-              <Sparkles className="w-4 h-4 text-[#D8B98A]" />
-              <span>{loading ? 'AI is planning your journey...' : '✨ Generate Day-by-Day Plan'}</span>
-            </button>
-          </div>
+          <button
+            type="button"
+            onClick={handleGenerate}
+            disabled={loading}
+            className="w-full py-4 rounded-full bg-[#2F6F68] hover:bg-[#265953] text-white font-bold text-xs sm:text-sm shadow-xl shadow-[#2F6F68]/25 transition-transform hover:scale-[1.02] active:scale-95 flex items-center justify-center space-x-2 disabled:opacity-50 min-h-[48px]"
+          >
+            <Sparkles className="w-4 h-4 text-[#D8B98A]" />
+            <span>{loading ? 'AI is generating itinerary...' : '✨ Generate Day-by-Day Plan'}</span>
+          </button>
 
-        </form>
+        </div>
+
+        {/* Right Column: Interactive Plan Canvas (7 cols) */}
+        <div className="lg:col-span-7 space-y-6">
+          
+          {loading && (
+            <div className="no-print">
+              <LoadingState type="itinerary" message="Gemini AI is crafting your tailored day-by-day travel timeline..." />
+            </div>
+          )}
+
+          {itineraryResult && !loading && (
+            <ItineraryTimeline itinerary={itineraryResult} />
+          )}
+
+        </div>
+
       </div>
 
-      {/* Loading Indicator */}
-      {loading && (
-        <div className="no-print">
-          <LoadingState type="itinerary" message="Gemini AI is crafting your day-by-day travel timeline..." />
-        </div>
-      )}
-
-      {/* Rendered Real, Readable Day-by-Day Plan on Page */}
-      {itineraryResult && !loading && (
-        <div className="space-y-6">
-          <ItineraryTimeline itinerary={itineraryResult} />
-        </div>
-      )}
-
-    </section>
+    </div>
   );
 }
