@@ -6,6 +6,10 @@ import Footer from './components/Footer';
 import Home from './pages/Home';
 import Destinations from './pages/Destinations';
 import DestinationDetails from './pages/DestinationDetails';
+import Places from './pages/Places';
+import ItineraryPage from './pages/ItineraryPage';
+import PackingPage from './pages/PackingPage';
+import WeatherPage from './pages/WeatherPage';
 import LocationSelector from './components/LocationSelector';
 import AIChat from './components/AIChat';
 import AuthModal from './components/AuthModal';
@@ -68,7 +72,7 @@ function AppContent() {
           />
         </div>
 
-        {/* Page Routes */}
+        {/* Dedicated Page Routes */}
         <main className="flex-grow">
           <Routes>
             <Route
@@ -89,6 +93,10 @@ function AppContent() {
                 />
               }
             />
+            <Route path="/places" element={<Places />} />
+            <Route path="/itinerary" element={<ItineraryPage />} />
+            <Route path="/packing" element={<PackingPage />} />
+            <Route path="/weather" element={<WeatherPage currentLocation={location} />} />
           </Routes>
         </main>
 

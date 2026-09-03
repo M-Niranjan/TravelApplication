@@ -1,131 +1,128 @@
-import React, { useState, useMemo } from 'react';
+import React, { useMemo } from 'react';
+import { Link } from 'react-router-dom';
 import Hero from '../components/Hero';
-import SearchBar from '../components/SearchBar';
-import Filters from '../components/Filters';
-import DestinationGrid from '../components/DestinationGrid';
+import DestinationCard from '../components/DestinationCard';
 import FamousPlaceCard from '../components/FamousPlaceCard';
-import WeatherCard from '../components/WeatherCard';
-import ItineraryGenerator from '../components/ItineraryGenerator';
-import PackingAssistant from '../components/PackingAssistant';
 import { DESTINATIONS } from '../data/destinations';
-import { Sparkles, MapPin, Landmark, Compass } from 'lucide-react';
+import { Sparkles, MapPin, Landmark, ArrowRight, Calendar, Luggage } from 'lucide-react';
 
 export default function Home({ onOpenAIChat, currentLocation }) {
-  const [searchQuery, setSearchQuery] = useState('');
-  const [selectedRegion, setSelectedRegion] = useState('All');
-  const [selectedType, setSelectedType] = useState('All Types');
+  // Top 4 featured destinations for clean home page
+  const featuredDestinations = useMemo(() => DESTINATIONS.slice(0, 4), []);
 
-  const filteredDestinations = useMemo(() => {
-    return DESTINATIONS.filter((dest) => {
-      const matchesSearch =
-        !searchQuery ||
-        dest.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        dest.country.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        dest.tags.some((t) => t.toLowerCase().includes(searchQuery.toLowerCase()));
-
-      const matchesRegion = selectedRegion === 'All' || dest.region === selectedRegion;
-      const matchesType = selectedType === 'All Types' || dest.tags.includes(selectedType);
-
-      return matchesSearch && matchesRegion && matchesType;
-    });
-  }, [searchQuery, selectedRegion, selectedType]);
-
-  // Aggregate famous places across top destinations
-  const allFamousPlaces = useMemo(() => {
-    return DESTINATIONS.flatMap((d) => d.places || []);
+  // Top 4 featured landmarks
+  const featuredPlaces = useMemo(() => {
+    return DESTINATIONS.flatMap((d) => d.places || []).slice(0, 4);
   }, []);
 
   return (
-    <div className="space-y-20">
+    <div className="space-y-16 pb-20">
       
-      {/* Hero Section */}
-      <div className="no-print">
-        <Hero onOpenAIChat={onOpenAIChat} />
-      </div>
+      {/* 1. Hero Section (3-Second Auto-Media Rotation Engine) */}
+      <Hero onOpenAIChat={onOpenAIChat} />
 
-      {/* Weather Section for Visitor's Current Location */}
-      <section id="weather" className="no-print max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-4">
-        <WeatherCard
-          lat={currentLocation.lat}
-          lon={currentLocation.lon}
-          locationName={currentLocation.formattedName}
-        />
-      </section>
-
-      {/* Destination Explorer Section */}
-      <section id="explorer" className="no-print max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        
-        {/* Section Header */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-6">
+      {/* 2. Curated Escapes Showcase (Top 4 Cards) */}
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-8 gap-4">
           <div>
-            <span className="text-xs font-extrabold uppercase tracking-widest text-[#2F6F68] block mb-2">
-              DISCOVER DESTINATIONS
+            <span className="text-xs font-extrabold uppercase tracking-widest text-[#2F6F68] block mb-1.5">
+              FEATURED ESCAPES
             </span>
-            <h2 className="font-editorial text-4xl sm:text-5xl font-bold text-[#171A19] tracking-tight">
-              Curated Escapes
+            <h2 className="font-editorial text-3xl sm:text-4xl font-bold text-[#171A19] tracking-tight">
+              Curated Destinations
             </h2>
           </div>
 
-          {/* Search Bar Component */}
-          <SearchBar
-            value={searchQuery}
-            onChange={setSearchQuery}
-            onClear={() => setSearchQuery('')}
-          />
+          <Link
+            to="/destinations"
+            className="inline-flex items-center space-x-1.5 px-5 py-2.5 rounded-full bg-white hover:bg-[#2F6F68] text-[#171A19] hover:text-white font-bold text-xs border border-[#171A19]/10 shadow-sm transition-all group shrink-0"
+          >
+            <span>View All Destinations</span>
+            <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
+          </Link>
         </div>
 
-        {/* Filters Bar */}
-        <div className="mb-10">
-          <Filters
-            selectedRegion={selectedRegion}
-            onSelectRegion={setSelectedRegion}
-            selectedType={selectedType}
-            onSelectType={setSelectedType}
-          />
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          {featuredDestinations.map((dest) => (
+            <DestinationCard key={dest.id} destination={dest} />
+          ))}
         </div>
-
-        {/* Grid of Destination Cards */}
-        <DestinationGrid
-          destinations={filteredDestinations}
-          onResetFilters={() => {
-            setSearchQuery('');
-            setSelectedRegion('All');
-            setSelectedType('All Types');
-          }}
-        />
-
       </section>
 
-      {/* Famous Places Showcase Section */}
-      <section className="no-print bg-white py-20 border-y border-[#171A19]/06">
+      {/* 3. Notable Landmarks Showcase (Top 4 Places) */}
+      <section className="bg-white py-16 border-y border-[#171A19]/06">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          
-          <div className="text-center max-w-2xl mx-auto mb-14">
-            <span className="text-xs font-extrabold uppercase tracking-widest text-[#2F6F68] block mb-2">
-              NOTABLE LANDMARKS
-            </span>
-            <h2 className="font-editorial text-3xl sm:text-5xl font-bold text-[#171A19] tracking-tight mb-4">
-              Famous Places Worth Visiting
-            </h2>
-            <p className="text-sm text-[#68706D] font-light">
-              Explore historic monuments, architectural wonders, and natural sanctuaries with estimated visit durations.
-            </p>
+          <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-8 gap-4">
+            <div>
+              <span className="text-xs font-extrabold uppercase tracking-widest text-[#2F6F68] block mb-1.5">
+                ICONIC SIGHTS
+              </span>
+              <h2 className="font-editorial text-3xl sm:text-4xl font-bold text-[#171A19] tracking-tight">
+                Top Tourist Places
+              </h2>
+            </div>
+
+            <Link
+              to="/places"
+              className="inline-flex items-center space-x-1.5 px-5 py-2.5 rounded-full bg-[#F7F5F0] hover:bg-[#2F6F68] text-[#171A19] hover:text-white font-bold text-xs border border-[#171A19]/10 shadow-sm transition-all group shrink-0"
+            >
+              <span>Explore All Tourist Places</span>
+              <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
+            </Link>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            {allFamousPlaces.slice(0, 8).map((place) => (
+            {featuredPlaces.map((place) => (
               <FamousPlaceCard key={place.id} place={place} />
             ))}
           </div>
-
         </div>
       </section>
 
-      {/* AI Itinerary Generator Section */}
-      <ItineraryGenerator />
+      {/* 4. Quick Action Hub Banner (Planner & Packing Links) */}
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          
+          {/* AI Itinerary Card */}
+          <Link
+            to="/itinerary"
+            className="p-8 rounded-3xl bg-[#101413] text-white flex items-center justify-between group hover:shadow-2xl transition-all border border-white/10"
+          >
+            <div className="space-y-2">
+              <div className="w-10 h-10 rounded-2xl bg-[#2F6F68] text-[#D8B98A] flex items-center justify-center">
+                <Calendar className="w-5 h-5" />
+              </div>
+              <h3 className="font-editorial text-2xl font-bold">AI Itinerary Planner</h3>
+              <p className="text-xs text-slate-300 font-light max-w-xs">
+                Generate tailored day-by-day travel schedules with PDF export.
+              </p>
+            </div>
+            <div className="w-10 h-10 rounded-full bg-white/10 group-hover:bg-[#2F6F68] flex items-center justify-center transition-colors">
+              <ArrowRight className="w-5 h-5 text-white group-hover:translate-x-0.5 transition-transform" />
+            </div>
+          </Link>
 
-      {/* Smart Packing Assistant Checklist */}
-      <PackingAssistant />
+          {/* Smart Packing Assistant Card */}
+          <Link
+            to="/packing"
+            className="p-8 rounded-3xl bg-white text-[#171A19] flex items-center justify-between group hover:shadow-2xl transition-all border border-[#171A19]/10"
+          >
+            <div className="space-y-2">
+              <div className="w-10 h-10 rounded-2xl bg-[#2F6F68]/10 text-[#2F6F68] flex items-center justify-center">
+                <Luggage className="w-5 h-5" />
+              </div>
+              <h3 className="font-editorial text-2xl font-bold">Smart Packing Checklist</h3>
+              <p className="text-xs text-[#68706D] font-light max-w-xs">
+                Interactive luggage readiness tracker and essential gear checklist.
+              </p>
+            </div>
+            <div className="w-10 h-10 rounded-full bg-[#F7F5F0] group-hover:bg-[#2F6F68] group-hover:text-white flex items-center justify-center transition-colors">
+              <ArrowRight className="w-5 h-5 group-hover:translate-x-0.5 transition-transform" />
+            </div>
+          </Link>
+
+        </div>
+      </section>
 
     </div>
   );
