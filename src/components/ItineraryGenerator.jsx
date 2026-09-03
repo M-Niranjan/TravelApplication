@@ -11,13 +11,13 @@ import {
   Printer, 
   Clock, 
   Check, 
-  Plus,
-  Minus,
+  Plus, 
+  Minus, 
   Sliders, 
-  Layers,
-  Edit3,
-  Landmark,
-  CheckCircle2
+  Layers, 
+  Edit3, 
+  Landmark, 
+  CheckCircle2 
 } from 'lucide-react';
 import confetti from 'canvas-confetti';
 
@@ -183,14 +183,14 @@ export default function ItineraryGenerator({ initialDestination = null }) {
       
       {/* Header */}
       <div className="no-print text-center max-w-2xl mx-auto mb-10">
-        <div className="inline-flex items-center space-x-2 px-4 py-1.5 rounded-full bg-[#2F6F68]/10 text-[#2F6F68] text-xs font-bold uppercase tracking-wider mb-3">
-          <Sparkles className="w-3.5 h-3.5 text-[#D8B98A]" />
-          <span>AI TRAVEL PLANNER STUDIO</span>
+        <div className="inline-flex items-center space-x-2 px-4 py-1.5 rounded-full bg-[#1B4944]/10 text-[#1B4944] text-xs font-bold uppercase tracking-wider mb-3">
+          <Sparkles className="w-3.5 h-3.5 text-[#C29C61]" />
+          <span>AI Travel Planner Studio</span>
         </div>
-        <h2 className="font-editorial text-3xl sm:text-5xl font-bold text-[#171A19] tracking-tight mb-3">
+        <h2 className="font-editorial text-3xl sm:text-5xl font-bold text-[#101413] tracking-tight mb-3">
           {initialDestination ? `${activeDestination.name} Travel Itinerary` : 'Custom Day-by-Day Itinerary'}
         </h2>
-        <p className="text-xs sm:text-sm text-[#68706D] font-light">
+        <p className="text-xs sm:text-sm text-[#586260] font-light">
           {initialDestination 
             ? `Customize tourist places and duration in ${activeDestination.name} to generate your schedule.`
             : 'Select your destination, customize included tours & duration, and let Gemini AI generate your schedule.'}
@@ -201,33 +201,32 @@ export default function ItineraryGenerator({ initialDestination = null }) {
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
         
         {/* Left Column: Studio Controls Panel (5 cols) */}
-        <div className="no-print lg:col-span-5 bg-white p-6 sm:p-7 rounded-3xl border border-[#171A19]/10 shadow-lg space-y-6 sticky lg:top-24">
+        <div className="no-print lg:col-span-5 bg-white p-6 sm:p-7 rounded-3xl border border-[#101413]/08 shadow-luxury space-y-6 sticky lg:top-24">
           
-          {/* 1. Destination Card (Dropdown shown only when in global planner, hidden when locked to single destination) */}
+          {/* 1. Destination Card */}
           <div>
-            <label className="text-[10px] font-extrabold text-[#2F6F68] uppercase tracking-wider block mb-2">
+            <label className="text-[10px] font-extrabold text-[#1B4944] uppercase tracking-wider block mb-2">
               Destination
             </label>
             
-            <div className="relative rounded-2xl overflow-hidden h-28 border border-[#171A19]/10 shadow-sm">
+            <div className="relative rounded-2xl overflow-hidden h-28 border border-[#101413]/08 shadow-sm bg-slate-200">
               <img
                 src={activeDestination.image}
                 alt={activeDestination.name}
                 className="w-full h-full object-cover"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/35 to-transparent" />
               <div className="absolute bottom-3 left-4 text-white">
-                <span className="text-[10px] uppercase font-bold text-[#D8B98A] block">{activeDestination.country}</span>
+                <span className="text-[10px] uppercase font-bold text-[#E0C89E] block">{activeDestination.country}</span>
                 <span className="font-editorial text-xl font-bold">{activeDestination.name}</span>
               </div>
             </div>
 
-            {/* If on a specific destination page, don't show other country options */}
             {!initialDestination && (
               <select
                 value={selectedDestId}
                 onChange={(e) => setSelectedDestId(e.target.value)}
-                className="w-full mt-3 bg-[#F7F5F0] border border-[#171A19]/10 rounded-2xl px-4 py-3 text-xs sm:text-sm font-semibold text-[#171A19] focus:outline-none focus:border-[#2F6F68]"
+                className="w-full mt-3 bg-[#F9F8F5] border border-[#101413]/10 rounded-2xl px-4 py-3 text-xs sm:text-sm font-semibold text-[#101413] focus:outline-none focus:border-[#1B4944]"
               >
                 {DESTINATIONS.map((d) => (
                   <option key={d.id} value={d.id}>
@@ -241,14 +240,14 @@ export default function ItineraryGenerator({ initialDestination = null }) {
           {/* 2. Included Tourist Places & Attractions in Destination */}
           <div>
             <div className="flex items-center justify-between mb-2">
-              <label className="text-[10px] font-extrabold text-[#2F6F68] uppercase tracking-wider flex items-center space-x-1">
-                <Landmark className="w-3.5 h-3.5 text-[#2F6F68]" />
+              <label className="text-[10px] font-extrabold text-[#1B4944] uppercase tracking-wider flex items-center space-x-1">
+                <Landmark className="w-3.5 h-3.5 text-[#1B4944]" />
                 <span>Tourist Places in {activeDestination.name}</span>
               </label>
               <button
                 type="button"
                 onClick={selectAllTours}
-                className="text-[10px] font-bold text-[#2F6F68] hover:underline"
+                className="text-[10px] font-bold text-[#1B4944] hover:underline"
               >
                 Select All
               </button>
@@ -263,8 +262,8 @@ export default function ItineraryGenerator({ initialDestination = null }) {
                     onClick={() => toggleTour(tour.id)}
                     className={`p-2.5 rounded-2xl border transition-all flex items-center justify-between cursor-pointer ${
                       isChecked
-                        ? 'bg-[#2F6F68]/08 border-[#2F6F68] text-[#171A19]'
-                        : 'bg-[#F7F5F0] border-transparent text-[#68706D] opacity-60 hover:opacity-100'
+                        ? 'bg-[#1B4944]/08 border-[#1B4944] text-[#101413]'
+                        : 'bg-[#F9F8F5] border-transparent text-[#586260] opacity-60 hover:opacity-100'
                     }`}
                   >
                     <div className="flex items-center space-x-3">
@@ -275,12 +274,12 @@ export default function ItineraryGenerator({ initialDestination = null }) {
                       />
                       <div>
                         <span className="text-xs font-bold block leading-tight">{tour.name}</span>
-                        <span className="text-[10px] text-[#68706D] block">{tour.category} · {tour.duration}</span>
+                        <span className="text-[10px] text-[#586260] block">{tour.category} · {tour.duration}</span>
                       </div>
                     </div>
 
                     <div className={`w-5 h-5 rounded-full flex items-center justify-center shrink-0 ${
-                      isChecked ? 'bg-[#2F6F68] text-white' : 'bg-gray-200 text-transparent'
+                      isChecked ? 'bg-[#1B4944] text-white' : 'bg-gray-200 text-transparent'
                     }`}>
                       <Check className="w-3 h-3" />
                     </div>
@@ -293,13 +292,13 @@ export default function ItineraryGenerator({ initialDestination = null }) {
           {/* 3. Duration Selector with Presets & Manual / Custom Option */}
           <div>
             <div className="flex items-center justify-between mb-2">
-              <label className="text-[10px] font-extrabold text-[#2F6F68] uppercase tracking-wider">
+              <label className="text-[10px] font-extrabold text-[#1B4944] uppercase tracking-wider">
                 Trip Duration
               </label>
               <button
                 type="button"
                 onClick={() => setIsCustomDays(!isCustomDays)}
-                className="text-[11px] font-bold text-[#2F6F68] hover:underline flex items-center space-x-1"
+                className="text-[11px] font-bold text-[#1B4944] hover:underline flex items-center space-x-1"
               >
                 <Edit3 className="w-3 h-3" />
                 <span>{isCustomDays ? 'Use Presets' : 'Custom Days'}</span>
@@ -315,8 +314,8 @@ export default function ItineraryGenerator({ initialDestination = null }) {
                     onClick={() => setDays(num)}
                     className={`py-2 rounded-xl text-xs font-bold transition-all min-h-[38px] ${
                       days === num
-                        ? 'bg-[#2F6F68] text-white shadow-md scale-105'
-                        : 'bg-[#F7F5F0] text-[#68706D] hover:text-[#171A19] hover:bg-black/5'
+                        ? 'bg-[#1B4944] text-white shadow-md scale-105'
+                        : 'bg-[#F9F8F5] text-[#586260] hover:text-[#101413] hover:bg-black/5'
                     }`}
                   >
                     {num}D
@@ -324,11 +323,11 @@ export default function ItineraryGenerator({ initialDestination = null }) {
                 ))}
               </div>
             ) : (
-              <div className="bg-[#F7F5F0] p-3 rounded-2xl border border-[#171A19]/08 flex items-center justify-between gap-3">
+              <div className="bg-[#F9F8F5] p-3 rounded-2xl border border-[#101413]/08 flex items-center justify-between gap-3">
                 <button
                   type="button"
                   onClick={() => setDays((prev) => Math.max(prev - 1, 1))}
-                  className="w-10 h-10 rounded-xl bg-white hover:bg-black/5 text-[#171A19] font-bold shadow-sm flex items-center justify-center transition-transform active:scale-90"
+                  className="w-10 h-10 rounded-xl bg-white hover:bg-black/5 text-[#101413] font-bold shadow-sm flex items-center justify-center transition-transform active:scale-90"
                 >
                   <Minus className="w-4 h-4" />
                 </button>
@@ -341,17 +340,17 @@ export default function ItineraryGenerator({ initialDestination = null }) {
                       max="30"
                       value={days}
                       onChange={(e) => handleCustomDaysChange(e.target.value)}
-                      className="w-16 text-center font-editorial text-2xl font-bold text-[#171A19] bg-white border border-[#171A19]/15 rounded-xl py-1 focus:outline-none focus:border-[#2F6F68]"
+                      className="w-16 text-center font-editorial text-2xl font-bold text-[#101413] bg-white border border-[#101413]/15 rounded-xl py-1 focus:outline-none focus:border-[#1B4944]"
                     />
-                    <span className="text-xs font-bold text-[#2F6F68]">Days</span>
+                    <span className="text-xs font-bold text-[#1B4944]">Days</span>
                   </div>
-                  <span className="text-[10px] text-[#68706D] block mt-0.5 font-light">Custom range: 1 to 30 days</span>
+                  <span className="text-[10px] text-[#586260] block mt-0.5 font-light">Custom range: 1 to 30 days</span>
                 </div>
 
                 <button
                   type="button"
                   onClick={() => setDays((prev) => Math.min(prev + 1, 30))}
-                  className="w-10 h-10 rounded-xl bg-white hover:bg-black/5 text-[#171A19] font-bold shadow-sm flex items-center justify-center transition-transform active:scale-90"
+                  className="w-10 h-10 rounded-xl bg-white hover:bg-black/5 text-[#101413] font-bold shadow-sm flex items-center justify-center transition-transform active:scale-90"
                 >
                   <Plus className="w-4 h-4" />
                 </button>
@@ -361,7 +360,7 @@ export default function ItineraryGenerator({ initialDestination = null }) {
 
           {/* 4. Travel Style Selector */}
           <div>
-            <label className="text-[10px] font-extrabold text-[#2F6F68] uppercase tracking-wider block mb-2">
+            <label className="text-[10px] font-extrabold text-[#1B4944] uppercase tracking-wider block mb-2">
               Travel Vibe & Style
             </label>
             <div className="grid grid-cols-3 gap-2">
@@ -372,8 +371,8 @@ export default function ItineraryGenerator({ initialDestination = null }) {
                   onClick={() => setStyle(st.id)}
                   className={`p-2.5 rounded-2xl text-xs font-bold transition-all flex flex-col items-center space-y-1 border ${
                     style === st.id
-                      ? 'bg-[#2F6F68]/10 border-[#2F6F68] text-[#2F6F68] shadow-sm'
-                      : 'bg-[#F7F5F0] border-transparent text-[#68706D] hover:text-[#171A19]'
+                      ? 'bg-[#1B4944]/10 border-[#1B4944] text-[#1B4944] shadow-sm'
+                      : 'bg-[#F9F8F5] border-transparent text-[#586260] hover:text-[#101413]'
                   }`}
                 >
                   <span className="text-base">{st.icon}</span>
@@ -385,7 +384,7 @@ export default function ItineraryGenerator({ initialDestination = null }) {
 
           {/* 5. Interests Filter Chips */}
           <div>
-            <label className="text-[10px] font-extrabold text-[#2F6F68] uppercase tracking-wider block mb-2">
+            <label className="text-[10px] font-extrabold text-[#1B4944] uppercase tracking-wider block mb-2">
               Specific Interests
             </label>
             <div className="flex flex-wrap gap-1.5">
@@ -399,10 +398,10 @@ export default function ItineraryGenerator({ initialDestination = null }) {
                     className={`px-3 py-1.5 rounded-full text-[11px] font-semibold transition-all flex items-center space-x-1 ${
                       selected
                         ? 'bg-[#101413] text-white shadow-sm'
-                        : 'bg-[#F7F5F0] text-[#68706D] hover:text-[#171A19]'
+                        : 'bg-[#F9F8F5] text-[#586260] hover:text-[#101413]'
                     }`}
                   >
-                    {selected && <Check className="w-3 h-3 text-[#D8B98A]" />}
+                    {selected && <Check className="w-3 h-3 text-[#E0C89E]" />}
                     <span>{interest}</span>
                   </button>
                 );
@@ -415,10 +414,10 @@ export default function ItineraryGenerator({ initialDestination = null }) {
             type="button"
             onClick={handleGenerate}
             disabled={loading}
-            className="w-full py-4 rounded-full bg-[#2F6F68] hover:bg-[#265953] text-white font-bold text-xs sm:text-sm shadow-xl shadow-[#2F6F68]/25 transition-transform hover:scale-[1.02] active:scale-95 flex items-center justify-center space-x-2 disabled:opacity-50 min-h-[48px]"
+            className="w-full py-4 rounded-full bg-[#1B4944] hover:bg-[#24655D] text-white font-bold text-xs sm:text-sm shadow-xl shadow-[#1B4944]/30 transition-transform hover:scale-[1.02] active:scale-95 flex items-center justify-center space-x-2 disabled:opacity-50 min-h-[48px]"
           >
-            <Sparkles className="w-4 h-4 text-[#D8B98A]" />
-            <span>{loading ? 'AI is generating itinerary...' : `✨ Generate ${days}-Day ${activeDestination.name} Itinerary`}</span>
+            <Sparkles className="w-4 h-4 text-[#E0C89E]" />
+            <span>{loading ? 'AI is generating itinerary...' : `✨ Generate ${days}-Day ${activeDestination.name} Plan`}</span>
           </button>
 
         </div>

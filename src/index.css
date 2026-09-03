@@ -4,59 +4,88 @@
 
 @layer base {
   body {
-    @apply bg-[#F7F5F0] text-[#171A19] font-sans antialiased overflow-x-hidden;
+    @apply bg-[#F9F8F5] text-[#101413] font-sans antialiased overflow-x-hidden;
+    letter-spacing: -0.01em;
   }
 
   h1, h2, h3, .font-editorial {
     font-family: 'Playfair Display', Georgia, serif;
+    letter-spacing: -0.02em;
   }
 }
 
-/* Glassmorphism & Navbar Blur Utilities */
+/* Luxury Glassmorphism Utilities */
 .glass-nav-light {
-  background: rgba(247, 245, 240, 0.85);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border-bottom: 1px solid rgba(23, 26, 25, 0.06);
+  background: rgba(249, 248, 245, 0.88);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(16, 20, 19, 0.06);
 }
 
 .glass-nav-dark {
-  background: rgba(16, 20, 19, 0.85);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
+  background: rgba(16, 20, 19, 0.88);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .glass-card-light {
   background: #FFFFFF;
-  border: 1px solid rgba(23, 26, 25, 0.06);
-  box-shadow: 0 4px 20px -2px rgba(23, 26, 25, 0.04);
+  border: 1px solid rgba(16, 20, 19, 0.06);
+  box-shadow: 0 10px 30px -10px rgba(16, 20, 19, 0.04), 0 0 1px 1px rgba(16, 20, 19, 0.03);
 }
 
 .glass-card-dark {
-  background: rgba(23, 30, 28, 0.7);
+  background: rgba(16, 20, 19, 0.75);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.glass-pill {
+  background: rgba(255, 255, 255, 0.85);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(16, 20, 19, 0.08);
+}
+
+/* Shimmer Skeleton Animation */
+.skeleton-shimmer {
+  background: linear-gradient(90deg, rgba(230, 228, 222, 0.4) 0%, rgba(245, 244, 240, 0.9) 50%, rgba(230, 228, 222, 0.4) 100%);
+  background-size: 200% 100%;
+  animation: shimmer 1.8s infinite ease-in-out;
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
 }
 
 /* Custom Scrollbar */
 ::-webkit-scrollbar {
-  width: 7px;
-  height: 7px;
+  width: 6px;
+  height: 6px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #F7F5F0;
+  background: #F9F8F5;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #D8B98A;
-  border-radius: 4px;
+  background: #C29C61;
+  border-radius: 9999px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #2F6F68;
+  background: #24655D;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
 
 /* Reduced Motion Accessibility */
@@ -69,17 +98,18 @@
   }
 }
 
-/* Leaflet dark/light popup overrides */
+/* Leaflet dark popup overrides */
 .leaflet-container {
-  font-family: 'Manrope', sans-serif !important;
-  border-radius: 1rem;
+  font-family: 'Plus Jakarta Sans', sans-serif !important;
+  border-radius: 1.5rem;
 }
 
 .leaflet-popup-content-wrapper {
   background: #101413 !important;
-  color: #F7F5F0 !important;
-  border-radius: 1rem !important;
-  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.4) !important;
+  color: #F9F8F5 !important;
+  border-radius: 1.25rem !important;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5) !important;
+  border: 1px solid rgba(255, 255, 255, 0.12);
 }
 
 .leaflet-popup-tip {
@@ -88,87 +118,34 @@
 
 /* ===== PRINT STYLES — Clean Itinerary-Only PDF ===== */
 @media print {
-
-  /* Reset page layout */
   @page {
     size: A4;
-    margin: 18mm 14mm 18mm 14mm;
+    margin: 16mm 14mm 16mm 14mm;
   }
 
-  /* Force white background and black text globally */
   body {
     background: #ffffff !important;
-    color: #171A19 !important;
+    color: #101413 !important;
     font-size: 11pt !important;
     line-height: 1.5 !important;
     -webkit-print-color-adjust: exact !important;
     print-color-adjust: exact !important;
   }
 
-  /* ---- Hide ALL non-itinerary sections ---- */
-  nav, header, footer,
-  .glass-nav-light, .glass-nav-dark {
+  nav, header, footer, .no-print, .glass-nav-light, .glass-nav-dark {
     display: none !important;
   }
 
-  /* Hide elements marked with no-print class */
-  .no-print {
-    display: none !important;
-  }
-
-  /* Show elements marked as print-only */
   .print-only {
     display: block !important;
   }
 
-  /* ---- Style the Itinerary Timeline for Print ---- */
-
-  /* Remove rounded corners, shadows, borders from itinerary wrapper */
-  .print-itinerary-container {
-    background: #ffffff !important;
-    border: none !important;
-    box-shadow: none !important;
-    border-radius: 0 !important;
-    padding: 0 !important;
-  }
-
-  /* Force all accordion content to be expanded */
-  .print-expand {
-    height: auto !important;
-    opacity: 1 !important;
-    overflow: visible !important;
-    display: block !important;
-  }
-
-  /* Timeline vertical line */
-  .print-timeline-line {
-    border-left-color: #2F6F68 !important;
-  }
-
-  /* Preserve background colors */
-  .print-color {
-    -webkit-print-color-adjust: exact !important;
-    print-color-adjust: exact !important;
-  }
-
-  /* Avoid page breaks inside day blocks */
-  .print-avoid-break {
-    page-break-inside: avoid;
-  }
-
-  /* Remove all animations/transitions in print */
   * {
     animation: none !important;
     transition: none !important;
-  }
-
-  /* Hide chevrons */
-  .print-hide-chevron {
-    display: none !important;
   }
 
   a[href]:after {
     content: none !important;
   }
 }
-

@@ -1,8 +1,8 @@
 import React, { useRef, useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowDown, Sparkles, Compass, MapPin, Calendar } from 'lucide-react';
+import { ArrowDown, Sparkles, Compass, MapPin, Calendar, ArrowRight } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
-// Curated Collection of High-Definition Travel Destinations with Optimized Visuals & Video Footage
 const TRAVEL_MEDIA = [
   {
     id: 'positano',
@@ -58,155 +58,172 @@ const TRAVEL_MEDIA = [
     name: 'Dubai Skyline & Marina',
     country: 'United Arab Emirates',
     image: 'https://images.unsplash.com/photo-1512453979798-5ea266f8880c?q=85&w=1920&auto=format&fit=crop',
-    video: 'https://assets.mixkit.co/videos/preview/mixkit-aerial-view-of-city-traffic-at-night-11-large.mp4',
+    video: 'https://assets.mixkit.co/videos/preview/mixkit-aerial-view-of-city-traffic-at-night-41548-large.mp4',
   }
 ];
 
 export default function Hero({ onOpenAIChat }) {
-  const [activeIdx, setActiveIdx] = useState(0);
+  const [currentMediaIndex, setCurrentMediaIndex] = useState(0);
+  const videoRefs = useRef([]);
+  const activeItem = TRAVEL_MEDIA[currentMediaIndex];
 
-  // Preload all destination images immediately into browser cache
-  useEffect(() => {
-    TRAVEL_MEDIA.forEach((item) => {
-      const img = new Image();
-      img.src = item.image;
-    });
-  }, []);
-
-  // Change background photo/media every 3 seconds reliably
+  // Auto-cycle through media smoothly every 4 seconds
   useEffect(() => {
     const timer = setInterval(() => {
-      setActiveIdx((prevIdx) => (prevIdx + 1) % TRAVEL_MEDIA.length);
-    }, 3000);
+      setCurrentMediaIndex((prev) => (prev + 1) % TRAVEL_MEDIA.length);
+    }, 4000);
 
     return () => clearInterval(timer);
   }, []);
 
-  const currentMedia = TRAVEL_MEDIA[activeIdx];
+  // Play video smoothly when it becomes active
+  useEffect(() => {
+    const activeVideo = videoRefs.current[currentMediaIndex];
+    if (activeVideo) {
+      activeVideo.currentTime = 0;
+      const playPromise = activeVideo.play();
+      if (playPromise !== undefined) {
+        playPromise.catch(() => {
+          // Handled autoplay restrictions gracefully
+        });
+      }
+    }
+  }, [currentMediaIndex]);
 
   return (
-    <section className="relative min-h-[92vh] sm:min-h-screen flex items-center justify-center pt-24 pb-16 overflow-hidden bg-[#101413]">
+    <section className="relative min-h-[92vh] sm:min-h-screen flex items-center justify-center overflow-hidden bg-[#101413]">
       
-      {/* Dynamic 3-Second Crossfade Background Photo & Video Layer */}
-      <div className="absolute inset-0 w-full h-full z-0 overflow-hidden">
-        <AnimatePresence mode="sync">
-          <motion.div
-            key={currentMedia.id}
-            initial={{ opacity: 0, scale: 1.08 }}
-            animate={{ opacity: 1, scale: 1.02 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.9, ease: 'easeInOut' }}
-            className="absolute inset-0 w-full h-full bg-cover bg-center"
-            style={{
-              backgroundImage: `url(${currentMedia.image})`,
-            }}
-          >
-            {/* Optional Ambient Video Overlay when supported */}
-            <video
-              autoPlay
-              muted
-              loop
-              playsInline
-              className="absolute inset-0 w-full h-full object-cover mix-blend-overlay opacity-50 pointer-events-none"
+      {/* 1. Cinematic Background Auto-Crossfade Layer */}
+      <div className="absolute inset-0 w-full h-full">
+        {TRAVEL_MEDIA.map((item, index) => {
+          const isActive = index === currentMediaIndex;
+          return (
+            <div
+              key={item.id}
+              className={`absolute inset-0 w-full h-full transition-opacity duration-1000 ease-in-out ${
+                isActive ? 'opacity-100 z-10' : 'opacity-0 z-0 pointer-events-none'
+              }`}
             >
-              <source src={currentMedia.video} type="video/mp4" />
-            </video>
-          </motion.div>
-        </AnimatePresence>
+              {/* Fallback & Loading High-Res Image */}
+              <img
+                src={item.image}
+                alt={item.name}
+                className="absolute inset-0 w-full h-full object-cover scale-105 transition-transform duration-[6000ms] ease-out"
+                loading="eager"
+              />
 
-        {/* Translucent Layered Gradient Overlay for Text Readability */}
-        <div className="absolute inset-0 bg-black/35 pointer-events-none z-10" />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-black/30 pointer-events-none z-10" />
-
-        {/* Live Location Tag (Bottom Left of Hero — completely clear of floating AI button) */}
-        <motion.div
-          key={`tag-${currentMedia.id}`}
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -10 }}
-          transition={{ duration: 0.5 }}
-          className="absolute bottom-6 left-6 sm:bottom-8 sm:left-8 z-20 flex items-center space-x-2 px-3.5 py-1.5 rounded-full bg-black/60 backdrop-blur-md border border-white/20 text-white text-xs font-semibold shadow-lg pointer-events-none"
-        >
-          <MapPin className="w-3.5 h-3.5 text-[#D8B98A]" />
-          <span>{currentMedia.name}</span>
-          <span className="text-[#D8B98A] text-[10px]">· 3s live</span>
-        </motion.div>
+              {/* Seamless Loop Video */}
+              {item.video && (
+                <video
+                  ref={(el) => (videoRefs.current[index] = el)}
+                  src={item.video}
+                  autoPlay
+                  muted
+                  loop
+                  playsInline
+                  preload="auto"
+                  className="absolute inset-0 w-full h-full object-cover"
+                />
+              )}
+            </div>
+          );
+        })}
       </div>
 
-      {/* Hero Content Container */}
-      <div className="relative z-30 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center w-full">
+      {/* 2. Deep Gradient Vignette for Maximum Text Legibility */}
+      <div className="absolute inset-0 bg-gradient-to-t from-[#101413] via-[#101413]/55 to-[#101413]/40 z-20" />
+      <div className="absolute inset-0 bg-radial-gradient from-transparent via-black/20 to-black/60 z-20 pointer-events-none" />
+
+      {/* 3. Hero Content */}
+      <div className="relative z-30 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center pt-24 pb-16 flex flex-col items-center">
         
-        {/* 1. Eyebrow Tag */}
+        {/* Glowing Badge */}
         <motion.div
           initial={{ opacity: 0, y: 15 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, ease: 'easeOut' }}
-          className="inline-flex items-center space-x-2 px-3.5 py-1.5 rounded-full bg-black/50 backdrop-blur-md border border-white/20 text-[10px] sm:text-xs font-bold tracking-widest uppercase text-[#D8B98A] mb-4 sm:mb-6 shadow-lg"
+          className="inline-flex items-center space-x-2 px-4 py-1.5 rounded-full bg-white/15 hover:bg-white/20 backdrop-blur-xl border border-white/20 text-white text-xs font-semibold tracking-wider uppercase mb-6 shadow-lg"
         >
-          <Compass className="w-3.5 h-3.5 text-[#D8B98A]" />
-          <span>DISCOVER THE WORLD</span>
+          <Sparkles className="w-3.5 h-3.5 text-[#C29C61] animate-pulse" />
+          <span>AI-Powered Global Travel Guide</span>
         </motion.div>
 
-        {/* 2. Main Heading */}
+        {/* Large Editorial Headline */}
         <motion.h1
-          initial={{ opacity: 0, y: 30 }}
+          initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, delay: 0.1, ease: 'easeOut' }}
-          className="font-editorial font-bold tracking-tight text-white mb-4 sm:mb-6 leading-[1.08] drop-shadow-xl"
-          style={{ fontSize: 'clamp(2.5rem, 7.5vw, 6.5rem)' }}
+          className="font-editorial text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-bold tracking-tight text-white leading-[1.08] mb-6 drop-shadow-2xl"
         >
-          Find your next <br />
-          <span className="italic font-normal text-[#D8B98A]">great escape.</span>
+          Explore Extraordinary <br />
+          <span className="italic font-normal text-[#E0C89E] font-editorial">Destinations</span> Across Earth
         </motion.h1>
 
-        {/* 3. Subtitle */}
+        {/* Supporting Subtitle */}
         <motion.p
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, delay: 0.2, ease: 'easeOut' }}
-          className="max-w-xl mx-auto text-xs sm:text-base md:text-lg text-slate-100 font-light mb-8 sm:mb-10 leading-relaxed drop-shadow-md px-2"
+          className="text-sm sm:text-base md:text-lg text-slate-200 font-light max-w-2xl mx-auto mb-10 leading-relaxed drop-shadow-md"
         >
-          Explore beautiful destinations, discover famous places and plan your journey with AI.
+          Curated iconic landmarks, live local climates, custom day-by-day itineraries, and smart packing assistants powered by Google Gemini AI.
         </motion.p>
 
-        {/* 4. Action Buttons */}
+        {/* Primary Action Buttons */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, delay: 0.3, ease: 'easeOut' }}
-          className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 max-w-md mx-auto w-full px-4 sm:px-0"
+          className="flex flex-col sm:flex-row items-center justify-center gap-4 w-full max-w-md sm:max-w-none"
         >
-          <a
-            href="#explorer"
-            className="w-full sm:w-auto px-8 py-3.5 sm:py-4 rounded-full bg-[#2F6F68] hover:bg-[#265953] text-white font-bold text-xs sm:text-sm transition-all shadow-2xl shadow-[#2F6F68]/50 hover:scale-[1.03] flex items-center justify-center space-x-2 min-h-[44px]"
+          <Link
+            to="/destinations"
+            className="w-full sm:w-auto px-8 py-4 rounded-full bg-[#1B4944] hover:bg-[#24655D] text-white font-bold text-xs sm:text-sm tracking-wide shadow-xl shadow-[#1B4944]/40 hover:scale-105 active:scale-95 transition-all flex items-center justify-center space-x-2.5 min-h-[48px]"
           >
-            <span>Explore destinations</span>
-          </a>
+            <Compass className="w-4 h-4 text-[#C29C61]" />
+            <span>Explore Destinations</span>
+            <ArrowRight className="w-4 h-4" />
+          </Link>
 
-          <a
-            href="#itinerary-builder"
-            className="w-full sm:w-auto px-8 py-3.5 sm:py-4 rounded-full bg-black/50 hover:bg-black/70 text-white font-bold text-xs sm:text-sm backdrop-blur-md border border-white/30 transition-all hover:scale-[1.03] flex items-center justify-center space-x-2 shadow-xl min-h-[44px]"
+          <Link
+            to="/itinerary"
+            className="w-full sm:w-auto px-8 py-4 rounded-full bg-white/15 hover:bg-white/25 text-white backdrop-blur-xl border border-white/25 font-bold text-xs sm:text-sm tracking-wide hover:scale-105 active:scale-95 transition-all flex items-center justify-center space-x-2 min-h-[48px]"
           >
-            <Calendar className="w-4 h-4 text-[#D8B98A]" />
+            <Calendar className="w-4 h-4 text-[#C29C61]" />
             <span>Plan Itinerary</span>
-          </a>
+          </Link>
         </motion.div>
 
-        {/* 5. Scroll Indicator */}
+        {/* Live Active Slide Location Indicator */}
         <motion.div
           initial={{ opacity: 0 }}
-          animate={{ opacity: 0.9 }}
-          transition={{ duration: 1, delay: 0.6 }}
-          className="mt-12 sm:mt-20 inline-flex flex-col items-center cursor-pointer text-slate-200 hover:text-white transition-colors"
-          onClick={() => {
-            document.getElementById('explorer')?.scrollIntoView({ behavior: 'smooth' });
-          }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 1, delay: 0.5 }}
+          className="mt-14 inline-flex items-center space-x-3 px-4 py-2 rounded-full bg-black/40 backdrop-blur-xl border border-white/10 text-white text-xs"
         >
-          <span className="text-[10px] uppercase tracking-widest font-semibold mb-1.5 drop-shadow-md">Scroll to explore</span>
-          <ArrowDown className="w-4 h-4 text-[#D8B98A] animate-bounce-gentle" />
+          <MapPin className="w-3.5 h-3.5 text-[#C29C61]" />
+          <span className="font-semibold">{activeItem.name}, {activeItem.country}</span>
+          <div className="flex space-x-1 pl-2">
+            {TRAVEL_MEDIA.map((_, i) => (
+              <button
+                key={i}
+                onClick={() => setCurrentMediaIndex(i)}
+                className={`h-1.5 rounded-full transition-all duration-300 ${
+                  i === currentMediaIndex ? 'w-5 bg-[#C29C61]' : 'w-1.5 bg-white/30 hover:bg-white/60'
+                }`}
+                aria-label={`Slide ${i + 1}`}
+              />
+            ))}
+          </div>
         </motion.div>
 
       </div>
+
+      {/* Down Arrow Indicator */}
+      <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-30 text-white/60 hover:text-white transition-colors cursor-pointer animate-bounce-gentle hidden sm:block">
+        <ArrowDown className="w-5 h-5" />
+      </div>
+
     </section>
   );
 }

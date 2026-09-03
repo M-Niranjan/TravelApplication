@@ -3,7 +3,7 @@ import ItineraryGenerator from '../components/ItineraryGenerator';
 
 export default function ItineraryPage() {
   return (
-    <div className="pt-28 pb-20">
+    <div className="pt-32 pb-24">
       <ItineraryGenerator />
     </div>
   );

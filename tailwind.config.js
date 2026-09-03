@@ -8,41 +8,53 @@ export default {
   theme: {
     extend: {
       colors: {
-        ivory: '#F7F5F0',
-        charcoal: '#101413',
-        ocean: {
-          50: '#f0f7f6',
-          100: '#dbeee9',
-          500: '#2F6F68',
-          600: '#265953',
-          700: '#1f4843',
-          900: '#15322e',
+        canvas: '#F9F8F5',
+        obsidian: '#101413',
+        emerald: {
+          50: '#F0F7F5',
+          100: '#DCEEEA',
+          200: '#BBDDD6',
+          500: '#24655D',
+          600: '#1B4944',
+          700: '#143834',
+          800: '#0E2825',
+          900: '#081715',
         },
-        sand: {
-          300: '#e8d4b8',
-          400: '#D8B98A',
-          500: '#c8a470',
+        champagne: {
+          300: '#EBDCBF',
+          400: '#E0C89E',
+          500: '#D4B37D',
+          600: '#C29C61',
         },
-        text: {
-          primary: '#171A19',
-          secondary: '#68706D'
+        slateText: {
+          primary: '#101413',
+          secondary: '#586260',
+          muted: '#8A9592',
         }
       },
       fontFamily: {
+        editorial: ['"Playfair Display"', 'Georgia', 'serif'],
+        sans: ['"Plus Jakarta Sans"', 'Manrope', 'Inter', 'sans-serif'],
         serif: ['"Playfair Display"', 'Georgia', 'serif'],
-        sans: ['Manrope', 'Inter', 'sans-serif'],
+      },
+      boxShadow: {
+        'luxury': '0 20px 40px -15px rgba(16, 20, 19, 0.07), 0 0 1px 1px rgba(16, 20, 19, 0.05)',
+        'luxury-hover': '0 30px 60px -20px rgba(16, 20, 19, 0.15), 0 0 1px 1px rgba(16, 20, 19, 0.08)',
+        'glass': '0 8px 32px 0 rgba(0, 0, 0, 0.08)',
+        'glow-teal': '0 0 25px rgba(36, 101, 93, 0.35)',
       },
       animation: {
         'bounce-gentle': 'bounceGentle 2s infinite',
-        'fade-in': 'fadeIn 0.6s ease-out forwards',
+        'fade-in': 'fadeIn 0.5s ease-out forwards',
+        'spin-slow': 'spin 12s linear infinite',
       },
       keyframes: {
         bounceGentle: {
           '0%, 100%': { transform: 'translateY(0)' },
-          '50%': { transform: 'translateY(6px)' },
+          '50%': { transform: 'translateY(5px)' },
         },
         fadeIn: {
-          '0%': { opacity: '0', transform: 'translateY(10px)' },
+          '0%': { opacity: '0', transform: 'translateY(8px)' },
           '100%': { opacity: '1', transform: 'translateY(0)' },
         }
       }

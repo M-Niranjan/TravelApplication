@@ -11,7 +11,8 @@ import {
   HeartPulse, 
   Plus, 
   Trash2,
-  CheckCircle2
+  CheckCircle2,
+  ListChecks
 } from 'lucide-react';
 import { DESTINATIONS } from '../data/destinations';
 
@@ -40,9 +41,6 @@ export default function PackingAssistant() {
   const [items, setItems] = useState(DEFAULT_PACKING_ITEMS);
   const [activeCategory, setActiveCategory] = useState('all');
   const [newItemText, setNewItemText] = useState('');
-  const [selectedDestId, setSelectedDestId] = useState(DESTINATIONS[0].id);
-
-  const activeDest = DESTINATIONS.find((d) => d.id === selectedDestId) || DESTINATIONS[0];
 
   const toggleItem = (id) => {
     setItems((prev) =>
@@ -74,67 +72,63 @@ export default function PackingAssistant() {
   const completedCount = items.filter((i) => i.checked).length;
   const progressPercent = Math.round((completedCount / items.length) * 100) || 0;
 
+  const categories = [
+    { id: 'all', label: 'All Items', icon: <ListChecks className="w-3.5 h-3.5" /> },
+    { id: 'docs', label: 'Documents', icon: <FileText className="w-3.5 h-3.5" /> },
+    { id: 'clothing', label: 'Clothing', icon: <Shirt className="w-3.5 h-3.5" /> },
+    { id: 'tech', label: 'Electronics', icon: <Smartphone className="w-3.5 h-3.5" /> },
+    { id: 'health', label: 'Health & Care', icon: <HeartPulse className="w-3.5 h-3.5" /> }
+  ];
+
   return (
-    <section id="packing-assistant" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-      <div className="bg-white p-6 sm:p-10 rounded-3xl border border-[#171A19]/10 shadow-lg">
+    <div id="packing-assistant" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="bg-white p-6 sm:p-10 rounded-3xl border border-[#101413]/08 shadow-luxury space-y-8">
         
         {/* Header Row */}
-        <div className="flex flex-col md:flex-row md:items-center justify-between pb-6 border-b border-[#171A19]/08 mb-6 gap-4">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-6 border-b border-[#101413]/08 gap-4">
           <div>
-            <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-[#2F6F68]/10 text-[#2F6F68] text-[10px] font-bold uppercase tracking-wider mb-2">
-              <Luggage className="w-3.5 h-3.5" />
-              <span>TRAVEL PREPARATION</span>
+            <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-[#1B4944]/10 text-[#1B4944] text-[10px] font-bold uppercase tracking-wider mb-2">
+              <Luggage className="w-3.5 h-3.5 text-[#C29C61]" />
+              <span>Smart Travel Gear</span>
             </div>
-            <h3 className="font-editorial text-3xl font-bold text-[#171A19]">
-              Smart Packing Checklist
+            <h3 className="font-editorial text-2xl sm:text-4xl font-bold text-[#101413]">
+              Packing Checklist & Readiness
             </h3>
-            <p className="text-xs text-[#68706D] font-light mt-1">
-              Essential gear, documents, and outfits tailored for your upcoming journey.
+            <p className="text-xs text-[#586260] font-light mt-1">
+              Keep track of essential travel documents, gear, electronics, and wardrobe.
             </p>
           </div>
 
-          {/* Progress Bar & Destination Pill */}
-          <div className="bg-[#F7F5F0] p-4 rounded-2xl border border-[#171A19]/06 sm:min-w-[240px]">
-            <div className="flex items-center justify-between text-xs font-bold mb-1.5">
-              <span className="text-[#171A19]">Luggage Readiness</span>
-              <span className="text-[#2F6F68]">{progressPercent}%</span>
+          {/* Readiness Gauge */}
+          <div className="bg-[#F9F8F5] p-4 rounded-2xl border border-[#101413]/06 min-w-[200px]">
+            <div className="flex justify-between items-center text-xs font-bold mb-1.5">
+              <span className="text-[#101413]">Luggage Readiness</span>
+              <span className="text-[#1B4944]">{progressPercent}%</span>
             </div>
-            <div className="w-full h-2.5 bg-black/10 rounded-full overflow-hidden">
+            <div className="w-full h-2.5 bg-gray-200 rounded-full overflow-hidden">
               <motion.div
                 initial={{ width: 0 }}
                 animate={{ width: `${progressPercent}%` }}
                 transition={{ duration: 0.5 }}
-                className="h-full bg-[#2F6F68] rounded-full"
+                className="h-full bg-gradient-to-r from-[#1B4944] to-[#24655D] rounded-full"
               />
             </div>
-            <div className="text-[10px] text-[#68706D] mt-1.5 flex items-center justify-between">
-              <span>{completedCount} of {items.length} items packed</span>
-              {progressPercent === 100 && (
-                <span className="text-[#2F6F68] font-bold flex items-center space-x-1">
-                  <CheckCircle2 className="w-3 h-3" />
-                  <span>Ready!</span>
-                </span>
-              )}
-            </div>
+            <span className="text-[10px] text-[#586260] block mt-1">
+              {completedCount} of {items.length} items packed
+            </span>
           </div>
         </div>
 
-        {/* Category Filter Tabs */}
-        <div className="flex items-center space-x-2 overflow-x-auto no-scrollbar pb-3 mb-6">
-          {[
-            { id: 'all', label: 'All Items', icon: <Luggage className="w-3.5 h-3.5" /> },
-            { id: 'docs', label: 'Documents', icon: <FileText className="w-3.5 h-3.5" /> },
-            { id: 'clothing', label: 'Clothing', icon: <Shirt className="w-3.5 h-3.5" /> },
-            { id: 'tech', label: 'Tech & Power', icon: <Smartphone className="w-3.5 h-3.5" /> },
-            { id: 'health', label: 'Health & Care', icon: <HeartPulse className="w-3.5 h-3.5" /> }
-          ].map((cat) => (
+        {/* Category Filters */}
+        <div className="flex flex-wrap gap-2">
+          {categories.map((cat) => (
             <button
               key={cat.id}
               onClick={() => setActiveCategory(cat.id)}
-              className={`px-4 py-2 rounded-full text-xs font-semibold whitespace-nowrap transition-all flex items-center space-x-1.5 min-h-[38px] ${
+              className={`px-4 py-2 rounded-full text-xs font-semibold transition-all flex items-center space-x-1.5 ${
                 activeCategory === cat.id
-                  ? 'bg-[#2F6F68] text-white shadow-sm'
-                  : 'bg-[#F7F5F0] text-[#68706D] hover:text-[#171A19] border border-[#171A19]/06'
+                  ? 'bg-[#1B4944] text-white shadow-sm'
+                  : 'bg-[#F9F8F5] text-[#586260] hover:text-[#101413] hover:bg-black/5'
               }`}
             >
               {cat.icon}
@@ -143,54 +137,56 @@ export default function PackingAssistant() {
           ))}
         </div>
 
-        {/* Add Item Input Form */}
-        <form onSubmit={addItem} className="flex items-center space-x-2 mb-6">
+        {/* Add New Item Form */}
+        <form onSubmit={addItem} className="flex gap-2">
           <input
             type="text"
             value={newItemText}
             onChange={(e) => setNewItemText(e.target.value)}
-            placeholder="Add a custom item to your checklist (e.g. Hiking boots, Camera lenses)..."
-            className="flex-1 bg-[#F7F5F0] border border-[#171A19]/10 rounded-full px-4 py-2.5 text-xs text-[#171A19] placeholder-[#68706D] focus:outline-none focus:border-[#2F6F68] min-h-[42px]"
+            placeholder="Add custom packing item (e.g. Scuba goggles, hiking socks)..."
+            className="flex-1 bg-[#F9F8F5] border border-[#101413]/10 rounded-2xl px-4 py-3 text-xs sm:text-sm font-medium text-[#101413] focus:outline-none focus:border-[#1B4944]"
           />
           <button
             type="submit"
             disabled={!newItemText.trim()}
-            className="px-5 py-2.5 rounded-full bg-[#101413] hover:bg-black text-white font-bold text-xs flex items-center space-x-1.5 disabled:opacity-40 min-h-[42px] transition-transform active:scale-95"
+            className="px-6 py-3 rounded-2xl bg-[#1B4944] hover:bg-[#24655D] text-white font-bold text-xs flex items-center space-x-1.5 shadow-sm disabled:opacity-40 transition-transform active:scale-95"
           >
             <Plus className="w-4 h-4" />
             <span className="hidden sm:inline">Add Item</span>
           </button>
         </form>
 
-        {/* Interactive Checklist Grid */}
+        {/* Packing Items List */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
           {filteredItems.map((item) => (
             <div
               key={item.id}
               onClick={() => toggleItem(item.id)}
-              className={`p-3.5 rounded-2xl border transition-all flex items-center justify-between cursor-pointer ${
+              className={`p-3.5 sm:p-4 rounded-2xl border transition-all flex items-center justify-between cursor-pointer select-none group ${
                 item.checked
-                  ? 'bg-emerald-50/70 border-emerald-200 text-emerald-900'
-                  : 'bg-[#F7F5F0] hover:bg-[#2F6F68]/05 border-[#171A19]/06 text-[#171A19]'
+                  ? 'bg-[#1B4944]/05 border-[#1B4944]/20 text-[#8A9592]'
+                  : 'bg-[#F9F8F5] border-transparent hover:border-[#101413]/10 text-[#101413]'
               }`}
             >
               <div className="flex items-center space-x-3">
-                {item.checked ? (
-                  <CheckSquare className="w-5 h-5 text-[#2F6F68] shrink-0" />
-                ) : (
-                  <Square className="w-5 h-5 text-[#68706D] shrink-0" />
-                )}
-                <span className={`text-xs font-semibold select-none ${item.checked ? 'line-through text-emerald-800 opacity-75' : ''}`}>
+                <div className={`w-5 h-5 rounded-lg flex items-center justify-center transition-colors ${
+                  item.checked ? 'bg-[#1B4944] text-white' : 'border-2 border-gray-300'
+                }`}>
+                  {item.checked && <CheckCircle2 className="w-3.5 h-3.5" />}
+                </div>
+
+                <span className={`text-xs font-medium ${item.checked ? 'line-through text-[#8A9592]' : 'text-[#101413]'}`}>
                   {item.text}
                 </span>
               </div>
 
               <button
+                type="button"
                 onClick={(e) => {
                   e.stopPropagation();
                   deleteItem(item.id);
                 }}
-                className="p-1 text-[#68706D] hover:text-red-600 opacity-60 hover:opacity-100 transition-opacity"
+                className="opacity-0 group-hover:opacity-100 p-1.5 text-gray-400 hover:text-rose-500 transition-opacity"
                 title="Remove item"
               >
                 <Trash2 className="w-3.5 h-3.5" />
@@ -200,6 +196,6 @@ export default function PackingAssistant() {
         </div>
 
       </div>
-    </section>
+    </div>
   );
 }

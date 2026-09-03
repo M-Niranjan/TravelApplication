@@ -11,24 +11,24 @@ import {
   CloudSun, 
   CloudRain, 
   CloudLightning, 
-  Snowflake,
-  MapPin,
-  Calendar,
-  Sparkles
+  Snowflake, 
+  MapPin, 
+  Calendar, 
+  Sparkles 
 } from 'lucide-react';
 
 export default function WeatherCard({ lat, lon, locationName = '' }) {
   const { weatherData, loading, error } = useWeather(lat, lon);
 
   if (loading) {
-    return <LoadingState type="weather" message="Checking the weather..." />;
+    return <LoadingState type="weather" message="Fetching live meteorological satellite radar data..." />;
   }
 
   if (error || !weatherData) {
     return (
       <ErrorState
-        title="Weather unavailable"
-        message="Weather information is temporarily unavailable. Try again."
+        title="Weather data unavailable"
+        message="Local satellite weather information is temporarily unreachable. Please retry."
       />
     );
   }
@@ -37,18 +37,18 @@ export default function WeatherCard({ lat, lon, locationName = '' }) {
   const getWeatherBg = (cond) => {
     const lower = (cond || '').toLowerCase();
     if (lower.includes('rain') || lower.includes('drizzle') || lower.includes('shower')) {
-      return 'https://images.unsplash.com/photo-1534274988757-a28bf1a57c17?q=80&w=1600&auto=format&fit=crop';
+      return 'https://images.unsplash.com/photo-1534274988757-a28bf1a57c17?q=85&w=1600&auto=format&fit=crop';
     }
     if (lower.includes('thunder') || lower.includes('storm')) {
-      return 'https://images.unsplash.com/photo-1511289081-d06dda19034d?q=80&w=1600&auto=format&fit=crop';
+      return 'https://images.unsplash.com/photo-1511289081-d06dda19034d?q=85&w=1600&auto=format&fit=crop';
     }
     if (lower.includes('snow') || lower.includes('ice')) {
-      return 'https://images.unsplash.com/photo-1483921020237-2ff51e8e4b22?q=80&w=1600&auto=format&fit=crop';
+      return 'https://images.unsplash.com/photo-1483921020237-2ff51e8e4b22?q=85&w=1600&auto=format&fit=crop';
     }
     if (lower.includes('cloud') || lower.includes('overcast')) {
-      return 'https://images.unsplash.com/photo-1534088568595-a066f410bcda?q=80&w=1600&auto=format&fit=crop';
+      return 'https://images.unsplash.com/photo-1534088568595-a066f410bcda?q=85&w=1600&auto=format&fit=crop';
     }
-    return 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?q=80&w=1600&auto=format&fit=crop';
+    return 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?q=85&w=1600&auto=format&fit=crop';
   };
 
   // Dynamic Weather Icon
@@ -64,9 +64,9 @@ export default function WeatherCard({ lat, lon, locationName = '' }) {
       return <Snowflake className="w-8 h-8 text-sky-200" />;
     }
     if (lower.includes('cloud')) {
-      return <CloudSun className="w-8 h-8 text-[#D8B98A]" />;
+      return <CloudSun className="w-8 h-8 text-[#E0C89E]" />;
     }
-    return <Sun className="w-8 h-8 text-[#D8B98A] animate-spin-slow" />;
+    return <Sun className="w-8 h-8 text-[#E0C89E] animate-spin-slow" />;
   };
 
   const bgImage = getWeatherBg(weatherData.condition);
@@ -85,14 +85,14 @@ export default function WeatherCard({ lat, lon, locationName = '' }) {
       high: currentTemp + 2,
       low: currentTemp - 3,
       condition: 'Partly Cloudy',
-      icon: <CloudSun className="w-6 h-6 text-[#D8B98A]" />
+      icon: <CloudSun className="w-6 h-6 text-[#E0C89E]" />
     },
     {
       day: 'In 3 Days',
       high: currentTemp,
       low: currentTemp - 5,
       condition: 'Clear Sky',
-      icon: <Sun className="w-6 h-6 text-[#D8B98A]" />
+      icon: <Sun className="w-6 h-6 text-[#E0C89E]" />
     }
   ];
 
@@ -110,7 +110,7 @@ export default function WeatherCard({ lat, lon, locationName = '' }) {
         loading="lazy"
       />
 
-      {/* 2. Glassmorphic Dark Tint & Gradient Overlays for High Legibility */}
+      {/* 2. Glassmorphic Dark Tint & Gradient Overlays */}
       <div className="absolute inset-0 bg-gradient-to-t from-[#101413]/95 via-[#101413]/70 to-[#101413]/50 backdrop-blur-[2px]" />
 
       {/* 3. Card Content */}
@@ -119,15 +119,15 @@ export default function WeatherCard({ lat, lon, locationName = '' }) {
         {/* Header Row: Badge & Location */}
         <div className="flex items-center justify-between pb-5 border-b border-white/15">
           <div className="flex items-center space-x-2">
-            <div className="w-2.5 h-2.5 rounded-full bg-[#D8B98A] animate-pulse" />
-            <span className="text-[10px] uppercase tracking-widest font-extrabold text-[#D8B98A]">
-              LIVE WEATHER CONDITIONS
+            <div className="w-2.5 h-2.5 rounded-full bg-[#C29C61] animate-pulse" />
+            <span className="text-[10px] uppercase tracking-widest font-extrabold text-[#E0C89E]">
+              LIVE SATELLITE CLIMATE
             </span>
           </div>
 
           {locationName && (
             <div className="flex items-center space-x-1.5 text-xs font-bold text-white bg-black/40 backdrop-blur-md px-3.5 py-1.5 rounded-full border border-white/20 shadow-sm">
-              <MapPin className="w-3.5 h-3.5 text-[#D8B98A]" />
+              <MapPin className="w-3.5 h-3.5 text-[#E0C89E]" />
               <span>{locationName}</span>
             </div>
           )}
@@ -142,12 +142,12 @@ export default function WeatherCard({ lat, lon, locationName = '' }) {
               <span className="font-editorial text-5xl sm:text-6xl font-bold text-white tracking-tight leading-none drop-shadow-md">
                 {weatherData.temp}
               </span>
-              <span className="font-sans text-2xl sm:text-3xl font-medium text-[#D8B98A] self-start leading-none pt-0.5">
+              <span className="font-sans text-2xl sm:text-3xl font-medium text-[#E0C89E] self-start leading-none pt-0.5">
                 °C
               </span>
             </div>
 
-            <div className="text-base font-bold text-[#D8B98A] capitalize">
+            <div className="text-base font-bold text-[#E0C89E] capitalize">
               {weatherData.condition}
             </div>
 
@@ -193,13 +193,13 @@ export default function WeatherCard({ lat, lon, locationName = '' }) {
               {weatherData.humidity}%
             </div>
             <div className="text-[10px] text-slate-300 font-light mt-0.5">
-              {weatherData.humidity > 70 ? 'High moisture' : 'Comfortable'}
+              {weatherData.humidity > 70 ? 'High moisture' : 'Comfortable air'}
             </div>
           </div>
 
           <div className="p-4 rounded-2xl bg-white/10 backdrop-blur-md border border-white/15 hover:bg-white/15 transition-all">
             <div className="flex items-center space-x-2 text-[10px] uppercase tracking-wider font-extrabold text-slate-300 mb-1.5">
-              <Wind className="w-3.5 h-3.5 text-[#D8B98A]" />
+              <Wind className="w-3.5 h-3.5 text-[#E0C89E]" />
               <span>WIND SPEED</span>
             </div>
             <div className="text-lg sm:text-xl font-extrabold text-white">
@@ -219,13 +219,13 @@ export default function WeatherCard({ lat, lon, locationName = '' }) {
               {weatherData.visibility}
             </div>
             <div className="text-[10px] text-slate-300 font-light mt-0.5">
-              Clear view
+              Clear horizon
             </div>
           </div>
 
           <div className="p-4 rounded-2xl bg-white/10 backdrop-blur-md border border-white/15 hover:bg-white/15 transition-all">
             <div className="flex items-center space-x-2 text-[10px] uppercase tracking-wider font-extrabold text-slate-300 mb-1.5">
-              <Sunrise className="w-3.5 h-3.5 text-[#D8B98A]" />
+              <Sunrise className="w-3.5 h-3.5 text-[#E0C89E]" />
               <span>SUNRISE</span>
             </div>
             <div className="text-lg sm:text-xl font-extrabold text-white">
@@ -240,11 +240,11 @@ export default function WeatherCard({ lat, lon, locationName = '' }) {
 
       </div>
 
-      {/* 4. 3-Day Upcoming Forecast Strip (Glass Style) */}
+      {/* 4. 3-Day Upcoming Forecast Strip */}
       <div className="relative z-10 pt-5 border-t border-white/15 mt-5">
         <div className="flex items-center justify-between mb-3">
           <span className="text-[10px] font-bold uppercase tracking-wider text-slate-300 flex items-center space-x-1.5">
-            <Calendar className="w-3 h-3 text-[#D8B98A]" />
+            <Calendar className="w-3 h-3 text-[#E0C89E]" />
             <span>3-Day Travel Outlook</span>
           </span>
         </div>
