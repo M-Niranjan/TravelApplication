@@ -49,7 +49,7 @@ export default function ItineraryGenerator({ initialDestination = null }) {
     if (activeDestination?.places) {
       setSelectedTourIds(activeDestination.places.map((p) => p.id));
     }
-  }, [selectedDestId]);
+  }, [selectedDestId, activeDestination]);
 
   const toggleTour = (tourId) => {
     setSelectedTourIds((prev) =>
@@ -188,10 +188,12 @@ export default function ItineraryGenerator({ initialDestination = null }) {
           <span>AI TRAVEL PLANNER STUDIO</span>
         </div>
         <h2 className="font-editorial text-3xl sm:text-5xl font-bold text-[#171A19] tracking-tight mb-3">
-          Custom Day-by-Day Itinerary
+          {initialDestination ? `${activeDestination.name} Travel Itinerary` : 'Custom Day-by-Day Itinerary'}
         </h2>
         <p className="text-xs sm:text-sm text-[#68706D] font-light">
-          Select your destination, customize included tours & duration, and let Gemini AI generate your schedule.
+          {initialDestination 
+            ? `Customize tourist places and duration in ${activeDestination.name} to generate your schedule.`
+            : 'Select your destination, customize included tours & duration, and let Gemini AI generate your schedule.'}
         </p>
       </div>
 
@@ -201,13 +203,13 @@ export default function ItineraryGenerator({ initialDestination = null }) {
         {/* Left Column: Studio Controls Panel (5 cols) */}
         <div className="no-print lg:col-span-5 bg-white p-6 sm:p-7 rounded-3xl border border-[#171A19]/10 shadow-lg space-y-6 sticky lg:top-24">
           
-          {/* 1. Destination Selector with Preview */}
+          {/* 1. Destination Card (Dropdown shown only when in global planner, hidden when locked to single destination) */}
           <div>
             <label className="text-[10px] font-extrabold text-[#2F6F68] uppercase tracking-wider block mb-2">
-              Select Destination
+              Destination
             </label>
             
-            <div className="relative mb-3 rounded-2xl overflow-hidden h-28 border border-[#171A19]/10">
+            <div className="relative rounded-2xl overflow-hidden h-28 border border-[#171A19]/10 shadow-sm">
               <img
                 src={activeDestination.image}
                 alt={activeDestination.name}
@@ -220,25 +222,28 @@ export default function ItineraryGenerator({ initialDestination = null }) {
               </div>
             </div>
 
-            <select
-              value={selectedDestId}
-              onChange={(e) => setSelectedDestId(e.target.value)}
-              className="w-full bg-[#F7F5F0] border border-[#171A19]/10 rounded-2xl px-4 py-3 text-xs sm:text-sm font-semibold text-[#171A19] focus:outline-none focus:border-[#2F6F68]"
-            >
-              {DESTINATIONS.map((d) => (
-                <option key={d.id} value={d.id}>
-                  {d.name}, {d.country} ({d.region})
-                </option>
-              ))}
-            </select>
+            {/* If on a specific destination page, don't show other country options */}
+            {!initialDestination && (
+              <select
+                value={selectedDestId}
+                onChange={(e) => setSelectedDestId(e.target.value)}
+                className="w-full mt-3 bg-[#F7F5F0] border border-[#171A19]/10 rounded-2xl px-4 py-3 text-xs sm:text-sm font-semibold text-[#171A19] focus:outline-none focus:border-[#2F6F68]"
+              >
+                {DESTINATIONS.map((d) => (
+                  <option key={d.id} value={d.id}>
+                    {d.name}
+                  </option>
+                ))}
+              </select>
+            )}
           </div>
 
-          {/* 2. Included Tours & Attractions in Destination (NEW!) */}
+          {/* 2. Included Tourist Places & Attractions in Destination */}
           <div>
             <div className="flex items-center justify-between mb-2">
               <label className="text-[10px] font-extrabold text-[#2F6F68] uppercase tracking-wider flex items-center space-x-1">
                 <Landmark className="w-3.5 h-3.5 text-[#2F6F68]" />
-                <span>Included Tours in {activeDestination.name}</span>
+                <span>Tourist Places in {activeDestination.name}</span>
               </label>
               <button
                 type="button"
@@ -413,7 +418,7 @@ export default function ItineraryGenerator({ initialDestination = null }) {
             className="w-full py-4 rounded-full bg-[#2F6F68] hover:bg-[#265953] text-white font-bold text-xs sm:text-sm shadow-xl shadow-[#2F6F68]/25 transition-transform hover:scale-[1.02] active:scale-95 flex items-center justify-center space-x-2 disabled:opacity-50 min-h-[48px]"
           >
             <Sparkles className="w-4 h-4 text-[#D8B98A]" />
-            <span>{loading ? 'AI is generating itinerary...' : `✨ Generate ${days}-Day Itinerary`}</span>
+            <span>{loading ? 'AI is generating itinerary...' : `✨ Generate ${days}-Day ${activeDestination.name} Itinerary`}</span>
           </button>
 
         </div>
@@ -423,7 +428,7 @@ export default function ItineraryGenerator({ initialDestination = null }) {
           
           {loading && (
             <div className="no-print">
-              <LoadingState type="itinerary" message="Gemini AI is crafting your tailored day-by-day travel timeline..." />
+              <LoadingState type="itinerary" message={`Gemini AI is crafting your ${days}-day ${activeDestination.name} travel timeline...`} />
             </div>
           )}
 
