@@ -200,7 +200,7 @@ export default function AuthModal({ isOpen, onClose }) {
               <div>
                 <div className="flex items-center space-x-2">
                   <span className="text-[10px] uppercase tracking-widest font-extrabold text-blue-400">
-                    Aetheria Travel Club
+                    Voyager Travel Club
                   </span>
                   {user && (
                     <span className="px-2 py-0.5 rounded-full bg-gradient-to-r from-blue-500 to-indigo-600 text-white text-[9px] font-extrabold">
@@ -209,7 +209,7 @@ export default function AuthModal({ isOpen, onClose }) {
                   )}
                 </div>
                 <h3 className="font-editorial text-2xl font-bold">
-                  {user ? 'Traveler Center' : 'Access Your Travel Hub'}
+                  {user ? 'Traveler Center' : 'Access Voyager Hub'}
                 </h3>
               </div>
             </div>

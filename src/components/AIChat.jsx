@@ -98,7 +98,7 @@ export default function AIChat({ isOpen, onClose, destination = null }) {
           </div>
           <div>
             <div className="flex items-center space-x-1.5">
-              <h3 className="font-editorial text-base font-bold tracking-wide">Aetheria AI</h3>
+              <h3 className="font-editorial text-base font-bold tracking-wide">Voyager AI</h3>
               <span className="text-[10px] px-2 py-0.5 rounded-full bg-gradient-to-r from-blue-500 to-indigo-600 text-white font-extrabold shadow-sm">
                 PRO
               </span>
@@ -139,7 +139,7 @@ export default function AIChat({ isOpen, onClose, destination = null }) {
           <div className="p-5 rounded-2xl bg-white border border-slate-200/80 shadow-sm space-y-3">
             <div className="flex items-center space-x-2 text-blue-600 font-bold text-xs">
               <Bot className="w-4 h-4" />
-              <span>Your Luxury Travel Concierge</span>
+              <span>Your Intelligent Travel Concierge</span>
             </div>
             <p className="text-xs text-slate-600 leading-relaxed font-light">
               Ask me anything about <strong>{activeDestination.name}</strong>, iconic sights, hidden spots, dining secrets, or custom trip timelines.
@@ -177,7 +177,7 @@ export default function AIChat({ isOpen, onClose, destination = null }) {
             </div>
             <div className="p-3.5 rounded-2xl bg-white border border-slate-200/80 shadow-sm flex items-center space-x-2">
               <Loader2 className="w-4 h-4 text-blue-600 animate-spin" />
-              <span className="text-xs text-slate-600 font-medium">Aetheria AI is thinking...</span>
+              <span className="text-xs text-slate-600 font-medium">Voyager AI is thinking...</span>
             </div>
           </div>
         )}

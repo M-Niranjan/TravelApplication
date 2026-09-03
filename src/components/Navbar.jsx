@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
-  Compass, 
   Menu, 
   X, 
   Sparkles, 
@@ -15,6 +14,7 @@ import {
   ChevronRight,
   Heart
 } from 'lucide-react';
+import VoyagerLogo from './VoyagerLogo';
 import { useAuth } from '../context/AuthContext';
 
 export default function Navbar({ onOpenAIChat, onOpenLocationModal, onOpenAuthModal, currentLocation }) {
@@ -31,7 +31,6 @@ export default function Navbar({ onOpenAIChat, onOpenLocationModal, onOpenAuthMo
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Lock background scroll when mobile menu is open
   useEffect(() => {
     if (mobileMenuOpen) {
       document.body.style.overflow = 'hidden';
@@ -40,7 +39,6 @@ export default function Navbar({ onOpenAIChat, onOpenLocationModal, onOpenAuthMo
     }
   }, [mobileMenuOpen]);
 
-  // Handle Escape key
   useEffect(() => {
     const handleKeyDown = (e) => {
       if (e.key === 'Escape' && mobileMenuOpen) {
@@ -83,26 +81,12 @@ export default function Navbar({ onOpenAIChat, onOpenLocationModal, onOpenAuthMo
     }`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between">
         
-        {/* Brand Logo with HD Gradient Icon */}
+        {/* Brand Logo with 3D Gradient Compass Rose */}
         <Link 
           to="/" 
-          className="flex items-center space-x-3 px-3.5 py-1.5 rounded-full bg-white/95 hover:bg-white backdrop-blur-xl border border-slate-200/80 shadow-sm group focus:outline-none focus:ring-2 focus:ring-blue-500 min-h-[44px] transition-all"
+          className="flex items-center px-3.5 py-1.5 rounded-full bg-white/95 hover:bg-white backdrop-blur-xl border border-slate-200/80 shadow-sm group focus:outline-none focus:ring-2 focus:ring-blue-500 min-h-[44px] transition-all"
         >
-          <motion.div 
-            whileHover={{ rotate: 90 }}
-            transition={{ type: 'spring', stiffness: 200, damping: 10 }}
-            className="w-8 h-8 rounded-full bg-gradient-to-tr from-blue-600 via-indigo-600 to-rose-500 text-white flex items-center justify-center shadow-md shadow-blue-500/25"
-          >
-            <Compass className="w-4 h-4 stroke-[2.4]" />
-          </motion.div>
-          <div className="flex flex-col">
-            <span className="font-editorial text-xl font-bold tracking-tight text-slate-900 leading-none">
-              Aetheria
-            </span>
-            <span className="text-[9px] uppercase tracking-[0.2em] font-bold text-blue-600 mt-0.5">
-              TRAVEL LUXE
-            </span>
-          </div>
+          <VoyagerLogo size="md" showText={true} />
         </Link>
 
         {/* Desktop Navigation Links with Spring Micro-Interactions */}
@@ -260,7 +244,7 @@ export default function Navbar({ onOpenAIChat, onOpenLocationModal, onOpenAuthMo
                 className="w-full flex items-center justify-center space-x-2 py-3.5 rounded-2xl bg-gradient-to-r from-blue-600 via-indigo-600 to-rose-500 text-white text-xs font-bold shadow-lg shadow-blue-500/20"
               >
                 <Sparkles className="w-4 h-4 text-amber-300" />
-                <span>✨ Launch AI Travel Assistant</span>
+                <span>✨ Launch Voyager AI Assistant</span>
               </button>
             </div>
           </motion.div>

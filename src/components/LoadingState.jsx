@@ -32,7 +32,7 @@ export default function LoadingState({ type = 'card', message = 'Loading details
         <div className="flex items-center space-x-3 text-blue-600 font-bold text-sm">
           <span className="w-2.5 h-2.5 rounded-full bg-blue-600 animate-ping" />
           <Sparkles className="w-4 h-4 text-rose-500" />
-          <span>Aetheria AI is orchestrating your custom travel schedule...</span>
+          <span>Voyager AI is orchestrating your custom travel schedule...</span>
         </div>
         <div className="space-y-4">
           <div className="h-7 w-3/4 rounded-xl skeleton-shimmer" />

@@ -2,6 +2,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { Compass, ArrowUp, Sparkles, MapPin } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import VoyagerLogo from './VoyagerLogo';
 
 export default function Footer() {
   return (
@@ -10,18 +11,11 @@ export default function Footer() {
         
         <div className="grid grid-cols-1 md:grid-cols-4 gap-10 pb-12 border-b border-slate-800">
           
-          {/* Brand Column */}
+          {/* Brand Column with VoyagerLogo */}
           <div className="space-y-4 md:col-span-2">
-            <div className="flex items-center space-x-3">
-              <div className="w-9 h-9 rounded-2xl bg-gradient-to-tr from-blue-600 via-indigo-600 to-rose-500 text-white flex items-center justify-center shadow-md shadow-blue-500/25">
-                <Compass className="w-5 h-5 stroke-[2.4]" />
-              </div>
-              <span className="font-editorial text-2xl font-bold tracking-tight text-white">
-                Aetheria
-              </span>
-            </div>
+            <VoyagerLogo size="lg" showText={true} isLight={true} />
             <p className="text-xs text-slate-400 font-light max-w-md leading-relaxed">
-              High-end luxury travel platform combining cinematic destination media, live satellite weather analytics, and multi-turn itinerary planning powered by Google Gemini AI.
+              Intelligent luxury travel platform combining cinematic destination media, live satellite weather analytics, and multi-turn itinerary planning powered by Google Gemini AI.
             </p>
           </div>
 
@@ -54,8 +48,8 @@ export default function Footer() {
 
         {/* Copyright */}
         <div className="pt-8 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500 font-light">
-          <p>© 2026 Aetheria Travel Technologies • Built with React, Tailwind CSS, & Google Gemini AI</p>
-          <p className="mt-2 sm:mt-0 text-[11px] text-slate-400">Modern Vibrant Luxury Travel Edition</p>
+          <p>© 2026 Voyager Luxe Technologies • Built with React, Tailwind CSS, & Google Gemini AI</p>
+          <p className="mt-2 sm:mt-0 text-[11px] text-slate-400">Intelligent Luxury Travel Platform</p>
         </div>
 
       </div>
