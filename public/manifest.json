@@ -1,0 +1,21 @@
+{
+  "short_name": "Aetheria",
+  "name": "Aetheria | Premium AI Travel Explorer",
+  "icons": [
+    {
+      "src": "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?q=80&w=192&auto=format&fit=crop",
+      "type": "image/jpeg",
+      "sizes": "192x192"
+    },
+    {
+      "src": "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?q=80&w=512&auto=format&fit=crop",
+      "type": "image/jpeg",
+      "sizes": "512x512"
+    }
+  ],
+  "start_url": "/",
+  "background_color": "#101413",
+  "theme_color": "#2F6F68",
+  "display": "standalone",
+  "orientation": "portrait"
+}

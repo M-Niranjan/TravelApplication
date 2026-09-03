@@ -1,0 +1,153 @@
+import React, { useState, useEffect } from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { App as CapApp } from '@capacitor/app';
+import Navbar from './components/Navbar';
+import Footer from './components/Footer';
+import Home from './pages/Home';
+import Destinations from './pages/Destinations';
+import DestinationDetails from './pages/DestinationDetails';
+import LocationSelector from './components/LocationSelector';
+import AIChat from './components/AIChat';
+import AuthModal from './components/AuthModal';
+import { AuthProvider } from './context/AuthContext';
+import { useLocation } from './hooks/useLocation';
+import { Sparkles } from 'lucide-react';
+
+function AppContent() {
+  const { location, permissionState, isLocating, errorMessage, requestLocation, setManualLocation } = useLocation();
+
+  const [isLocationModalOpen, setIsLocationModalOpen] = useState(false);
+  const [isAIChatOpen, setIsAIChatOpen] = useState(false);
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+  const [activeChatDestination, setActiveChatDestination] = useState(null);
+
+  const handleOpenAIChatWithDestination = (dest = null) => {
+    setActiveChatDestination(dest);
+    setIsAIChatOpen(true);
+  };
+
+  // Android Native Hardware Back Button Handler
+  useEffect(() => {
+    let listener;
+    try {
+      listener = CapApp.addListener('backButton', ({ canGoBack }) => {
+        if (isAuthModalOpen) {
+          setIsAuthModalOpen(false);
+        } else if (isAIChatOpen) {
+          setIsAIChatOpen(false);
+        } else if (isLocationModalOpen) {
+          setIsLocationModalOpen(false);
+        } else if (canGoBack) {
+          window.history.back();
+        } else {
+          CapApp.exitApp();
+        }
+      });
+    } catch (e) {
+      // Running on web browser
+    }
+
+    return () => {
+      if (listener && typeof listener.then === 'function') {
+        listener.then((h) => h.remove());
+      }
+    };
+  }, [isAuthModalOpen, isAIChatOpen, isLocationModalOpen]);
+
+  return (
+    <Router>
+      <div className="min-h-screen bg-[#F7F5F0] text-[#171A19] font-sans relative selection:bg-[#2F6F68] selection:text-white flex flex-col justify-between pt-[env(safe-area-inset-top)] pb-[env(safe-area-inset-bottom)]">
+        
+        {/* Navigation Bar */}
+        <div className="no-print">
+          <Navbar
+            onOpenAIChat={() => handleOpenAIChatWithDestination(null)}
+            onOpenLocationModal={() => setIsLocationModalOpen(true)}
+            onOpenAuthModal={() => setIsAuthModalOpen(true)}
+            currentLocation={location}
+          />
+        </div>
+
+        {/* Page Routes */}
+        <main className="flex-grow">
+          <Routes>
+            <Route
+              path="/"
+              element={
+                <Home
+                  onOpenAIChat={() => handleOpenAIChatWithDestination(null)}
+                  currentLocation={location}
+                />
+              }
+            />
+            <Route path="/destinations" element={<Destinations />} />
+            <Route
+              path="/destinations/:id"
+              element={
+                <DestinationDetails
+                  onOpenAIChatWithDestination={handleOpenAIChatWithDestination}
+                />
+              }
+            />
+          </Routes>
+        </main>
+
+        {/* Floating AI Assistant Trigger Button (Bottom-Right) */}
+        {!isAIChatOpen && (
+          <button
+            onClick={() => handleOpenAIChatWithDestination(null)}
+            className="no-print fixed bottom-6 right-6 z-40 px-5 py-3.5 rounded-full bg-[#101413] text-white font-bold text-xs shadow-2xl hover:scale-105 transition-transform flex items-center space-x-2 border border-white/10 group min-h-[44px]"
+          >
+            <Sparkles className="w-4 h-4 text-[#D8B98A] animate-pulse" />
+            <span>✨ Ask Travel AI</span>
+          </button>
+        )}
+
+        {/* Location Selector Modal */}
+        <div className="no-print">
+          <LocationSelector
+            isOpen={isLocationModalOpen}
+            onClose={() => setIsLocationModalOpen(false)}
+            currentLocation={location}
+            onRequestLocation={requestLocation}
+            onSelectLocation={setManualLocation}
+            permissionState={permissionState}
+            isLocating={isLocating}
+            errorMessage={errorMessage}
+          />
+        </div>
+
+        {/* Firebase Authentication & User Profile Modal */}
+        <div className="no-print">
+          <AuthModal
+            isOpen={isAuthModalOpen}
+            onClose={() => setIsAuthModalOpen(false)}
+          />
+        </div>
+
+        {/* AI Chat Floating Assistant Panel / Mobile Bottom Sheet */}
+        <div className="no-print">
+          <AIChat
+            isOpen={isAIChatOpen}
+            onClose={() => setIsAIChatOpen(false)}
+            destination={activeChatDestination}
+          />
+        </div>
+
+        {/* Footer */}
+        <div className="no-print">
+          <Footer />
+        </div>
+
+      </div>
+    </Router>
+  );
+}
+
+export default function App() {
+  return (
+    <AuthProvider>
+      <AppContent />
+    </AuthProvider>
+  );
+}

@@ -1,0 +1,11 @@
+{
+  "appId": "com.travel.application",
+  "appName": "Aetheria Travel",
+  "webDir": "dist",
+  "bundledWebRuntime": false,
+  "plugins": {
+    "Geolocation": {
+      "permissions": ["location"]
+    }
+  }
+}
