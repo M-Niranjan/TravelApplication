@@ -112,8 +112,8 @@ export default function Home({ onOpenAIChat, currentLocation }) {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {allFamousPlaces.slice(0, 6).map((place) => (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            {allFamousPlaces.slice(0, 8).map((place) => (
               <FamousPlaceCard key={place.id} place={place} />
             ))}
           </div>

@@ -23,7 +23,7 @@ export default function DestinationCard({ destination }) {
     >
       <Link 
         to={`/destinations/${destination.id}`}
-        className="group relative block rounded-3xl overflow-hidden glass-card-light hover:shadow-2xl transition-all duration-500 flex flex-col h-[400px]"
+        className="group relative block rounded-3xl overflow-hidden glass-card-light hover:shadow-2xl transition-all duration-500 flex flex-col h-[380px]"
       >
         {/* Destination Image with Framer Motion hover scale */}
         <div className="relative w-full h-full overflow-hidden">
@@ -63,23 +63,23 @@ export default function DestinationCard({ destination }) {
           </button>
 
           {/* Destination Content Overlay */}
-          <div className="absolute bottom-6 left-6 right-6 z-10 flex flex-col justify-end text-white">
-            <span className="text-xs uppercase tracking-widest font-semibold text-[#D8B98A] mb-1">
+          <div className="absolute bottom-5 left-5 right-5 z-10 flex flex-col justify-end text-white">
+            <span className="text-[11px] uppercase tracking-widest font-semibold text-[#D8B98A] mb-1">
               {destination.country}
             </span>
 
-            {/* Title with subtle upward move on hover */}
-            <h3 className="font-editorial text-3xl font-bold tracking-tight mb-3 group-hover:-translate-y-1 transition-transform duration-300">
+            {/* Title */}
+            <h3 className="font-editorial text-2xl font-bold tracking-tight mb-2 group-hover:-translate-y-0.5 transition-transform duration-300">
               {destination.name}
             </h3>
 
             {/* Explore Arrow */}
             <div className="pt-2 border-t border-white/20 flex items-center justify-between">
-              <span className="text-xs text-slate-300 font-light line-clamp-1 max-w-[200px]">
+              <span className="text-xs text-slate-300 font-light line-clamp-1 max-w-[150px] sm:max-w-[170px]">
                 {destination.description}
               </span>
 
-              <span className="inline-flex items-center space-x-1 text-xs font-semibold text-[#D8B98A] group-hover:text-white transition-colors">
+              <span className="inline-flex items-center space-x-1 text-xs font-semibold text-[#D8B98A] group-hover:text-white transition-colors shrink-0">
                 <span>Explore</span>
                 <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform duration-300" />
               </span>
