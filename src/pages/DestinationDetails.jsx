@@ -1,27 +1,21 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { DESTINATIONS } from '../data/destinations';
 import WeatherCard from '../components/WeatherCard';
 import FamousPlaceCard from '../components/FamousPlaceCard';
-import DestinationCard from '../components/DestinationCard';
 import ItineraryGenerator from '../components/ItineraryGenerator';
 import PackingAssistant from '../components/PackingAssistant';
-import TouristPlaceModal from '../components/TouristPlaceModal';
-import { MapPin, Calendar, Globe, DollarSign, ArrowLeft, Sparkles, Compass, Landmark } from 'lucide-react';
+import { MapPin, Calendar, Globe, DollarSign, ArrowLeft, Sparkles } from 'lucide-react';
 
 export default function DestinationDetails({ onOpenAIChatWithDestination }) {
   const { id } = useParams();
   const destination = DESTINATIONS.find((d) => d.id === id) || DESTINATIONS[0];
-  const [selectedPlace, setSelectedPlace] = useState(null);
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }, [id]);
 
   if (!destination) return null;
-
-  // Other destinations for the recommendation row
-  const otherDestinations = DESTINATIONS.filter((d) => d.id !== destination.id).slice(0, 4);
 
   return (
     <div className="pt-24 pb-24 space-y-16">
@@ -110,34 +104,35 @@ export default function DestinationDetails({ onOpenAIChatWithDestination }) {
           />
         </div>
 
-        {/* Beautiful Tourist Places inside this Country */}
-        <section id="destination-places" className="space-y-6">
-          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
-            <div>
-              <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-[#2F6F68]/10 text-[#2F6F68] text-[10px] font-bold uppercase tracking-wider mb-2">
-                <Landmark className="w-3.5 h-3.5 text-[#D8B98A]" />
-                <span>TOP ATTRACTIONS & SIGHTS</span>
-              </div>
-              <h3 className="font-editorial text-3xl sm:text-4xl font-bold text-[#171A19]">
-                Beautiful Places in {destination.name}
-              </h3>
-              <p className="text-xs text-[#68706D] font-light mt-1">
-                Explore iconic landmarks, alpine vistas, and cultural sanctuaries across {destination.name}, {destination.country}.
-              </p>
-            </div>
-          </div>
+        {/* About Section */}
+        <div className="bg-white p-8 sm:p-10 rounded-3xl border border-[#171A19]/10 shadow-sm">
+          <h3 className="font-editorial text-3xl font-bold text-[#171A19] mb-4">
+            About {destination.name}
+          </h3>
+          <p className="text-sm text-[#68706D] font-light leading-relaxed mb-6">
+            {destination.description}
+          </p>
 
-          {/* 4-Column Responsive Grid of Places inside this country */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            {destination.places?.map((place) => (
-              <FamousPlaceCard 
-                key={place.id} 
-                place={place} 
-                onSelectPlace={(p) => setSelectedPlace(p)}
-              />
+          <div className="flex flex-wrap gap-2 pt-4 border-t border-[#171A19]/08">
+            {destination.tags?.map((tag) => (
+              <span key={tag} className="px-3.5 py-1 rounded-full text-xs font-semibold bg-[#F7F5F0] text-[#2F6F68]">
+                #{tag}
+              </span>
             ))}
           </div>
-        </section>
+        </div>
+
+        {/* Famous Places Section */}
+        <div>
+          <h3 className="font-editorial text-3xl font-bold text-[#171A19] mb-6">
+            Famous Places in {destination.name}
+          </h3>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            {destination.places?.map((place) => (
+              <FamousPlaceCard key={place.id} place={place} />
+            ))}
+          </div>
+        </div>
 
         {/* Ask AI Assistant CTA */}
         <div className="p-8 sm:p-10 rounded-3xl bg-[#101413] text-white flex flex-col md:flex-row items-center justify-between gap-6 shadow-xl">
@@ -149,13 +144,13 @@ export default function DestinationDetails({ onOpenAIChatWithDestination }) {
               Have questions about {destination.name}?
             </h3>
             <p className="text-xs text-slate-300 font-light max-w-lg">
-              Ask our AI assistant what to pack, when to visit, what food to sample, or how many days to spend in {destination.name}.
+              Ask our AI assistant what to pack, when to visit, what food to sample, or how many days to spend.
             </p>
           </div>
 
           <button
             onClick={() => onOpenAIChatWithDestination(destination)}
-            className="px-8 py-3.5 rounded-full bg-[#2F6F68] hover:bg-[#265953] text-white font-bold text-xs shadow-md transition-transform hover:scale-105 flex items-center space-x-2 shrink-0 min-h-[44px]"
+            className="px-8 py-3.5 rounded-full bg-[#2F6F68] hover:bg-[#265953] text-white font-bold text-xs shadow-md transition-transform hover:scale-105 flex items-center space-x-2 shrink-0"
           >
             <Sparkles className="w-4 h-4 text-[#D8B98A]" />
             <span>✨ Ask AI about {destination.name}</span>
@@ -168,34 +163,7 @@ export default function DestinationDetails({ onOpenAIChatWithDestination }) {
         {/* Smart Packing Assistant Checklist */}
         <PackingAssistant />
 
-        {/* Discover Other Worldwide Escapes */}
-        <section className="pt-8 border-t border-[#171A19]/08 space-y-6">
-          <div>
-            <span className="text-xs font-extrabold uppercase tracking-widest text-[#2F6F68] block mb-1">
-              MORE DESTINATIONS
-            </span>
-            <h3 className="font-editorial text-3xl font-bold text-[#171A19]">
-              Explore Other Worldwide Escapes
-            </h3>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            {otherDestinations.map((dest) => (
-              <DestinationCard key={dest.id} destination={dest} />
-            ))}
-          </div>
-        </section>
-
       </div>
-
-      {/* Tourist Place Detail Modal */}
-      <TouristPlaceModal
-        place={selectedPlace}
-        destination={destination}
-        isOpen={!!selectedPlace}
-        onClose={() => setSelectedPlace(null)}
-        onAskAI={(p) => onOpenAIChatWithDestination(destination)}
-      />
 
     </div>
   );
