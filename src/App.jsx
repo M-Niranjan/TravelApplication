@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { App as CapApp } from '@capacitor/app';
 import Navbar from './components/Navbar';
+import MobileBottomNav from './components/MobileBottomNav';
 import Footer from './components/Footer';
 import Home from './pages/Home';
 import Destinations from './pages/Destinations';
@@ -60,9 +61,9 @@ function AppContent() {
 
   return (
     <Router>
-      <div className="min-h-screen bg-[#F7F5F0] text-[#171A19] font-sans relative selection:bg-[#2F6F68] selection:text-white flex flex-col justify-between pt-[env(safe-area-inset-top)] pb-[env(safe-area-inset-bottom)]">
+      <div className="min-h-screen bg-[#F8FAFC] text-[#0F172A] font-sans relative selection:bg-blue-600 selection:text-white flex flex-col justify-between pt-[env(safe-area-inset-top)] pb-[env(safe-area-inset-bottom)]">
         
-        {/* Navigation Bar */}
+        {/* Top Navigation Bar */}
         <div className="no-print">
           <Navbar
             onOpenAIChat={() => handleOpenAIChatWithDestination(null)}
@@ -72,8 +73,8 @@ function AppContent() {
           />
         </div>
 
-        {/* Dedicated Page Routes */}
-        <main className="flex-grow">
+        {/* Dedicated Page Routes with Safe Bottom Padding for Mobile Nav Dock */}
+        <main className="flex-grow pb-24 lg:pb-0">
           <Routes>
             <Route
               path="/"
@@ -93,21 +94,29 @@ function AppContent() {
                 />
               }
             />
-            <Route path="/places" element={<Places />} />
+            <Route path="/places" element={<Places onOpenAIChatWithDestination={handleOpenAIChatWithDestination} />} />
             <Route path="/itinerary" element={<ItineraryPage />} />
             <Route path="/packing" element={<PackingPage />} />
             <Route path="/weather" element={<WeatherPage currentLocation={location} />} />
           </Routes>
         </main>
 
-        {/* Floating AI Assistant Trigger Button (Bottom-Right) */}
+        {/* Mobile Luxury Bottom Navigation Bar (App Dock) */}
+        <div className="no-print">
+          <MobileBottomNav
+            onOpenAIChat={() => handleOpenAIChatWithDestination(null)}
+            onOpenAuthModal={() => setIsAuthModalOpen(true)}
+          />
+        </div>
+
+        {/* Desktop Floating AI Assistant Trigger Button (Bottom-Right) */}
         {!isAIChatOpen && (
           <button
             onClick={() => handleOpenAIChatWithDestination(null)}
-            className="no-print fixed bottom-6 right-6 z-40 px-5 py-3.5 rounded-full bg-[#101413] text-white font-bold text-xs shadow-2xl hover:scale-105 transition-transform flex items-center space-x-2 border border-white/10 group min-h-[44px]"
+            className="no-print hidden lg:flex fixed bottom-6 right-6 z-40 px-5 py-3.5 rounded-full bg-[#0F172A] text-white font-bold text-xs shadow-2xl hover:scale-105 transition-transform items-center space-x-2 border border-slate-700 group min-h-[44px] cursor-pointer"
           >
-            <Sparkles className="w-4 h-4 text-[#D8B98A] animate-pulse" />
-            <span>✨ Ask Travel AI</span>
+            <Sparkles className="w-4 h-4 text-amber-300 animate-pulse" />
+            <span>✨ Ask Voyager AI</span>
           </button>
         )}
 
@@ -142,8 +151,8 @@ function AppContent() {
           />
         </div>
 
-        {/* Footer */}
-        <div className="no-print">
+        {/* Footer (with safe spacing for bottom dock on mobile) */}
+        <div className="no-print pb-16 lg:pb-0">
           <Footer />
         </div>
 
