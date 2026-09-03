@@ -1,100 +1,142 @@
-import React, { useEffect } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import React, { useState } from 'react';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import { DESTINATIONS } from '../data/destinations';
 import WeatherCard from '../components/WeatherCard';
 import FamousPlaceCard from '../components/FamousPlaceCard';
+import PlaceDetailModal from '../components/PlaceDetailModal';
 import ItineraryGenerator from '../components/ItineraryGenerator';
 import PackingAssistant from '../components/PackingAssistant';
-import { MapPin, Calendar, Globe, DollarSign, ArrowLeft, Sparkles } from 'lucide-react';
+import { MapPin, Calendar, Globe, DollarSign, ArrowLeft, Sparkles, Heart } from 'lucide-react';
+import { useAuth } from '../context/AuthContext';
 
 export default function DestinationDetails({ onOpenAIChatWithDestination }) {
   const { id } = useParams();
-  const destination = DESTINATIONS.find((d) => d.id === id) || DESTINATIONS[0];
+  const navigate = useNavigate();
+  const { savedFavorites, toggleFavorite } = useAuth();
+  const [selectedPlace, setSelectedPlace] = useState(null);
 
-  useEffect(() => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  }, [id]);
+  const destination = DESTINATIONS.find((d) => d.id === id);
+  const isSaved = destination ? savedFavorites.includes(destination.id) : false;
 
-  if (!destination) return null;
-
-  return (
-    <div className="pt-24 pb-24 space-y-16">
-      
-      {/* Back Link & Hero Image Header */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+  if (!destination) {
+    return (
+      <div className="pt-32 pb-24 text-center max-w-md mx-auto px-4">
+        <h2 className="font-editorial text-3xl font-bold mb-4">Destination not found</h2>
+        <p className="text-xs text-[#68706D] mb-6">The requested destination could not be located.</p>
         <Link
           to="/destinations"
-          className="inline-flex items-center space-x-2 text-xs font-bold text-[#68706D] hover:text-[#2F6F68] mb-6 transition-colors"
+          className="px-6 py-3 rounded-full bg-[#2F6F68] text-white font-bold text-xs inline-flex items-center space-x-2"
         >
           <ArrowLeft className="w-4 h-4" />
-          <span>Back to All Destinations</span>
+          <span>Back to Destinations</span>
         </Link>
+      </div>
+    );
+  }
 
-        {/* Hero Cover Banner */}
-        <div className="relative h-[480px] sm:h-[560px] w-full rounded-3xl overflow-hidden shadow-2xl">
-          <img
-            src={destination.image}
-            alt={destination.name}
-            className="w-full h-full object-cover"
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-[#101413]/90 via-[#101413]/30 to-transparent" />
+  return (
+    <div className="pt-24 pb-24">
+      
+      {/* 1. Cinematic Hero Banner */}
+      <div className="relative h-[65vh] min-h-[440px] w-full overflow-hidden">
+        <img
+          src={destination.image}
+          alt={destination.name}
+          className="w-full h-full object-cover"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#101413] via-[#101413]/50 to-black/30" />
 
-          {/* Title & Introduction Overlay */}
-          <div className="absolute bottom-8 left-8 right-8 z-10 text-white max-w-3xl">
-            <span className="px-3.5 py-1 rounded-full text-xs font-bold uppercase tracking-widest bg-white/20 backdrop-blur-md text-[#D8B98A] border border-white/20 mb-3 inline-block">
+        {/* Back Link & Heart Action */}
+        <div className="absolute top-8 left-4 sm:left-8 right-4 sm:right-8 z-20 flex items-center justify-between">
+          <button
+            onClick={() => navigate(-1)}
+            className="inline-flex items-center space-x-2 px-4 py-2 rounded-full bg-white/90 hover:bg-white text-[#171A19] font-bold text-xs backdrop-blur-md shadow-md transition-all active:scale-95"
+          >
+            <ArrowLeft className="w-4 h-4" />
+            <span>Back</span>
+          </button>
+
+          <button
+            onClick={() => toggleFavorite(destination.id)}
+            className="p-3 rounded-full bg-black/40 hover:bg-black/60 backdrop-blur-md border border-white/20 text-white transition-all active:scale-95 shadow-md"
+            title={isSaved ? 'Remove from favorites' : 'Save to favorites'}
+          >
+            <Heart className={`w-5 h-5 ${isSaved ? 'fill-rose-500 text-rose-500' : 'text-white'}`} />
+          </button>
+        </div>
+
+        {/* Hero Title & Badges */}
+        <div className="absolute bottom-12 left-4 sm:left-8 lg:left-16 right-4 sm:right-8 max-w-4xl text-white">
+          <div className="flex items-center space-x-2 mb-3">
+            <span className="px-3.5 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-white/90 text-[#171A19] shadow-sm">
+              {destination.region}
+            </span>
+            <span className="px-3.5 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-[#2F6F68] text-[#D8B98A] shadow-sm">
               {destination.country}
             </span>
-            <h1 className="font-editorial text-5xl sm:text-7xl font-bold tracking-tight mb-3">
-              {destination.name}
-            </h1>
-            <p className="text-sm sm:text-base text-slate-200 font-light leading-relaxed">
-              {destination.description}
-            </p>
           </div>
+
+          <h1 className="font-editorial text-5xl sm:text-7xl font-bold tracking-tight mb-4 drop-shadow-lg">
+            {destination.name}
+          </h1>
+
+          <p className="text-sm sm:text-base text-slate-200 font-light leading-relaxed max-w-2xl drop-shadow-md">
+            {destination.description}
+          </p>
         </div>
       </div>
 
-      {/* Main Content Area */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-16">
+      {/* 2. Destination Core Info Cards */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-8 relative z-20 space-y-14">
         
-        {/* Quick Travel Metrics Bar */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-          <div className="p-5 rounded-2xl bg-white border border-[#171A19]/08 shadow-sm">
-            <span className="text-[10px] text-[#68706D] uppercase tracking-wider block mb-1 flex items-center space-x-1">
-              <Calendar className="w-3.5 h-3.5 text-[#2F6F68]" />
-              <span>Best Time to Visit</span>
-            </span>
-            <span className="text-xs font-bold text-[#171A19]">{destination.bestTime}</span>
+        {/* Quick Facts Grid */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 bg-white p-6 sm:p-8 rounded-3xl border border-[#171A19]/10 shadow-lg">
+          
+          <div className="flex items-center space-x-3">
+            <div className="w-10 h-10 rounded-2xl bg-[#2F6F68]/10 text-[#2F6F68] flex items-center justify-center shrink-0">
+              <Calendar className="w-5 h-5" />
+            </div>
+            <div>
+              <span className="text-[10px] font-bold uppercase tracking-wider text-[#68706D] block">Best Season</span>
+              <span className="text-xs sm:text-sm font-bold text-[#171A19]">{destination.bestTime}</span>
+            </div>
           </div>
 
-          <div className="p-5 rounded-2xl bg-white border border-[#171A19]/08 shadow-sm">
-            <span className="text-[10px] text-[#68706D] uppercase tracking-wider block mb-1 flex items-center space-x-1">
-              <Globe className="w-3.5 h-3.5 text-[#2F6F68]" />
-              <span>Language</span>
-            </span>
-            <span className="text-xs font-bold text-[#171A19]">{destination.language}</span>
+          <div className="flex items-center space-x-3">
+            <div className="w-10 h-10 rounded-2xl bg-[#2F6F68]/10 text-[#2F6F68] flex items-center justify-center shrink-0">
+              <DollarSign className="w-5 h-5" />
+            </div>
+            <div>
+              <span className="text-[10px] font-bold uppercase tracking-wider text-[#68706D] block">Currency</span>
+              <span className="text-xs sm:text-sm font-bold text-[#171A19]">{destination.currency}</span>
+            </div>
           </div>
 
-          <div className="p-5 rounded-2xl bg-white border border-[#171A19]/08 shadow-sm">
-            <span className="text-[10px] text-[#68706D] uppercase tracking-wider block mb-1 flex items-center space-x-1">
-              <DollarSign className="w-3.5 h-3.5 text-[#D8B98A]" />
-              <span>Currency</span>
-            </span>
-            <span className="text-xs font-bold text-[#171A19]">{destination.currency}</span>
+          <div className="flex items-center space-x-3">
+            <div className="w-10 h-10 rounded-2xl bg-[#2F6F68]/10 text-[#2F6F68] flex items-center justify-center shrink-0">
+              <Globe className="w-5 h-5" />
+            </div>
+            <div>
+              <span className="text-[10px] font-bold uppercase tracking-wider text-[#68706D] block">Language</span>
+              <span className="text-xs sm:text-sm font-bold text-[#171A19]">{destination.language}</span>
+            </div>
           </div>
 
-          <div className="p-5 rounded-2xl bg-white border border-[#171A19]/08 shadow-sm">
-            <span className="text-[10px] text-[#68706D] uppercase tracking-wider block mb-1 flex items-center space-x-1">
-              <MapPin className="w-3.5 h-3.5 text-[#2F6F68]" />
-              <span>Region</span>
-            </span>
-            <span className="text-xs font-bold text-[#171A19]">{destination.region}</span>
+          <div className="flex items-center space-x-3">
+            <div className="w-10 h-10 rounded-2xl bg-[#2F6F68]/10 text-[#2F6F68] flex items-center justify-center shrink-0">
+              <MapPin className="w-5 h-5" />
+            </div>
+            <div>
+              <span className="text-[10px] font-bold uppercase tracking-wider text-[#68706D] block">Coordinates</span>
+              <span className="text-xs sm:text-sm font-bold text-[#171A19]">{destination.latitude.toFixed(2)}°, {destination.longitude.toFixed(2)}°</span>
+            </div>
           </div>
+
         </div>
 
-        {/* Real-Time Weather Component for this destination */}
+        {/* Live Weather Forecast for this destination */}
         <div>
-          <h3 className="font-editorial text-2xl font-bold text-[#171A19] mb-4">
+          <h3 className="font-editorial text-3xl font-bold text-[#171A19] mb-4">
             Live Weather in {destination.name}
           </h3>
           <WeatherCard
@@ -104,32 +146,29 @@ export default function DestinationDetails({ onOpenAIChatWithDestination }) {
           />
         </div>
 
-        {/* About Section */}
-        <div className="bg-white p-8 sm:p-10 rounded-3xl border border-[#171A19]/10 shadow-sm">
-          <h3 className="font-editorial text-3xl font-bold text-[#171A19] mb-4">
-            About {destination.name}
-          </h3>
-          <p className="text-sm text-[#68706D] font-light leading-relaxed mb-6">
-            {destination.description}
-          </p>
-
-          <div className="flex flex-wrap gap-2 pt-4 border-t border-[#171A19]/08">
-            {destination.tags?.map((tag) => (
-              <span key={tag} className="px-3.5 py-1 rounded-full text-xs font-semibold bg-[#F7F5F0] text-[#2F6F68]">
-                #{tag}
-              </span>
-            ))}
-          </div>
-        </div>
-
-        {/* Famous Places Section */}
+        {/* Famous Places in this Destination (Clickable to open PlaceDetailModal) */}
         <div>
-          <h3 className="font-editorial text-3xl font-bold text-[#171A19] mb-6">
-            Famous Places in {destination.name}
-          </h3>
+          <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-6 gap-2">
+            <div>
+              <span className="text-xs font-bold uppercase tracking-wider text-[#2F6F68] block mb-1">
+                CURATED SIGHTS
+              </span>
+              <h3 className="font-editorial text-3xl font-bold text-[#171A19]">
+                Famous Places in {destination.name}
+              </h3>
+            </div>
+            <p className="text-xs text-[#68706D]">
+              Click any place to explore detailed visiting tips & AI advice.
+            </p>
+          </div>
+
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             {destination.places?.map((place) => (
-              <FamousPlaceCard key={place.id} place={place} />
+              <FamousPlaceCard
+                key={place.id}
+                place={place}
+                onSelectPlace={(p) => setSelectedPlace(p)}
+              />
             ))}
           </div>
         </div>
@@ -164,6 +203,15 @@ export default function DestinationDetails({ onOpenAIChatWithDestination }) {
         <PackingAssistant />
 
       </div>
+
+      {/* Interactive Place Detail Modal */}
+      {selectedPlace && (
+        <PlaceDetailModal
+          place={selectedPlace}
+          onClose={() => setSelectedPlace(null)}
+          onOpenAIChatWithDestination={onOpenAIChatWithDestination}
+        />
+      )}
 
     </div>
   );

@@ -1,18 +1,21 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import Hero from '../components/Hero';
 import DestinationCard from '../components/DestinationCard';
 import FamousPlaceCard from '../components/FamousPlaceCard';
+import PlaceDetailModal from '../components/PlaceDetailModal';
 import { DESTINATIONS } from '../data/destinations';
 import { Sparkles, MapPin, Landmark, ArrowRight, Calendar, Luggage } from 'lucide-react';
 
 export default function Home({ onOpenAIChat, currentLocation }) {
+  const [selectedPlace, setSelectedPlace] = useState(null);
+
   // Top 4 featured destinations for clean home page
   const featuredDestinations = useMemo(() => DESTINATIONS.slice(0, 4), []);
 
   // Top 4 featured landmarks
   const featuredPlaces = useMemo(() => {
-    return DESTINATIONS.flatMap((d) => d.places || []).slice(0, 4);
+    return DESTINATIONS.flatMap((d) => (d.places || []).map((p) => ({ ...p, destinationName: d.name, country: d.country }))).slice(0, 4);
   }, []);
 
   return (
@@ -73,7 +76,11 @@ export default function Home({ onOpenAIChat, currentLocation }) {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             {featuredPlaces.map((place) => (
-              <FamousPlaceCard key={place.id} place={place} />
+              <FamousPlaceCard
+                key={place.id}
+                place={place}
+                onSelectPlace={(p) => setSelectedPlace(p)}
+              />
             ))}
           </div>
         </div>
@@ -123,6 +130,15 @@ export default function Home({ onOpenAIChat, currentLocation }) {
 
         </div>
       </section>
+
+      {/* Place Detail Modal */}
+      {selectedPlace && (
+        <PlaceDetailModal
+          place={selectedPlace}
+          onClose={() => setSelectedPlace(null)}
+          onOpenAIChatWithDestination={onOpenAIChat}
+        />
+      )}
 
     </div>
   );

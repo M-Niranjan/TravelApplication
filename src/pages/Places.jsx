@@ -1,12 +1,13 @@
 import React, { useState, useMemo } from 'react';
 import FamousPlaceCard from '../components/FamousPlaceCard';
+import PlaceDetailModal from '../components/PlaceDetailModal';
 import { DESTINATIONS } from '../data/destinations';
-import { Landmark, Search, Filter } from 'lucide-react';
+import { Landmark, Search } from 'lucide-react';
 
-export default function Places() {
+export default function Places({ onOpenAIChatWithDestination }) {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCountry, setSelectedCountry] = useState('All');
-  const [selectedCategory, setSelectedCategory] = useState('All');
+  const [selectedPlace, setSelectedPlace] = useState(null);
 
   // Extract all places with destination context
   const allPlaces = useMemo(() => {
@@ -20,14 +21,10 @@ export default function Places() {
     );
   }, []);
 
-  // Extract unique countries and categories
+  // Extract unique countries
   const countries = useMemo(() => {
     return ['All', ...new Set(DESTINATIONS.map((d) => d.country))];
   }, []);
-
-  const categories = useMemo(() => {
-    return ['All', ...new Set(allPlaces.map((p) => p.category))];
-  }, [allPlaces]);
 
   // Filter places
   const filteredPlaces = useMemo(() => {
@@ -40,11 +37,10 @@ export default function Places() {
         place.country.toLowerCase().includes(searchQuery.toLowerCase());
 
       const matchesCountry = selectedCountry === 'All' || place.country === selectedCountry;
-      const matchesCategory = selectedCategory === 'All' || place.category === selectedCategory;
 
-      return matchesSearch && matchesCountry && matchesCategory;
+      return matchesSearch && matchesCountry;
     });
-  }, [allPlaces, searchQuery, selectedCountry, selectedCategory]);
+  }, [allPlaces, searchQuery, selectedCountry]);
 
   return (
     <div className="pt-32 pb-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -59,7 +55,7 @@ export default function Places() {
           Tourist Places & Sights
         </h1>
         <p className="text-sm sm:text-base text-[#68706D] font-light leading-relaxed">
-          Discover iconic historic monuments, alpine summits, holy shrines, and natural wonders across the globe.
+          Click on any landmark to view detailed traveler guides, history, visiting hours, and AI assistance.
         </p>
       </div>
 
@@ -111,7 +107,6 @@ export default function Places() {
             onClick={() => {
               setSearchQuery('');
               setSelectedCountry('All');
-              setSelectedCategory('All');
             }}
             className="px-6 py-2 rounded-full bg-[#2F6F68] text-white font-bold text-xs"
           >
@@ -121,9 +116,22 @@ export default function Places() {
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           {filteredPlaces.map((place) => (
-            <FamousPlaceCard key={place.id} place={place} />
+            <FamousPlaceCard
+              key={place.id}
+              place={place}
+              onSelectPlace={(p) => setSelectedPlace(p)}
+            />
           ))}
         </div>
+      )}
+
+      {/* Interactive Place Detail Modal */}
+      {selectedPlace && (
+        <PlaceDetailModal
+          place={selectedPlace}
+          onClose={() => setSelectedPlace(null)}
+          onOpenAIChatWithDestination={onOpenAIChatWithDestination}
+        />
       )}
 
     </div>
