@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { HashRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { App as CapApp } from '@capacitor/app';
 import Navbar from './components/Navbar';
 import MobileBottomNav from './components/MobileBottomNav';
@@ -94,10 +94,16 @@ function AppContent() {
                 />
               }
             />
-            <Route path="/places" element={<Places onOpenAIChatWithDestination={handleOpenAIChatWithDestination} />} />
+            <Route 
+              path="/places" 
+              element={<Places onOpenAIChatWithDestination={handleOpenAIChatWithDestination} />} 
+            />
             <Route path="/itinerary" element={<ItineraryPage />} />
             <Route path="/packing" element={<PackingPage />} />
             <Route path="/weather" element={<WeatherPage currentLocation={location} />} />
+            
+            {/* Fallback wildcard catch-all route to prevent 404s */}
+            <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </main>
 
