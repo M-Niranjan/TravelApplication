@@ -26,7 +26,7 @@ export const DESTINATIONS = [
         name: 'The Louvre Museum',
         category: 'Art & Heritage',
         description: 'World’s largest art museum housing historic masterpieces including the Mona Lisa and Venus de Milo.',
-        image: 'https://images.unsplash.com/photo-1565099824688-e93eb20fe52c?q=85&w=1200&auto=format&fit=crop',
+        image: 'https://images.unsplash.com/photo-1499856871958-5b9627545d1a?q=85&w=1200&auto=format&fit=crop',
         duration: '3–4 hours'
       },
       {
@@ -42,7 +42,7 @@ export const DESTINATIONS = [
         name: 'Montmartre & Sacré-Cœur',
         category: 'Historic Hilltop',
         description: 'Bohemian hilltop neighborhood featuring artists’ squares and panoramic views over Paris.',
-        image: 'https://images.unsplash.com/photo-1550340499-a6c60fc8287c?q=85&w=1200&auto=format&fit=crop',
+        image: 'https://images.unsplash.com/photo-1509356843151-3e7d96241e11?q=85&w=1200&auto=format&fit=crop',
         duration: '2–3 hours'
       },
       {
@@ -106,7 +106,7 @@ export const DESTINATIONS = [
         name: 'Meiji Jingu Shrine',
         category: 'Sacred Sanctuary',
         description: 'Peaceful Shinto shrine surrounded by an evergreen forest of over 100,000 trees in Shibuya.',
-        image: 'https://images.unsplash.com/photo-1583037189850-1921ae7c6c22?q=85&w=1200&auto=format&fit=crop',
+        image: 'https://images.unsplash.com/photo-1503899036084-c55cdd92da26?q=85&w=1200&auto=format&fit=crop',
         duration: '1.5 hours'
       },
       {
@@ -146,7 +146,7 @@ export const DESTINATIONS = [
         name: 'Ubud Sacred Monkey Forest',
         category: 'Nature & Wildlife',
         description: 'Lush natural forest sanctuary housing hundreds of Balinese long-tailed macaques and ancient mossy temples.',
-        image: 'https://images.unsplash.com/photo-1544644181-1484b3fdfc62?q=85&w=1200&auto=format&fit=crop',
+        image: 'https://images.unsplash.com/photo-1537996194471-e657df975ab4?q=85&w=1200&auto=format&fit=crop',
         duration: '2 hours'
       },
       {
@@ -178,7 +178,7 @@ export const DESTINATIONS = [
         name: 'Kelingking Beach (Nusa Penida)',
         category: 'Coastal Wonder',
         description: 'Breathtaking T-Rex shaped coastal headland surrounded by crystal-clear turquoise waters and white sand.',
-        image: 'https://images.unsplash.com/photo-1598387993441-a364f854c3e1?q=85&w=1200&auto=format&fit=crop',
+        image: 'https://images.unsplash.com/photo-1544644181-1484b3fdfc62?q=85&w=1200&auto=format&fit=crop',
         duration: 'Half Day'
       },
       {
@@ -210,7 +210,7 @@ export const DESTINATIONS = [
         name: 'Burj Khalifa',
         category: 'Skyscraper Landmark',
         description: 'World’s tallest building offering breathtaking panoramas over the desert skyline from level 148.',
-        image: 'https://images.unsplash.com/photo-1580674684081-7617fbf3d745?q=85&w=1200&auto=format&fit=crop',
+        image: 'https://images.unsplash.com/photo-1512453979798-5ea266f8880c?q=85&w=1200&auto=format&fit=crop',
         duration: '2–3 hours'
       },
       {
@@ -218,7 +218,7 @@ export const DESTINATIONS = [
         name: 'Dubai Miracle Garden',
         category: 'Floral Attraction',
         description: 'World’s largest natural flower garden displaying over 150 million blooming flowers in fantastical shapes.',
-        image: 'https://images.unsplash.com/photo-1586861635167-e5223aadc9fe?q=85&w=1200&auto=format&fit=crop',
+        image: 'https://images.unsplash.com/photo-1580674684081-7617fbf3d745?q=85&w=1200&auto=format&fit=crop',
         duration: '2 hours'
       },
       {
@@ -274,7 +274,7 @@ export const DESTINATIONS = [
         name: 'The Matterhorn, Zermatt',
         category: 'Alpine Peak',
         description: 'Iconic pyramid-shaped peak towering over Zermatt with year-round glacier skiing and scenic mountain railways.',
-        image: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?q=85&w=1200&auto=format&fit=crop',
+        image: 'https://images.unsplash.com/photo-1530122037265-a5f1f91d3b99?q=85&w=1200&auto=format&fit=crop',
         duration: 'Half Day'
       },
       {
@@ -362,7 +362,7 @@ export const DESTINATIONS = [
         name: 'The Pantheon',
         category: 'Ancient Temple',
         description: 'Former Roman temple renowned for its unreinforced concrete dome and magnificent central oculus.',
-        image: 'https://images.unsplash.com/photo-1543429776-2782fc8e1acd?q=85&w=1200&auto=format&fit=crop',
+        image: 'https://images.unsplash.com/photo-1552832230-c0197dd311b5?q=85&w=1200&auto=format&fit=crop',
         duration: '1 hour'
       },
       {
@@ -378,7 +378,7 @@ export const DESTINATIONS = [
         name: 'Roman Forum & Palatine Hill',
         category: 'Archaeological Park',
         description: 'The ancient political and commercial heart of the Roman Empire amidst soaring stone columns and ruins.',
-        image: 'https://images.unsplash.com/photo-1588614959060-4d144f28b207?q=85&w=1200&auto=format&fit=crop',
+        image: 'https://images.unsplash.com/photo-1552832230-c0197dd311b5?q=85&w=1200&auto=format&fit=crop',
         duration: '2 hours'
       }
     ]
@@ -418,7 +418,7 @@ export const DESTINATIONS = [
         name: 'Casa Batlló',
         category: 'Modernist Masterpiece',
         description: 'A visceral architectural wonder with a dragon-scale roof and skeletal balconies on Passeig de Gràcia.',
-        image: 'https://images.unsplash.com/photo-1564507592333-c60657eea523?q=85&w=1200&auto=format&fit=crop',
+        image: 'https://images.unsplash.com/photo-1539037116277-4db20889f2d4?q=85&w=1200&auto=format&fit=crop',
         duration: '1.5 hours'
       },
       {
@@ -442,7 +442,7 @@ export const DESTINATIONS = [
         name: 'Montjuïc Hill & Castle',
         category: 'Panoramic Hilltop',
         description: 'Hilltop fortress featuring cable car rides, botanical gardens, and evening panoramic views.',
-        image: 'https://images.unsplash.com/photo-1512753360435-329c4535a9a7?q=85&w=1200&auto=format&fit=crop',
+        image: 'https://images.unsplash.com/photo-1583422409516-2895a77efded?q=85&w=1200&auto=format&fit=crop',
         duration: '3 hours'
       }
     ]
@@ -466,7 +466,7 @@ export const DESTINATIONS = [
         name: 'Blue Lagoon Geothermal Spa',
         category: 'Geothermal Spa',
         description: 'Milky-blue mineral-rich geothermal spa surrounded by black volcanic basalt rocks and silica masks.',
-        image: 'https://images.unsplash.com/photo-1529963183134-61a90db47eaf?q=85&w=1200&auto=format&fit=crop',
+        image: 'https://images.unsplash.com/photo-1504893524553-b855bce32c67?q=85&w=1200&auto=format&fit=crop',
         duration: '3 hours'
       },
       {
@@ -474,7 +474,7 @@ export const DESTINATIONS = [
         name: 'Gullfoss (Golden Falls)',
         category: 'Iconic Waterfall',
         description: 'Thunderous two-tiered glacial waterfall plunging deep into a rugged canyon along the Golden Circle.',
-        image: 'https://images.unsplash.com/photo-1509316975850-ff9c5deb0cd9?q=85&w=1200&auto=format&fit=crop',
+        image: 'https://images.unsplash.com/photo-1504893524553-b855bce32c67?q=85&w=1200&auto=format&fit=crop',
         duration: '1.5 hours'
       },
       {
@@ -482,7 +482,7 @@ export const DESTINATIONS = [
         name: 'Reynisfjara Black Sand Beach',
         category: 'Volcanic Beach',
         description: 'Dramatic black volcanic sand beach famous for towering basalt sea stacks and roaring Atlantic waves.',
-        image: 'https://images.unsplash.com/photo-1508873696983-2df5293cb32f?q=85&w=1200&auto=format&fit=crop',
+        image: 'https://images.unsplash.com/photo-1509316975850-ff9c5deb0cd9?q=85&w=1200&auto=format&fit=crop',
         duration: '2 hours'
       },
       {
@@ -506,7 +506,7 @@ export const DESTINATIONS = [
         name: 'Skógafoss Waterfall',
         category: 'Majestic Waterfall',
         description: 'Breathtaking 60-meter-high curtain waterfall frequently generating single and double rainbows.',
-        image: 'https://images.unsplash.com/photo-1476610182048-b716b8518aae?q=85&w=1200&auto=format&fit=crop',
+        image: 'https://images.unsplash.com/photo-1504893524553-b855bce32c67?q=85&w=1200&auto=format&fit=crop',
         duration: '1.5 hours'
       }
     ]

@@ -1,11 +1,17 @@
 import React from 'react';
 import { Clock, ArrowRight, MapPin, Sparkles } from 'lucide-react';
 
+const FALLBACK_IMAGE = 'https://images.unsplash.com/photo-1488646953014-85cb44e25828?q=85&w=1200&auto=format&fit=crop';
+
 export default function FamousPlaceCard({ place, onSelectPlace }) {
   const handleClick = () => {
     if (onSelectPlace) {
       onSelectPlace(place);
     }
+  };
+
+  const handleImageError = (e) => {
+    e.target.src = FALLBACK_IMAGE;
   };
 
   return (
@@ -14,11 +20,12 @@ export default function FamousPlaceCard({ place, onSelectPlace }) {
       className="group rounded-3xl overflow-hidden glass-card-light hover:shadow-2xl hover:border-[#2F6F68]/30 transition-all duration-300 flex flex-col justify-between h-full cursor-pointer select-none"
     >
       <div>
-        {/* Dynamic Image with Hover Zoom */}
-        <div className="relative h-48 w-full overflow-hidden">
+        {/* Dynamic Image with Hover Zoom & Robust Error Fallback */}
+        <div className="relative h-48 w-full overflow-hidden bg-slate-200">
           <img
-            src={place.image}
+            src={place.image || FALLBACK_IMAGE}
             alt={place.name}
+            onError={handleImageError}
             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
             loading="lazy"
           />
