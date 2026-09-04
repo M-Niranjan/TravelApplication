@@ -36,8 +36,8 @@ export default function DestinationCard({ destination }) {
             loading="lazy"
           />
           
-          {/* Deep Gradient Overlays for Vivid High-Contrast Text */}
-          <div className="absolute inset-0 bg-gradient-to-t from-[#0F172A] via-[#0F172A]/40 to-transparent group-hover:from-[#0F172A] transition-colors duration-300" />
+          {/* Soft Gradient Overlays for Light, Clean High-Contrast Image */}
+          <div className="absolute inset-0 bg-gradient-to-t from-[#0F172A]/70 via-[#0F172A]/20 to-transparent group-hover:from-[#0F172A]/80 transition-colors duration-300" />
 
           {/* Region Badge (Top-Left) with HD Gradient Container */}
           <div className="absolute top-4 left-4 flex items-center space-x-2 z-10">

@@ -213,7 +213,7 @@ export default function ItineraryGenerator({ initialDestination = null }) {
                 alt={activeDestination.name}
                 className="w-full h-full object-cover"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-[#0F172A]/90 via-[#0F172A]/40 to-transparent" />
+              <div className="absolute inset-0 bg-gradient-to-t from-[#0F172A]/65 via-[#0F172A]/20 to-transparent" />
               <div className="absolute bottom-3 left-4 text-white">
                 <span className="text-[10px] uppercase font-bold text-amber-300 block">{activeDestination.country}</span>
                 <span className="font-editorial text-xl font-bold">{activeDestination.name}</span>

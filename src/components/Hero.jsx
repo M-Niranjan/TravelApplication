@@ -124,9 +124,9 @@ export default function Hero({ onOpenAIChat }) {
         })}
       </div>
 
-      {/* 2. Deep Midnight Sapphire Gradient Vignette */}
-      <div className="absolute inset-0 bg-gradient-to-t from-[#0F172A] via-[#0F172A]/60 to-[#0F172A]/40 z-20" />
-      <div className="absolute inset-0 bg-radial-gradient from-transparent via-black/20 to-black/60 z-20 pointer-events-none" />
+      {/* 2. Soft Midnight Sapphire Gradient Vignette (Light & Vibrant) */}
+      <div className="absolute inset-0 bg-gradient-to-t from-[#0F172A]/75 via-[#0F172A]/35 to-black/20 z-20" />
+      <div className="absolute inset-0 bg-radial-gradient from-transparent via-black/10 to-black/30 z-20 pointer-events-none" />
 
       {/* 3. Hero Content */}
       <div className="relative z-30 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center pt-28 pb-16 flex flex-col items-center">

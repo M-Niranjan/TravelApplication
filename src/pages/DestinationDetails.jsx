@@ -45,7 +45,7 @@ export default function DestinationDetails({ onOpenAIChatWithDestination }) {
           alt={destination.name}
           className="w-full h-full object-cover"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-[#0F172A] via-[#0F172A]/50 to-black/30" />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#0F172A]/70 via-[#0F172A]/25 to-transparent" />
 
         {/* Back Link & Heart Action */}
         <div className="absolute top-8 left-4 sm:left-8 right-4 sm:right-8 z-20 flex items-center justify-between">

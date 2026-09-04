@@ -127,7 +127,7 @@ export default function WeatherCard({ lat, lon, locationName = '' }) {
       />
 
       {/* 2. Glassmorphic Midnight Tint & Gradient Overlays */}
-      <div className="absolute inset-0 bg-gradient-to-t from-[#0F172A]/95 via-[#0F172A]/70 to-[#0F172A]/50 backdrop-blur-[2px]" />
+      <div className="absolute inset-0 bg-gradient-to-t from-[#0F172A]/75 via-[#0F172A]/45 to-[#0F172A]/25 backdrop-blur-[2px]" />
 
       {/* 3. Card Content */}
       <div className="relative z-10 space-y-6">

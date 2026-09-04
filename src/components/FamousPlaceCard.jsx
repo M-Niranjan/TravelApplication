@@ -32,7 +32,7 @@ export default function FamousPlaceCard({ place, onSelectPlace }) {
             className="w-full h-full object-cover group-hover:scale-108 transition-transform duration-500"
             loading="lazy"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-[#0F172A]/80 via-transparent to-transparent group-hover:from-[#0F172A]/90 transition-colors" />
+          <div className="absolute inset-0 bg-gradient-to-t from-[#0F172A]/40 via-transparent to-transparent group-hover:from-[#0F172A]/50 transition-colors" />
           
           {/* HD Category Badge */}
           <span className="absolute top-3 left-3 px-3 py-1 rounded-full text-[10px] font-extrabold uppercase tracking-wider bg-white/95 text-slate-900 backdrop-blur-md shadow-md border border-white/50">

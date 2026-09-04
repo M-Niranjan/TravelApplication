@@ -36,7 +36,7 @@ export default function DestinationDetailModal({ destination, onClose, onStartIt
             alt={destination.name}
             className="w-full h-full object-cover transition-all duration-700"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/30 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-t from-slate-950/65 via-transparent to-transparent" />
 
           {/* Title and Country */}
           <div className="absolute bottom-6 left-6 right-6 z-10">

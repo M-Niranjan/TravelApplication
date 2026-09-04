@@ -65,7 +65,7 @@ export default function PlaceDetailModal({ place, onClose, onOpenAIChatWithDesti
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           onClick={onClose}
-          className="fixed inset-0 bg-[#0F172A]/85 backdrop-blur-md cursor-pointer"
+          className="fixed inset-0 bg-[#0F172A]/50 backdrop-blur-sm cursor-pointer"
         />
 
         {/* Modal Window with Spring Entrance */}
@@ -87,7 +87,7 @@ export default function PlaceDetailModal({ place, onClose, onOpenAIChatWithDesti
                 e.currentTarget.src = parentDestination?.image || 'https://images.unsplash.com/photo-1599661046289-e31897846e41?q=85&w=1200&auto=format&fit=crop';
               }}
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-[#0F172A] via-[#0F172A]/40 to-transparent" />
+            <div className="absolute inset-0 bg-gradient-to-t from-[#0F172A]/65 via-[#0F172A]/20 to-transparent" />
 
             {/* Close Button */}
             <motion.button
