@@ -510,6 +510,278 @@ export const DESTINATIONS = [
         duration: '1.5 hours'
       }
     ]
+  },
+  {
+    id: 'jaipur-rajasthan-india',
+    name: 'Jaipur',
+    country: 'India',
+    region: 'Asia',
+    description: 'The storied Pink City of Rajasthan, renowned for its royal sandstone palaces, formidable hilltop fortresses, vibrant textile bazaars, and opulent royal heritage.',
+    image: 'https://images.unsplash.com/photo-1599661046289-e31897846e41?q=85&w=1600&auto=format&fit=crop',
+    latitude: 26.9124,
+    longitude: 75.7873,
+    bestTime: 'October - March',
+    currency: 'INR (₹)',
+    language: 'Hindi / Rajasthani / English',
+    tags: ['Asia', 'India', 'Culture', 'History', 'Architecture', 'Luxury'],
+    places: [
+      {
+        id: 'hawa-mahal',
+        name: 'Hawa Mahal (Palace of Winds)',
+        category: 'Royal Palace',
+        description: 'Iconic five-story pink and red sandstone palace with 953 intricately carved jharokhas designed for royal breeze circulation.',
+        image: 'https://images.unsplash.com/photo-1599661046289-e31897846e41?q=85&w=1200&auto=format&fit=crop',
+        duration: '1.5 hours'
+      },
+      {
+        id: 'amer-fort',
+        name: 'Amer Fort (Amber Palace)',
+        category: 'Hilltop Fortress',
+        description: 'Majestic UNESCO World Heritage hill fort overlooking Maota Lake, famous for the shimmering Sheesh Mahal (Mirror Palace).',
+        image: 'https://images.unsplash.com/photo-1585136917192-e421c640d210?q=85&w=1200&auto=format&fit=crop',
+        duration: '3–4 hours'
+      },
+      {
+        id: 'city-palace-jaipur',
+        name: 'City Palace & Chandra Mahal',
+        category: 'Royal Residence & Museum',
+        description: 'Grand palace complex blending Rajput and Mughal architecture, featuring courtyards, Peacock Gate, and museum armories.',
+        image: 'https://images.unsplash.com/photo-1603228254119-e6aefd84be25?q=85&w=1200&auto=format&fit=crop',
+        duration: '2 hours'
+      },
+      {
+        id: 'jal-mahal',
+        name: 'Jal Mahal (Water Palace)',
+        category: 'Palace on Lake',
+        description: 'Serene sandstone palace appearing to float in the middle of Man Sagar Lake with Aravali hill backdrops.',
+        image: 'https://images.unsplash.com/photo-1599661046289-e31897846e41?q=85&w=1200&auto=format&fit=crop',
+        duration: '1 hour'
+      },
+      {
+        id: 'jantar-mantar-jaipur',
+        name: 'Jantar Mantar Astronomical Observatory',
+        category: 'UNESCO Heritage Site',
+        description: 'Collection of 19 monumental astronomical instruments built by Maharaja Sawai Jai Singh II, featuring the world’s largest stone sundial.',
+        image: 'https://images.unsplash.com/photo-1585136917192-e421c640d210?q=85&w=1200&auto=format&fit=crop',
+        duration: '1.5 hours'
+      },
+      {
+        id: 'nahargarh-fort',
+        name: 'Nahargarh Fort & Sunset Point',
+        category: 'Historic Fort & Panorama',
+        description: 'Formidable cliffside fortress offering panoramic sunset vistas across the entire Jaipur city landscape.',
+        image: 'https://images.unsplash.com/photo-1599661046289-e31897846e41?q=85&w=1200&auto=format&fit=crop',
+        duration: '2 hours'
+      }
+    ]
+  },
+  {
+    id: 'agra-delhi-india',
+    name: 'Agra & Delhi',
+    country: 'India',
+    region: 'Asia',
+    description: 'The monumental heart of northern India, home to the ivory-white Taj Mahal, Mughal citadels, historic bazaars, and iconic national monuments.',
+    image: 'https://images.unsplash.com/photo-1564507592333-c60657eea523?q=85&w=1600&auto=format&fit=crop',
+    latitude: 27.1751,
+    longitude: 78.0421,
+    bestTime: 'October - March',
+    currency: 'INR (₹)',
+    language: 'Hindi / English',
+    tags: ['Asia', 'India', 'Culture', 'History', 'Architecture'],
+    places: [
+      {
+        id: 'taj-mahal',
+        name: 'Taj Mahal',
+        category: 'Wonder of the World',
+        description: 'Immense mausoleum of white marble on the Yamuna River bank, regarded worldwide as the pinnacle of Mughal architectural genius.',
+        image: 'https://images.unsplash.com/photo-1564507592333-c60657eea523?q=85&w=1200&auto=format&fit=crop',
+        duration: '2–3 hours'
+      },
+      {
+        id: 'agra-fort',
+        name: 'Agra Fort',
+        category: 'UNESCO Mughal Fortress',
+        description: 'Sprawling red sandstone fortress served as the main royal residence of Mughal emperors, containing palatial marble pavilions.',
+        image: 'https://images.unsplash.com/photo-1585136917192-e421c640d210?q=85&w=1200&auto=format&fit=crop',
+        duration: '2 hours'
+      },
+      {
+        id: 'qutub-minar',
+        name: 'Qutub Minar & Mehrauli Complex',
+        category: 'Historic Victory Tower',
+        description: '73-meter-high fluted red sandstone minaret dating to 1192, standing amidst ancient carved stone ruins and iron pillars.',
+        image: 'https://images.unsplash.com/photo-1587474260584-136574528ed5?q=85&w=1200&auto=format&fit=crop',
+        duration: '1.5 hours'
+      },
+      {
+        id: 'india-gate',
+        name: 'India Gate & Kartavya Path',
+        category: 'War Memorial & Boulevard',
+        description: 'Triumphal archway standing 42 meters high in central Delhi, commemorating soldiers with the eternal flame Amar Jawan Jyoti.',
+        image: 'https://images.unsplash.com/photo-1587474260584-136574528ed5?q=85&w=1200&auto=format&fit=crop',
+        duration: '1 hour'
+      },
+      {
+        id: 'humayuns-tomb',
+        name: 'Humayun’s Tomb',
+        category: 'Mughal Garden Tomb',
+        description: 'Splendid red sandstone and white marble garden tomb that served as the primary architectural inspiration for the Taj Mahal.',
+        image: 'https://images.unsplash.com/photo-1564507592333-c60657eea523?q=85&w=1200&auto=format&fit=crop',
+        duration: '1.5 hours'
+      }
+    ]
+  },
+  {
+    id: 'kerala-gods-country-india',
+    name: 'Kerala',
+    country: 'India',
+    region: 'Asia',
+    description: 'God’s Own Country, famed for its tranquil emerald backwaters, misty high-altitude tea plantations in Munnar, spice markets, and Ayurvedic coastal retreats.',
+    image: 'https://images.unsplash.com/photo-1602216056096-3b40cc0c9944?q=85&w=1600&auto=format&fit=crop',
+    latitude: 9.4981,
+    longitude: 76.3388,
+    bestTime: 'September - March',
+    currency: 'INR (₹)',
+    language: 'Malayalam / English',
+    tags: ['Asia', 'India', 'Nature', 'Relaxation', 'Beach', 'Culture'],
+    places: [
+      {
+        id: 'alleppey-backwaters',
+        name: 'Alleppey Backwaters & Luxury Houseboats',
+        category: 'Scenic Waterways',
+        description: 'Interconnected labyrinth of palm-fringed lagoons, tranquil canals, and traditional Kettuvallam luxury houseboats.',
+        image: 'https://images.unsplash.com/photo-1602216056096-3b40cc0c9944?q=85&w=1200&auto=format&fit=crop',
+        duration: 'Overnight / Half Day'
+      },
+      {
+        id: 'munnar-tea-gardens',
+        name: 'Munnar Tea Plantations & Misty Hills',
+        category: 'Misty Mountain Retreat',
+        description: 'Lush rolling green tea estates situated 1,600 meters above sea level in the Western Ghats with cool alpine breezes.',
+        image: 'https://images.unsplash.com/photo-1593693397690-362cb9666fc2?q=85&w=1200&auto=format&fit=crop',
+        duration: 'Full Day'
+      },
+      {
+        id: 'fort-kochi-nets',
+        name: 'Fort Kochi & Chinese Fishing Nets',
+        category: 'Colonial Heritage & Coast',
+        description: 'Charming seaside town with Portuguese churches, Dutch palaces, spice storehouses, and cantilevered shore fishing nets.',
+        image: 'https://images.unsplash.com/photo-1602216056096-3b40cc0c9944?q=85&w=1200&auto=format&fit=crop',
+        duration: '2–3 hours'
+      },
+      {
+        id: 'varkala-cliff-beach',
+        name: 'Varkala Cliff & Arabian Sea Beach',
+        category: 'Arabian Sea Cliff & Beach',
+        description: 'Dramatic red laterite cliffs towering directly beside the Arabian Sea, dotted with rooftop seafood cafes and natural springs.',
+        image: 'https://images.unsplash.com/photo-1602216056096-3b40cc0c9944?q=85&w=1200&auto=format&fit=crop',
+        duration: 'Half Day'
+      },
+      {
+        id: 'athirappilly-waterfalls',
+        name: 'Athirappilly Waterfalls',
+        category: 'Majestic Waterfall',
+        description: 'Vibrant 80-foot-high cascading waterfall nestled within the Sholayar rainforest, often called the Niagara of India.',
+        image: 'https://images.unsplash.com/photo-1593693397690-362cb9666fc2?q=85&w=1200&auto=format&fit=crop',
+        duration: '2 hours'
+      }
+    ]
+  },
+  {
+    id: 'goa-india',
+    name: 'Goa',
+    country: 'India',
+    region: 'Asia',
+    description: 'India’s premier tropical beach paradise, celebrated for golden sands along the Arabian Sea, Portuguese colonial architecture, and vibrant coastal dining.',
+    image: 'https://images.unsplash.com/photo-1512343879784-a960bf40e7f2?q=85&w=1600&auto=format&fit=crop',
+    latitude: 15.2993,
+    longitude: 74.1240,
+    bestTime: 'November - February',
+    currency: 'INR (₹)',
+    language: 'Konkani / English / Hindi',
+    tags: ['Asia', 'India', 'Beach', 'Relaxation', 'Food', 'Culture'],
+    places: [
+      {
+        id: 'basilica-bom-jesus',
+        name: 'Basilica of Bom Jesus (Old Goa)',
+        category: 'UNESCO Heritage Landmark',
+        description: 'Baroque Catholic basilica constructed in 1605, enshrining the sacred relics of St. Francis Xavier in a silver casket.',
+        image: 'https://images.unsplash.com/photo-1512343879784-a960bf40e7f2?q=85&w=1200&auto=format&fit=crop',
+        duration: '1.5 hours'
+      },
+      {
+        id: 'dudhsagar-falls',
+        name: 'Dudhsagar Waterfalls',
+        category: 'Four-Tiered Jungle Cascade',
+        description: 'Spectacular 310-meter white cascading waterfall situated on the Mandovi River amidst lush Bhagwan Mahaveer Sanctuary.',
+        image: 'https://images.unsplash.com/photo-1512343879784-a960bf40e7f2?q=85&w=1200&auto=format&fit=crop',
+        duration: 'Half Day'
+      },
+      {
+        id: 'palolem-beach',
+        name: 'Palolem Beach & Bay',
+        category: 'Tropical Palm Coast',
+        description: 'Crescent-shaped white sand bay in South Goa framed by swaying coconut palms and calm, swimmable azure waters.',
+        image: 'https://images.unsplash.com/photo-1512343879784-a960bf40e7f2?q=85&w=1200&auto=format&fit=crop',
+        duration: 'Half Day'
+      },
+      {
+        id: 'aguada-fort',
+        name: 'Aguada Fort & Portuguese Lighthouse',
+        category: '17th-Century Coastal Fort',
+        description: 'Well-preserved 1612 Portuguese fortress overlooking Sinquerim Beach and the expansive Arabian Sea.',
+        image: 'https://images.unsplash.com/photo-1512343879784-a960bf40e7f2?q=85&w=1200&auto=format&fit=crop',
+        duration: '1.5 hours'
+      }
+    ]
+  },
+  {
+    id: 'varanasi-india',
+    name: 'Varanasi',
+    country: 'India',
+    region: 'Asia',
+    description: 'One of the world’s oldest continuously inhabited spiritual cities, situated along the sacred River Ganga with ancient stone ghats, temple chants, and spiritual heritage.',
+    image: 'https://images.unsplash.com/photo-1561361513-2d000a50f0dc?q=85&w=1600&auto=format&fit=crop',
+    latitude: 25.3176,
+    longitude: 82.9739,
+    bestTime: 'October - March',
+    currency: 'INR (₹)',
+    language: 'Hindi / English',
+    tags: ['Asia', 'India', 'Culture', 'History', 'Spiritual'],
+    places: [
+      {
+        id: 'dashashwamedh-ghat',
+        name: 'Dashashwamedh Ghat & Ganga Aarti',
+        category: 'Sacred Riverfront & Rituals',
+        description: 'Main riverfront ghat where the grand evening Maha Aarti ceremony is performed daily with brass lamps and rhythmic chants.',
+        image: 'https://images.unsplash.com/photo-1561361513-2d000a50f0dc?q=85&w=1200&auto=format&fit=crop',
+        duration: '2 hours'
+      },
+      {
+        id: 'kashi-vishwanath',
+        name: 'Kashi Vishwanath Golden Temple',
+        category: 'Ancient Sacred Shrine',
+        description: 'Legendary Shiva temple featuring gold-plated spires, standing in the heart of the historic labyrinthine Vishwanath Gali.',
+        image: 'https://images.unsplash.com/photo-1561361513-2d000a50f0dc?q=85&w=1200&auto=format&fit=crop',
+        duration: '1.5 hours'
+      },
+      {
+        id: 'assi-ghat-sunrise',
+        name: 'Assi Ghat Morning Sunrise Cruise',
+        category: 'Historic Ghat & Boat Cruise',
+        description: 'Southernmost ghat of Varanasi famous for peaceful dawn boat rides, morning Subah-e-Banaras music, and yoga sessions.',
+        image: 'https://images.unsplash.com/photo-1561361513-2d000a50f0dc?q=85&w=1200&auto=format&fit=crop',
+        duration: '2 hours'
+      },
+      {
+        id: 'sarnath-deer-park',
+        name: 'Sarnath & Dhamek Stupa',
+        category: 'Ancient Buddhist Heritage',
+        description: 'Historic deer park where Gautama Buddha first taught the Dharma, featuring the massive 500 CE cylindrical Dhamek Stupa.',
+        image: 'https://images.unsplash.com/photo-1561361513-2d000a50f0dc?q=85&w=1200&auto=format&fit=crop',
+        duration: '2–3 hours'
+      }
+    ]
   }
 ];
 
