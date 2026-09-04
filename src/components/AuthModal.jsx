@@ -136,16 +136,20 @@ export default function AuthModal({ isOpen, onClose }) {
 
     try {
       if (authMode === 'login') {
-        await loginWithEmail(email, password);
-        setSuccessMessage('Welcome back!');
-        setTimeout(() => setSuccessMessage(''), 1500);
+        const res = await loginWithEmail(email, password);
+        if (res) {
+          setSuccessMessage('Welcome back!');
+          setTimeout(() => setSuccessMessage(''), 1500);
+        }
       } else {
-        await registerWithEmail(email, password, displayName);
-        setSuccessMessage('Account created successfully!');
-        setTimeout(() => setSuccessMessage(''), 1500);
+        const res = await registerWithEmail(email, password, displayName);
+        if (res) {
+          setSuccessMessage('Account created successfully!');
+          setTimeout(() => setSuccessMessage(''), 1500);
+        }
       }
     } catch (err) {
-      // Handled
+      console.warn('Auth submit error:', err.message);
     } finally {
       setIsSubmitting(false);
     }
@@ -155,11 +159,13 @@ export default function AuthModal({ isOpen, onClose }) {
     setIsSubmitting(true);
     setAuthError(null);
     try {
-      await loginWithGoogle();
-      setSuccessMessage('Logged in with Google!');
-      setTimeout(() => setSuccessMessage(''), 1500);
+      const res = await loginWithGoogle();
+      if (res) {
+        setSuccessMessage('Logged in with Google!');
+        setTimeout(() => setSuccessMessage(''), 1500);
+      }
     } catch (err) {
-      // Handled
+      console.warn('Google sign in error:', err.message);
     } finally {
       setIsSubmitting(false);
     }

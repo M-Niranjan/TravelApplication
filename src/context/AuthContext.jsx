@@ -166,7 +166,7 @@ export function AuthProvider({ children }) {
           return profileData;
         }
       } catch (fbErr) {
-        if (fbErr.code === 'auth/wrong-password' || fbErr.code === 'auth/invalid-credential') {
+        if (fbErr.code === 'auth/wrong-password' || fbErr.code === 'auth/invalid-credential' || fbErr.code === 'auth/user-not-found') {
           const msg = 'Invalid email or password.';
           setAuthError(msg);
           throw new Error(msg);
@@ -182,7 +182,9 @@ export function AuthProvider({ children }) {
 
       if (foundUser) {
         if (foundUser.password && foundUser.password !== password) {
-          throw new Error('Incorrect password. Please verify your credentials.');
+          const msg = 'Incorrect password. Please verify your credentials.';
+          setAuthError(msg);
+          throw new Error(msg);
         }
 
         const activeProfile = {
@@ -276,11 +278,10 @@ export function AuthProvider({ children }) {
     return newProfile;
   };
 
-  // Sign in with Google (Mobile + Desktop optimized with auto fallback)
+  // Sign in with Google (Accurately handles cancellation without unauthorized login)
   const loginWithGoogle = async () => {
     setAuthError(null);
 
-    // Check if on mobile or WebView
     const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
 
     if (auth && googleProvider) {
@@ -300,38 +301,43 @@ export function AuthProvider({ children }) {
           return profileData;
         }
       } catch (popupErr) {
-        console.warn('Google popup error:', popupErr.code, popupErr.message);
+        console.warn('Google popup status:', popupErr.code);
 
-        // If popup blocked on mobile, try redirect authentication
+        // User intentionally cancelled / closed popup / went back without picking an account
+        if (
+          popupErr.code === 'auth/popup-closed-by-user' ||
+          popupErr.code === 'auth/cancelled-popup-request' ||
+          popupErr.code === 'auth/user-cancelled' ||
+          popupErr.message?.includes('closed')
+        ) {
+          // Do nothing and do NOT auto-login
+          return null;
+        }
+
+        // Popup blocked on mobile browser: try redirect
         if (popupErr.code === 'auth/popup-blocked' && isMobile) {
           try {
             await signInWithRedirect(auth, googleProvider);
-            return;
+            return null;
           } catch (redirErr) {
             console.warn('Google redirect error:', redirErr);
           }
         }
+
+        const errorMessages = {
+          'auth/unauthorized-domain': `This domain (${window.location.hostname}) is not authorized in Firebase Console. Add it in Authentication > Settings > Authorized domains.`,
+          'auth/operation-not-allowed': 'Google Sign-in is disabled in Firebase Console.',
+          'auth/network-request-failed': 'Network connection failed. Please check your internet.'
+        };
+        const msg = errorMessages[popupErr.code] || popupErr.message;
+        if (msg) {
+          setAuthError(msg);
+        }
+        return null;
       }
     }
 
-    // Seamless fallback for mobile devices and preview domains without blockers
-    try {
-      const googleProfile = {
-        uid: `google_user_${Date.now()}`,
-        email: 'google.traveler@voyager.luxe',
-        displayName: 'Google Traveler',
-        photoURL: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=250&auto=format&fit=crop',
-        createdAt: new Date().toLocaleDateString('en-US', { month: 'long', year: 'numeric' }),
-        isFirebase: true
-      };
-      setUser(googleProfile);
-      localStorage.setItem('aetheria_active_user', JSON.stringify(googleProfile));
-      return googleProfile;
-    } catch (fallbackErr) {
-      const msg = 'Google sign-in completed.';
-      setAuthError(null);
-      return null;
-    }
+    return null;
   };
 
   // Sign out
