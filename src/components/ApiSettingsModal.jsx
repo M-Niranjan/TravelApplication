@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { X, Key, ShieldCheck, Check, Sparkles, Sun, Image } from 'lucide-react';
 
 export default function ApiSettingsModal({ isOpen, onClose, apiKeys, onSaveApiKeys }) {
-  const [geminiKey, setGeminiKey] = useState(apiKeys.geminiKey || '');
+  const [groqKey, setGroqKey] = useState(apiKeys.groqKey || '');
   const [openWeatherKey, setOpenWeatherKey] = useState(apiKeys.openWeatherKey || '');
   const [pexelsKey, setPexelsKey] = useState(apiKeys.pexelsKey || '');
   const [savedSuccess, setSavedSuccess] = useState(false);
@@ -12,7 +12,7 @@ export default function ApiSettingsModal({ isOpen, onClose, apiKeys, onSaveApiKe
   const handleSubmit = (e) => {
     e.preventDefault();
     onSaveApiKeys({
-      geminiKey: geminiKey.trim(),
+      groqKey: groqKey.trim(),
       openWeatherKey: openWeatherKey.trim(),
       pexelsKey: pexelsKey.trim()
     });
@@ -59,17 +59,17 @@ export default function ApiSettingsModal({ isOpen, onClose, apiKeys, onSaveApiKe
         {/* Form */}
         <form onSubmit={handleSubmit} className="space-y-4">
           
-          {/* Gemini Key */}
+          {/* Groq Key */}
           <div>
             <label className="text-xs font-bold text-slate-300 flex items-center space-x-1.5 mb-1.5">
               <Sparkles className="w-4 h-4 text-cyan-400" />
-              <span>Google Gemini API Key</span>
+              <span>Groq API Key</span>
             </label>
             <input
               type="password"
-              value={geminiKey}
-              onChange={(e) => setGeminiKey(e.target.value)}
-              placeholder="AIZASy..."
+              value={groqKey}
+              onChange={(e) => setGroqKey(e.target.value)}
+              placeholder="gsk_..."
               className="w-full bg-slate-900 border border-slate-700/80 rounded-2xl px-4 py-2.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-teal-500"
             />
           </div>

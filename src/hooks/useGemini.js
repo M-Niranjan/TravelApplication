@@ -38,7 +38,7 @@ export function useGemini(apiKey = '') {
 
       setMessages((prev) => [...prev, aiMsg]);
     } catch (err) {
-      setError('Sorry, I could not get a response right now. Please try again.');
+      setError(err.message || 'Sorry, I could not get a response right now. Please try again.');
     } finally {
       setLoading(false);
     }

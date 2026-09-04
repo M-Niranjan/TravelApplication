@@ -63,7 +63,7 @@ React Application (Vite + Tailwind + Framer Motion)
 Create a `.env` file in the project root:
 
 ```env
-VITE_GEMINI_API_KEY=your_gemini_api_key_here
+VITE_GROQ_API_KEY=your_groq_api_key_here
 VITE_OPENWEATHER_API_KEY=your_openweather_api_key_here
 VITE_UNSPLASH_ACCESS_KEY=your_unsplash_access_key_here
 ```
@@ -89,13 +89,13 @@ VITE_UNSPLASH_ACCESS_KEY=your_unsplash_access_key_here
 
 ### Vercel Deployment
 
-The `.env` file is intentionally excluded from Git. Add the Gemini key in the Vercel project before deploying:
+The `.env` file is intentionally excluded from Git. Add the Groq key in the Vercel project before deploying:
 
 1. Open **Project Settings → Environment Variables**.
-2. Add `VITE_GEMINI_API_KEY` with your Google Gemini API key and enable **Production** (also enable Preview if needed).
+2. Add `VITE_GROQ_API_KEY` with your Groq API key and enable **Production** (also enable Preview if needed).
 3. Redeploy from **Deployments → Redeploy**. Vite injects `VITE_*` variables during the build, so changing the variable requires a new deployment.
 
-The variable name must be exactly `VITE_GEMINI_API_KEY`; do not add quotes or spaces around the value.
+The variable name must be exactly `VITE_GROQ_API_KEY`; do not add quotes or spaces around the value.
 
 ### Google Sign-In Deployment Setup
 

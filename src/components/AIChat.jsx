@@ -17,11 +17,16 @@ import { useGemini } from '../hooks/useGemini';
 import { DESTINATIONS } from '../data/destinations';
 
 export default function AIChat({ isOpen, onClose, destination = null }) {
-  const activeDestination = destination || DESTINATIONS[0];
+  const [selectedDestination, setSelectedDestination] = useState(destination || DESTINATIONS[0]);
+  const activeDestination = selectedDestination;
   const { messages, loading, error, sendMessage, clearMessages } = useGemini();
   const [input, setInput] = useState('');
   const chatEndRef = useRef(null);
   const inputRef = useRef(null);
+
+  useEffect(() => {
+    if (destination) setSelectedDestination(destination);
+  }, [destination]);
 
   const suggestedPrompts = useMemo(() => {
     const destName = activeDestination.name;
@@ -68,14 +73,18 @@ export default function AIChat({ isOpen, onClose, destination = null }) {
 
   const handleSend = (userQuery = input) => {
     if (!userQuery.trim() || loading) return;
-    sendMessage(userQuery.trim(), activeDestination);
+    const queryDestination = findDestinationInQuery(userQuery, activeDestination);
+    setSelectedDestination(queryDestination);
+    sendMessage(userQuery.trim(), queryDestination);
     setInput('');
   };
 
   const handleRetryLast = () => {
     const lastUserMsg = [...messages].reverse().find((m) => m.sender === 'user');
     if (lastUserMsg) {
-      sendMessage(lastUserMsg.text, activeDestination);
+      const queryDestination = findDestinationInQuery(lastUserMsg.text, activeDestination);
+      setSelectedDestination(queryDestination);
+      sendMessage(lastUserMsg.text, queryDestination);
     }
   };
 
@@ -248,4 +257,15 @@ export default function AIChat({ isOpen, onClose, destination = null }) {
 
     </motion.div>
   );
+}
+
+function findDestinationInQuery(query, currentDestination) {
+  const normalizedQuery = query.toLowerCase();
+  const mentionedDestination = DESTINATIONS.find((item) => {
+    const name = item.name.toLowerCase();
+    const country = item.country.toLowerCase();
+    return normalizedQuery.includes(name) || normalizedQuery.includes(country);
+  });
+
+  return mentionedDestination || currentDestination;
 }
