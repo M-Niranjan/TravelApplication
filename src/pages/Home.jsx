@@ -89,7 +89,7 @@ export default function Home({ onOpenAIChat, currentLocation }) {
         </div>
       </section>
 
-      {/* 4. Quick Action Hub Banner with Electric Azure & Coral Accents */}
+      {/* 4. Quick Action Hub Banner */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           
@@ -97,19 +97,23 @@ export default function Home({ onOpenAIChat, currentLocation }) {
           <motion.div whileHover={{ y: -4 }} transition={{ type: 'spring', stiffness: 300, damping: 20 }}>
             <Link
               to="/itinerary"
-              className="p-8 sm:p-10 rounded-3xl bg-[#0F172A] text-white flex items-center justify-between group hover:shadow-2xl hover:shadow-blue-500/20 transition-all border border-slate-800 h-full"
+              className="p-8 sm:p-10 rounded-3xl bg-white text-slate-900 flex items-center justify-between group hover:shadow-[0_16px_36px_rgba(0,0,0,0.06)] transition-all border border-slate-200/80 shadow-[0_4px_20px_rgba(0,0,0,0.02)] h-full"
             >
-              <div className="space-y-2">
-                <div className="w-11 h-11 rounded-2xl bg-gradient-to-tr from-blue-600 to-indigo-600 text-white flex items-center justify-center shadow-md shadow-blue-500/30">
-                  <Calendar className="w-5 h-5" />
+              <div className="space-y-3">
+                <div className="w-12 h-12 rounded-2xl bg-blue-50 text-blue-600 flex items-center justify-center shadow-sm">
+                  <Calendar className="w-6 h-6" />
                 </div>
-                <h3 className="font-editorial text-2xl sm:text-3xl font-bold">AI Itinerary Planner</h3>
-                <p className="text-xs text-slate-300 font-light max-w-sm leading-relaxed">
-                  Generate tailored day-by-day travel schedules with PDF export and custom durations.
-                </p>
+                <div>
+                  <h3 className="font-editorial text-2xl sm:text-3xl font-bold text-slate-900 group-hover:text-blue-600 transition-colors">
+                    AI Itinerary Planner
+                  </h3>
+                  <p className="text-xs text-slate-500 font-light max-w-sm leading-relaxed mt-1">
+                    Generate tailored day-by-day travel schedules with PDF export and custom durations.
+                  </p>
+                </div>
               </div>
-              <div className="w-12 h-12 rounded-full bg-white/10 group-hover:bg-blue-600 flex items-center justify-center transition-colors shrink-0 ml-4">
-                <ArrowRight className="w-5 h-5 text-white group-hover:translate-x-0.5 transition-transform" />
+              <div className="w-12 h-12 rounded-full bg-slate-100 group-hover:bg-blue-600 group-hover:text-white text-slate-700 flex items-center justify-center transition-all shrink-0 ml-4">
+                <ArrowRight className="w-5 h-5 group-hover:translate-x-0.5 transition-transform" />
               </div>
             </Link>
           </motion.div>
@@ -118,18 +122,22 @@ export default function Home({ onOpenAIChat, currentLocation }) {
           <motion.div whileHover={{ y: -4 }} transition={{ type: 'spring', stiffness: 300, damping: 20 }}>
             <Link
               to="/packing"
-              className="p-8 sm:p-10 rounded-3xl bg-white text-slate-900 flex items-center justify-between group hover:shadow-2xl hover:shadow-rose-500/15 transition-all border border-slate-200/90 h-full"
+              className="p-8 sm:p-10 rounded-3xl bg-white text-slate-900 flex items-center justify-between group hover:shadow-[0_16px_36px_rgba(0,0,0,0.06)] transition-all border border-slate-200/80 shadow-[0_4px_20px_rgba(0,0,0,0.02)] h-full"
             >
-              <div className="space-y-2">
-                <div className="w-11 h-11 rounded-2xl bg-gradient-to-tr from-rose-500 to-pink-500 text-white flex items-center justify-center shadow-md shadow-rose-500/30">
-                  <Luggage className="w-5 h-5" />
+              <div className="space-y-3">
+                <div className="w-12 h-12 rounded-2xl bg-rose-50 text-rose-600 flex items-center justify-center shadow-sm">
+                  <Luggage className="w-6 h-6" />
                 </div>
-                <h3 className="font-editorial text-2xl sm:text-3xl font-bold">Smart Packing Checklist</h3>
-                <p className="text-xs text-slate-600 font-light max-w-sm leading-relaxed">
-                  Interactive luggage readiness tracker and essential gear checklist by category.
-                </p>
+                <div>
+                  <h3 className="font-editorial text-2xl sm:text-3xl font-bold text-slate-900 group-hover:text-rose-600 transition-colors">
+                    Smart Packing Checklist
+                  </h3>
+                  <p className="text-xs text-slate-500 font-light max-w-sm leading-relaxed mt-1">
+                    Interactive luggage readiness tracker and essential gear checklist tailored to destination climate.
+                  </p>
+                </div>
               </div>
-              <div className="w-12 h-12 rounded-full bg-slate-100 group-hover:bg-gradient-to-r from-rose-500 to-pink-500 group-hover:text-white flex items-center justify-center transition-colors shrink-0 ml-4">
+              <div className="w-12 h-12 rounded-full bg-slate-100 group-hover:bg-rose-600 group-hover:text-white text-slate-700 flex items-center justify-center transition-all shrink-0 ml-4">
                 <ArrowRight className="w-5 h-5 group-hover:translate-x-0.5 transition-transform" />
               </div>
             </Link>
