@@ -13,6 +13,7 @@ import {
   Compass
 } from 'lucide-react';
 import AIMessage from './AIMessage';
+import AILogo from './AILogo';
 import { useGemini } from '../hooks/useGemini';
 import { DESTINATIONS } from '../data/destinations';
 
@@ -102,9 +103,7 @@ export default function AIChat({ isOpen, onClose, destination = null }) {
       {/* Header with Deep Sapphire & Radiant Gradient */}
       <div className="bg-[#0F172A] text-white px-5 py-4 flex items-center justify-between shrink-0 shadow-md">
         <div className="flex items-center space-x-3">
-          <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-blue-600 via-indigo-600 to-rose-500 flex items-center justify-center text-white shadow-md">
-            <Sparkles className="w-4 h-4" />
-          </div>
+          <AILogo size="md" />
           <div>
             <div className="flex items-center space-x-1.5">
               <h3 className="font-editorial text-base font-bold tracking-wide">Voyager AI</h3>

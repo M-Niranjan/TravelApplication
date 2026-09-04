@@ -1,5 +1,6 @@
 import React from 'react';
 import { Sparkles, User, Calendar, ArrowDownRight } from 'lucide-react';
+import AILogo from './AILogo';
 
 /**
  * Formats AI text into clean, human-readable prose with emojis.
@@ -96,9 +97,7 @@ export default function AIMessage({ message, onViewItineraryOnPage }) {
   return (
     <div className={`flex items-start space-x-2.5 ${isAI ? 'justify-start' : 'justify-end'} animate-fade-in`}>
       {isAI && (
-        <div className="w-7 h-7 rounded-full bg-gradient-to-tr from-blue-600 to-indigo-600 text-white flex items-center justify-center shrink-0 mt-0.5 shadow-sm">
-          <Sparkles className="w-3.5 h-3.5 text-amber-300" />
-        </div>
+        <AILogo size="sm" className="mt-0.5" />
       )}
 
       <div

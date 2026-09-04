@@ -14,9 +14,9 @@ import WeatherPage from './pages/WeatherPage';
 import LocationSelector from './components/LocationSelector';
 import AIChat from './components/AIChat';
 import AuthModal from './components/AuthModal';
+import AIFloatingTrigger from './components/AIFloatingTrigger';
 import { AuthProvider } from './context/AuthContext';
 import { useLocation } from './hooks/useLocation';
-import { Sparkles } from 'lucide-react';
 
 function AppContent() {
   const { location, permissionState, isLocating, errorMessage, requestLocation, setManualLocation } = useLocation();
@@ -117,13 +117,7 @@ function AppContent() {
 
         {/* Desktop Floating AI Assistant Trigger Button (Bottom-Right) */}
         {!isAIChatOpen && (
-          <button
-            onClick={() => handleOpenAIChatWithDestination(null)}
-            className="no-print hidden lg:flex fixed bottom-6 right-6 z-40 px-5 py-3.5 rounded-full bg-[#0F172A] text-white font-bold text-xs shadow-2xl hover:scale-105 transition-transform items-center space-x-2 border border-slate-700 group min-h-[44px] cursor-pointer"
-          >
-            <Sparkles className="w-4 h-4 text-amber-300 animate-pulse" />
-            <span>✨ Ask Voyager AI</span>
-          </button>
+          <AIFloatingTrigger onClick={() => handleOpenAIChatWithDestination(null)} />
         )}
 
         {/* Location Selector Modal */}
