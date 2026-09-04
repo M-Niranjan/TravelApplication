@@ -82,6 +82,10 @@ export default function PlaceDetailModal({ place, onClose, onOpenAIChatWithDesti
               src={place.image}
               alt={place.name}
               className="w-full h-full object-cover"
+              onError={(e) => {
+                e.currentTarget.onerror = null;
+                e.currentTarget.src = parentDestination?.image || 'https://images.unsplash.com/photo-1599661046289-e31897846e41?q=85&w=1200&auto=format&fit=crop';
+              }}
             />
             <div className="absolute inset-0 bg-gradient-to-t from-[#0F172A] via-[#0F172A]/40 to-transparent" />
 

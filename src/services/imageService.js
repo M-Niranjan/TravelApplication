@@ -57,8 +57,14 @@ export async function fetchImages(query, pexelsApiKey = '', count = 4) {
     }
   }
 
-  // Fallback to Unsplash Source high quality search URLs
-  return Array.from({ length: count }).map((_, i) => 
-    `https://images.unsplash.com/photo-${1488646953014 + i * 1000}?q=80&w=1200&auto=format&fit=crop&sig=${i + 1}`
-  );
+  // Fallback to verified high quality travel photos
+  const fallbackList = [
+    'https://images.unsplash.com/photo-1488646953014-85cb44e25828?q=80&w=1200&auto=format&fit=crop',
+    'https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?q=80&w=1200&auto=format&fit=crop',
+    'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?q=80&w=1200&auto=format&fit=crop',
+    'https://images.unsplash.com/photo-1503614472-8c93d56e92ce?q=80&w=1200&auto=format&fit=crop',
+    'https://images.unsplash.com/photo-1512343879784-a960bf40e7f2?q=80&w=1200&auto=format&fit=crop',
+    'https://images.unsplash.com/photo-1564507592333-c60657eea523?q=80&w=1200&auto=format&fit=crop'
+  ];
+  return Array.from({ length: count }).map((_, i) => fallbackList[i % fallbackList.length]);
 }

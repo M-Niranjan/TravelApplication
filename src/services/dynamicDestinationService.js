@@ -78,12 +78,19 @@ export async function createDynamicDestination(query) {
     let famousPlaces = [];
     if (placesRes.ok) {
       const placesData = await placesRes.json();
+      const fallbackLandmarks = [
+        'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?q=80&w=800&auto=format&fit=crop',
+        'https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?q=80&w=800&auto=format&fit=crop',
+        'https://images.unsplash.com/photo-1488646953014-85cb44e25828?q=80&w=800&auto=format&fit=crop',
+        'https://images.unsplash.com/photo-1503614472-8c93d56e92ce?q=80&w=800&auto=format&fit=crop',
+        'https://images.unsplash.com/photo-1512343879784-a960bf40e7f2?q=80&w=800&auto=format&fit=crop'
+      ];
       famousPlaces = placesData.map((p, idx) => ({
         id: `dynamic-place-${p.place_id || idx}`,
         name: p.name || `${cityName} Landmark ${idx + 1}`,
         category: idx % 2 === 0 ? 'Monument & Sight' : 'Historic & Nature',
         description: `Explore the vibrant attraction of ${p.name || cityName}, offering iconic views and local cultural experiences.`,
-        image: `https://images.unsplash.com/photo-${1500000000000 + idx * 100000}?q=80&w=800&auto=format&fit=crop&sig=${idx + 10}`,
+        image: fallbackLandmarks[idx % fallbackLandmarks.length],
         duration: '2-3 hours',
         approxCost: idx === 0 ? 'Free' : '$15 - $30',
         lat: parseFloat(p.lat),

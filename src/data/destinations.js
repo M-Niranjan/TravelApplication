@@ -26,7 +26,7 @@ export const DESTINATIONS = [
         name: 'Amer Fort (Amber Palace)',
         category: 'Hilltop Fortress',
         description: 'Majestic UNESCO World Heritage hill fort overlooking Maota Lake, famous for the shimmering Sheesh Mahal (Mirror Palace).',
-        image: 'https://images.unsplash.com/photo-1585136917192-e421c640d210?q=85&w=1200&auto=format&fit=crop',
+        image: 'https://images.unsplash.com/photo-1590050752117-238cb0fb12b1?q=85&w=1200&auto=format&fit=crop',
         duration: '3–4 hours'
       },
       {
@@ -34,7 +34,7 @@ export const DESTINATIONS = [
         name: 'City Palace & Chandra Mahal',
         category: 'Royal Residence & Museum',
         description: 'Grand palace complex blending Rajput and Mughal architecture, featuring courtyards, Peacock Gate, and museum armories.',
-        image: 'https://images.unsplash.com/photo-1603228254119-e6aefd84be25?q=85&w=1200&auto=format&fit=crop',
+        image: 'https://images.unsplash.com/photo-1524492412937-b28074a5d7da?q=85&w=1200&auto=format&fit=crop',
         duration: '2 hours'
       },
       {
@@ -50,7 +50,7 @@ export const DESTINATIONS = [
         name: 'Jantar Mantar Astronomical Observatory',
         category: 'UNESCO Heritage Site',
         description: 'Collection of 19 monumental astronomical instruments built by Maharaja Sawai Jai Singh II, featuring the world’s largest stone sundial.',
-        image: 'https://images.unsplash.com/photo-1585136917192-e421c640d210?q=85&w=1200&auto=format&fit=crop',
+        image: 'https://images.unsplash.com/photo-1599661046289-e31897846e41?q=85&w=1200&auto=format&fit=crop',
         duration: '1.5 hours'
       },
       {
@@ -90,7 +90,7 @@ export const DESTINATIONS = [
         name: 'Agra Fort',
         category: 'UNESCO Mughal Fortress',
         description: 'Sprawling red sandstone fortress served as the main royal residence of Mughal emperors, containing palatial marble pavilions.',
-        image: 'https://images.unsplash.com/photo-1585136917192-e421c640d210?q=85&w=1200&auto=format&fit=crop',
+        image: 'https://images.unsplash.com/photo-1548013146-72479768bada?q=85&w=1200&auto=format&fit=crop',
         duration: '2 hours'
       },
       {
