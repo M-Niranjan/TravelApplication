@@ -1,4 +1,4 @@
-// Groq AI API integration using OpenAI-compatible chat completions.
+// High-Speed Groq AI API integration for instant mobile responses.
 
 const DEFAULT_KEY_CODES = [103,115,107,95,119,101,102,100,122,74,114,113,82,109,87,112,118,111,67,81,111,66,74,112,87,71,100,121,98,51,70,89,48,54,48,77,68,113,83,111,57,73,78,97,71,118,102,90,67,107,104,81,48,110,70,48];
 
@@ -12,11 +12,13 @@ const getActiveApiKey = (customKey) => {
   }
 };
 
-const PRIMARY_MODEL = 'openai/gpt-oss-120b';
-const FALLBACK_MODEL = 'openai/gpt-oss-20b';
+// Ultra-fast lightweight models optimized for instant mobile generation
+const PRIMARY_FAST_MODEL = 'openai/gpt-oss-20b';
+const SECONDARY_FAST_MODEL = 'qwen/qwen3.6-27b';
+const FALLBACK_MODEL = 'openai/gpt-oss-120b';
 
 /**
- * Ask Voyager AI Travel Assistant with destination context & multi-turn history
+ * Ask Voyager AI Travel Assistant with destination context & high-speed generation
  */
 export async function askTravelAI({
   destination = null,
@@ -26,46 +28,38 @@ export async function askTravelAI({
 }) {
   const activeKey = getActiveApiKey(apiKey);
 
-  // 1. Build rich destination context
+  // 1. Build concise destination context
   const destInfo = destination
-    ? `Destination Name: ${destination.name}
-Country: ${destination.country}
-Region: ${destination.region || ''}
-Overview: ${destination.description || ''}
-Best Season: ${destination.bestTime || ''}
-Recommended Duration: ${destination.duration || ''}
-Currency: ${destination.currency || ''}
-Language: ${destination.language || ''}
-Iconic Sights: ${destination.places?.map((p) => `${p.name} (${p.description})`).join(', ') || ''}`
-    : `General global travel guidance.`;
+    ? `Destination: ${destination.name}, ${destination.country} (${destination.region || ''}). Highlights: ${destination.places?.slice(0, 4).map((p) => p.name).join(', ') || 'Iconic landmarks'}. Best time: ${destination.bestTime || 'Spring/Autumn'}. Duration: ${destination.duration || '3-5 days'}.`
+    : `Global travel destination.`;
 
-  // 2. Comprehensive Travel System Instruction
-  const systemInstruction = `You are Voyager AI, an intelligent, inspiring, and expert personal luxury travel concierge.
+  // 2. High-speed mobile system instruction
+  const systemInstruction = `You are Voyager AI, a fast, friendly luxury travel concierge.
+Context: ${destInfo}
 
-Current Context:
-${destInfo}
+Rules:
+1. Give a direct, concise, and high-value answer in 2-4 short bullet points or sentences.
+2. Use friendly travel emojis (✨, 🗺️, 📍, 🥐, ☀️, 💡, 🧳).
+3. Do NOT output raw markdown symbols like double asterisks (**), hashes (#), or underscores (__).`;
 
-Instructions:
-1. Answer the traveler's question directly, accurately, and thoroughly with specific, practical travel knowledge.
-2. If asked about places, foods, transportation, itineraries, budgets, best times, packing, safety, or hidden gems, give detailed, high-value advice.
-3. Formatting: Write in warm, elegant, natural human-readable prose enriched with relevant travel emojis (✨, 🗺️, 📍, 🥐, ☀️, 💡, 🧳, 🍷, 🏛️).
-4. Do NOT output raw markdown symbols like double asterisks (**), hashes (#), or underscores (__). Use clean line breaks, emoji bullet points (e.g. 📍, ☀️, 🍷, 🧳), and well-spaced paragraphs suitable for mobile screens.`;
-
-  // 3. Construct history for multi-turn conversational memory
+  // 3. Lean multi-turn history (last 4 turns) for fast token processing
   const recentHistory = (conversation || [])
-    .slice(-8)
+    .slice(-4)
     .filter((msg) => msg.text && msg.text.trim())
     .map((msg) => ({
       role: msg.sender === 'user' ? 'user' : 'assistant',
       content: msg.text
     }));
 
-  // 4. Call Groq API with primary and fallback model
+  // 4. Call Groq with fast models and 4-second timeout
   if (activeKey) {
-    const modelsToTry = [PRIMARY_MODEL, FALLBACK_MODEL, 'qwen/qwen3.8-27b'];
+    const modelsToTry = [PRIMARY_FAST_MODEL, SECONDARY_FAST_MODEL, FALLBACK_MODEL];
 
     for (const model of modelsToTry) {
       try {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 4000);
+
         const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
           method: 'POST',
           headers: {
@@ -79,10 +73,13 @@ Instructions:
               ...recentHistory,
               { role: 'user', content: question }
             ],
-            temperature: 0.7,
-            max_tokens: 1024
-          })
+            temperature: 0.6,
+            max_tokens: 380
+          }),
+          signal: controller.signal
         });
+
+        clearTimeout(timeoutId);
 
         if (response.ok) {
           const data = await response.json();
@@ -92,12 +89,12 @@ Instructions:
           }
         }
       } catch (err) {
-        console.warn(`Attempt with ${model} failed, trying next:`, err.message);
+        console.warn(`Fast model ${model} attempt passed to next:`, err.message);
       }
     }
   }
 
-  // 5. Fallback Answer Engine if offline or network unavailable
+  // 5. Instant Fallback Answer Engine
   return generateFallbackAnswer(question, destination);
 }
 
@@ -113,46 +110,31 @@ export async function generateStructuredItinerary(config, apiKey = '') {
   const activeKey = getActiveApiKey(apiKey);
   const { destination, days = 3, style = 'Culture', budget = 'Mid-range', interests = [] } = config;
 
-  const systemPrompt = `You are an expert travel planner for Voyager Luxe. Generate a structured JSON travel itinerary for ${destination.name}, ${destination.country} for ${days} days.
-Style: ${style}, Budget: ${budget}, Interests: ${interests.join(', ') || 'Highlights'}.
-
-Return ONLY valid JSON matching this exact structure:
+  const systemPrompt = `You are an expert travel planner. Return ONLY valid JSON matching this schema for a ${days}-day ${style} trip to ${destination.name}, ${destination.country}:
 {
   "destination": "${destination.name}",
-  "overview": "A brief overview of the planned trip.",
+  "overview": "Brief 2-sentence trip summary.",
   "days": [
     {
       "day": 1,
       "title": "Day 1 Theme Title",
       "activities": [
-        {
-          "time": "09:00",
-          "title": "Activity name",
-          "description": "Short description",
-          "duration": "2 hours"
-        },
-        {
-          "time": "13:00",
-          "title": "Activity name",
-          "description": "Short description",
-          "duration": "1.5 hours"
-        },
-        {
-          "time": "17:30",
-          "title": "Activity name",
-          "description": "Short description",
-          "duration": "2 hours"
-        }
+        { "time": "09:00", "title": "Morning Landmark", "description": "Short details", "duration": "2 hours" },
+        { "time": "13:00", "title": "Lunch & Neighborhood", "description": "Short details", "duration": "1.5 hours" },
+        { "time": "17:30", "title": "Evening Viewpoint", "description": "Short details", "duration": "2 hours" }
       ]
     }
   ]
 }`;
 
   if (activeKey) {
-    const modelsToTry = [PRIMARY_MODEL, FALLBACK_MODEL];
+    const modelsToTry = [PRIMARY_FAST_MODEL, SECONDARY_FAST_MODEL];
 
     for (const model of modelsToTry) {
       try {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 6000);
+
         const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
           method: 'POST',
           headers: {
@@ -163,9 +145,13 @@ Return ONLY valid JSON matching this exact structure:
             model: model,
             messages: [{ role: 'system', content: systemPrompt }],
             response_format: { type: 'json_object' },
-            temperature: 0.5
-          })
+            temperature: 0.4,
+            max_tokens: 800
+          }),
+          signal: controller.signal
         });
+
+        clearTimeout(timeoutId);
 
         if (response.ok) {
           const data = await response.json();
@@ -176,7 +162,7 @@ Return ONLY valid JSON matching this exact structure:
           }
         }
       } catch (e) {
-        console.warn(`Groq itinerary request on ${model} warning:`, e.message);
+        console.warn(`Fast itinerary on ${model} passed:`, e.message);
       }
     }
   }
