@@ -3,6 +3,8 @@ import {
   getAuth, 
   GoogleAuthProvider, 
   signInWithPopup, 
+  signInWithRedirect,
+  getRedirectResult,
   signInWithEmailAndPassword, 
   createUserWithEmailAndPassword, 
   updateProfile, 
@@ -12,7 +14,7 @@ import {
 
 // Firebase configuration targeting user's travelApplication project
 const firebaseConfig = {
-  apiKey: import.meta.env.VITE_FIREBASE_API_KEY || "AIzaSyDemoTravelKey1234567890abcdefgh",
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY || "AIzaSyBRH8jfNcc4wwEYs11tXAbWyFKp035TbdQ",
   authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN || "travelapplication.firebaseapp.com",
   projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID || "travelapplication",
   storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET || "travelapplication.appspot.com",
@@ -29,7 +31,7 @@ try {
   app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApp();
   auth = getAuth(app);
   googleProvider = new GoogleAuthProvider();
-  // Force account selection screen on Google Popup
+  // Force account selection screen on Google
   googleProvider.setCustomParameters({
     prompt: 'select_account'
   });
@@ -42,6 +44,8 @@ export {
   auth, 
   googleProvider, 
   signInWithPopup, 
+  signInWithRedirect,
+  getRedirectResult,
   signInWithEmailAndPassword, 
   createUserWithEmailAndPassword, 
   updateProfile, 
