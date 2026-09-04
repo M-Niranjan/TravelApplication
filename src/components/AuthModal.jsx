@@ -78,7 +78,6 @@ export default function AuthModal({ isOpen, onClose }) {
     loginWithEmail, 
     registerWithEmail, 
     loginWithGoogle, 
-    loginWithDemo, 
     logout, 
     savedFavorites, 
     toggleFavorite, 
@@ -158,20 +157,6 @@ export default function AuthModal({ isOpen, onClose }) {
     try {
       await loginWithGoogle();
       setSuccessMessage('Logged in with Google!');
-      setTimeout(() => setSuccessMessage(''), 1500);
-    } catch (err) {
-      // Handled
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
-
-  const handleDemoSignIn = async () => {
-    setIsSubmitting(true);
-    setAuthError(null);
-    try {
-      await loginWithDemo();
-      setSuccessMessage('Welcome Explorer!');
       setTimeout(() => setSuccessMessage(''), 1500);
     } catch (err) {
       // Handled
@@ -853,35 +838,22 @@ export default function AuthModal({ isOpen, onClose }) {
                   </span>
                 </div>
 
-                {/* 1-Tap Google & Quick Demo Sign In Buttons */}
-                <div className="grid grid-cols-2 gap-3">
-                  <motion.button
-                    whileTap={{ scale: 0.95 }}
-                    type="button"
-                    onClick={handleGoogleSignIn}
-                    disabled={isSubmitting}
-                    className="p-2.5 rounded-2xl border border-slate-200 hover:bg-slate-50 text-xs font-bold text-slate-800 flex items-center justify-center space-x-2 transition-all min-h-[42px] cursor-pointer"
-                  >
-                    <svg className="w-4 h-4" viewBox="0 0 24 24">
-                      <path fill="#EA4335" d="M12 5c1.6 0 3 .6 4.1 1.7l3.1-3.1C17.3 1.8 14.8 1 12 1 7.5 1 3.7 3.6 1.9 7.3l3.7 2.9C6.5 7.3 9 5 12 5z" />
-                      <path fill="#4285F4" d="M23.5 12.3c0-.8-.1-1.6-.2-2.3H12v4.5h6.5c-.3 1.5-1.1 2.8-2.4 3.7l3.7 2.9c2.2-2 3.7-5 3.7-8.8z" />
-                      <path fill="#FBBC05" d="M5.6 14.8c-.2-.7-.4-1.5-.4-2.3 0-.8.2-1.6.4-2.3L1.9 7.3C.7 9.7 0 12 0 14.8c0 2.8.7 5.1 1.9 7.5l3.7-2.9z" />
-                      <path fill="#34A853" d="M12 23.5c3.2 0 6-1.1 8-3l-3.7-2.9c-1.1.7-2.5 1.2-4.3 1.2-3 0-5.5-2.3-6.4-5.2L1.9 16.5C3.7 20.2 7.5 23.5 12 23.5z" />
-                    </svg>
-                    <span>Google</span>
-                  </motion.button>
-
-                  <motion.button
-                    whileTap={{ scale: 0.95 }}
-                    type="button"
-                    onClick={handleDemoSignIn}
-                    disabled={isSubmitting}
-                    className="p-2.5 rounded-2xl bg-blue-50 hover:bg-blue-100 text-blue-700 text-xs font-bold flex items-center justify-center space-x-1.5 transition-all min-h-[42px] cursor-pointer border border-blue-200/60"
-                  >
-                    <Sparkles className="w-3.5 h-3.5 text-rose-500" />
-                    <span>Demo Login</span>
-                  </motion.button>
-                </div>
+                {/* 1-Tap Google Sign In */}
+                <motion.button
+                  whileTap={{ scale: 0.98 }}
+                  type="button"
+                  onClick={handleGoogleSignIn}
+                  disabled={isSubmitting}
+                  className="w-full py-3 px-4 rounded-2xl border border-slate-200 hover:bg-slate-50 text-xs font-bold text-slate-800 flex items-center justify-center space-x-2.5 transition-all min-h-[44px] cursor-pointer shadow-sm"
+                >
+                  <svg className="w-4 h-4 shrink-0" viewBox="0 0 24 24">
+                    <path fill="#EA4335" d="M12 5c1.6 0 3 .6 4.1 1.7l3.1-3.1C17.3 1.8 14.8 1 12 1 7.5 1 3.7 3.6 1.9 7.3l3.7 2.9C6.5 7.3 9 5 12 5z" />
+                    <path fill="#4285F4" d="M23.5 12.3c0-.8-.1-1.6-.2-2.3H12v4.5h6.5c-.3 1.5-1.1 2.8-2.4 3.7l3.7 2.9c2.2-2 3.7-5 3.7-8.8z" />
+                    <path fill="#FBBC05" d="M5.6 14.8c-.2-.7-.4-1.5-.4-2.3 0-.8.2-1.6.4-2.3L1.9 7.3C.7 9.7 0 12 0 14.8c0 2.8.7 5.1 1.9 7.5l3.7-2.9z" />
+                    <path fill="#34A853" d="M12 23.5c3.2 0 6-1.1 8-3l-3.7-2.9c-1.1.7-2.5 1.2-4.3 1.2-3 0-5.5-2.3-6.4-5.2L1.9 16.5C3.7 20.2 7.5 23.5 12 23.5z" />
+                  </svg>
+                  <span>Continue with Google</span>
+                </motion.button>
 
               </div>
             )}
